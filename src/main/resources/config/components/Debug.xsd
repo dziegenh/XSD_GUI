@@ -10,7 +10,7 @@
 				<xs:element name="input">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="field" minOccurs="5" maxOccurs="unbounded"
+							<xs:element name="field" minOccurs="2" maxOccurs="unbounded"
 								type="st:FieldType" />
 						</xs:sequence>
 					</xs:complexType>

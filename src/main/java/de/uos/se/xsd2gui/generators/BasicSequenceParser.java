@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.generators;
 
+import de.uos.se.xsd2gui.util.XPathUtil;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
 import javafx.scene.Node;
@@ -8,10 +9,7 @@ import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.util.logging.Logger;
 
 /**
@@ -32,14 +30,9 @@ public class BasicSequenceParser implements WidgetGenerator {
       if (!elementNode.getLocalName().equals(ELEMENT_NAME)) {
          return null;
       }
-      // setup the XPath object
-      XPathFactory xp = XPathFactory.newInstance();
-      XPath newXPath = xp.newXPath();
-      newXPath.setNamespaceContext(controller.getDefaultNamespaceContext());
 
-      // Find the node which defines the current element type
       try {
-         NodeList matchingTypeNodes = (NodeList) newXPath.evaluate("./xs:element[@minOccurs and @maxOccurs]", xsdNode, XPathConstants.NODESET);
+         NodeList matchingTypeNodes = XPathUtil.evaluateXPath(controller.getDefaultNamespaceContext(), xsdNode);
          Pane contentNodesPane = new VBox();
          for (int i = 0; i < matchingTypeNodes.getLength(); i++) {
             Element item = (Element) matchingTypeNodes.item(i);
@@ -60,4 +53,5 @@ public class BasicSequenceParser implements WidgetGenerator {
       }
       return null;
    }
+
 }

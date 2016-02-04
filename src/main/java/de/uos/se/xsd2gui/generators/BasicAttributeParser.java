@@ -44,7 +44,7 @@ public class BasicAttributeParser implements WidgetGenerator {
         Control inputWidget = null;
         switch (elementNode.getAttribute("type")) {
             case "xs:int":
-                IntegerSpinnerValueFactory factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE);
+                IntegerSpinnerValueFactory factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE,0);
                 Spinner spinner = new Spinner(factory);
                 spinner.setEditable(true);
                 inputWidget = spinner;
