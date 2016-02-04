@@ -1,0 +1,23 @@
+## IntelliJ Project file
+*.iml
+## IntelliJ IDEA Project folder
+.idea/
+## Compiler output
+target/
+
+##sqlite files
+*.db
+
+## IntelliJ reports
+reports/
+
+## testdata csv-file
+## evaluate csv data
+*.csv
+*.json
+
+##lucene index
+luceneindex/
+
+##logfile
+*.log
