@@ -18,6 +18,6 @@ public interface WidgetGenerator {
      * @param xsdNode
      * @return
      */
-    Node createWidget(WidgetGeneratorController controller, Pane parentWidget, org.w3c.dom.Node xsdNode);
+    Node createWidget(WidgetFactory controller, Pane parentWidget, org.w3c.dom.Node xsdNode);
 
 }

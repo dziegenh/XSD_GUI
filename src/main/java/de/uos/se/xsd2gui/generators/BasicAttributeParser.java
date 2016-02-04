@@ -11,7 +11,7 @@ import javafx.scene.layout.Pane;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
+import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 
 /**
  * Creates GUI components for attribute tags with basic XSMLSchema types (e.g.
@@ -22,7 +22,7 @@ import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
 public class BasicAttributeParser implements WidgetGenerator {
 
     @Override
-    public javafx.scene.Node createWidget(WidgetGeneratorController controller, Pane parentWidget, Node xsdNode) {
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode) {
 
         if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE)) {
             return null;

@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
+import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 
 /**
  * Creates titled GUI component for named container tags without any type (e.g.
@@ -18,7 +18,7 @@ import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
 public class ContainerParser implements WidgetGenerator {
 
     @Override
-    public javafx.scene.Node createWidget(WidgetGeneratorController controller, Pane parentWidget, Node xsdNode) {
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode) {
 
         if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE)) {
             return null;

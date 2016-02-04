@@ -3,8 +3,9 @@ package de.uos.se.xsd2gui.generators;
 import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javax.xml.parsers.DocumentBuilder;
@@ -17,7 +18,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
 
 /**
  * Creates the GUI component for elements which have a common type (e.g.
@@ -43,7 +43,7 @@ public class CustomTypesParser implements WidgetGenerator {
     }
     
     @Override
-    public javafx.scene.Node createWidget(WidgetGeneratorController controller, Pane parentWidget, Node xsdNode) {
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode) {
         if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE)) {
             return null;
         }

@@ -1,6 +1,5 @@
 package de.uos.se.xsd2gui.util;
 
-import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
 import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;

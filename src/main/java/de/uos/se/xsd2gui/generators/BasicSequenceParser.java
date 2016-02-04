@@ -2,7 +2,7 @@ package de.uos.se.xsd2gui.generators;
 
 import de.uos.se.xsd2gui.util.XPathUtil;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
+import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -21,7 +21,7 @@ public class BasicSequenceParser implements WidgetGenerator {
    public static final Logger LOGGER = Logger.getLogger(BasicSequenceParser.class.getName());
 
    @Override
-   public Node createWidget(WidgetGeneratorController controller, Pane parentWidget, org.w3c.dom.Node xsdNode) {
+   public Node createWidget(WidgetFactory controller, Pane parentWidget, org.w3c.dom.Node xsdNode) {
       if (!(xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)) {
          return null;
       }
@@ -35,9 +35,9 @@ public class BasicSequenceParser implements WidgetGenerator {
          NodeList matchingTypeNodes = XPathUtil.evaluateXPath(controller.getDefaultNamespaceContext(), xsdNode);
          Pane contentNodesPane = new VBox();
          for (int i = 0; i < matchingTypeNodes.getLength(); i++) {
-            Element item = (Element) matchingTypeNodes.item(i);
-            int minOccurs = Integer.parseInt(item.getAttribute("minOccurs"));
-            String maxOccursString = item.getAttribute("maxOccurs");
+            final Element item = (Element) matchingTypeNodes.item(i);
+            final int minOccurs = Integer.parseInt(item.getAttribute("minOccurs"));
+            final String maxOccursString = item.getAttribute("maxOccurs");
             int maxOccurs = maxOccursString.matches("\\d+") ? Integer.parseInt(maxOccursString) : Integer.MAX_VALUE;
             if (minOccurs > maxOccurs) {
                LOGGER.warning("minOccurs > maxOccurs for element " + item);

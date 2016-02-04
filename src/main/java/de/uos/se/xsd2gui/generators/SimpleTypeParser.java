@@ -2,6 +2,8 @@ package de.uos.se.xsd2gui.generators;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javax.xml.xpath.XPath;
@@ -12,7 +14,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
 import de.uos.se.xsd2gui.app.XsdParserApp;
 
 /**
@@ -23,7 +24,7 @@ import de.uos.se.xsd2gui.app.XsdParserApp;
 public class SimpleTypeParser implements WidgetGenerator {
 
     @Override
-    public javafx.scene.Node createWidget(WidgetGeneratorController controller, Pane parentWidget, Node xsdNode) {
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode) {
 
         // TODO das kann ggf. auch als XPath ausgedrueckt werden...
         if (xsdNode.getNodeType() != Node.ELEMENT_NODE || !((Element) xsdNode).getLocalName().equals("simpleType")) {

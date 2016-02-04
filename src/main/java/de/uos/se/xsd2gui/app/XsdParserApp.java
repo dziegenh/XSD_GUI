@@ -15,7 +15,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
-import de.uos.se.xsd2gui.xsdparser.WidgetGeneratorController;
+import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 
 /**
  * Test application for the XSD-to-GUI parser/generator.
@@ -71,17 +71,17 @@ public class XsdParserApp extends Application {
         };
 
         // Create the main widget generator controller with the shared namespace.
-        WidgetGeneratorController widgetGeneratorController = new WidgetGeneratorController();
-        widgetGeneratorController.setDefaultNamespaceContext(namespaceContext);
+        WidgetFactory widgetFactory = new WidgetFactory();
+        widgetFactory.setDefaultNamespaceContext(namespaceContext);
 
         // Add the Generators
         // TODO create missing parsers (e.g. for sequence tags)
-        widgetGeneratorController.addWidgetGenerator(new BasicAttributeParser());
-        widgetGeneratorController.addWidgetGenerator(new SimpleTypeParser());
-        widgetGeneratorController.addWidgetGenerator(new ContainerParser());
-        widgetGeneratorController.addWidgetGenerator(new BasicSequenceParser());
-        widgetGeneratorController.addWidgetGenerator(new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\Components\\CommonTypes.xsd"));
-        widgetGeneratorController.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR + "config\\Components\\StructuredTypes.xsd"));
+        widgetFactory.addWidgetGenerator(new BasicAttributeParser());
+        widgetFactory.addWidgetGenerator(new SimpleTypeParser());
+        widgetFactory.addWidgetGenerator(new ContainerParser());
+        widgetFactory.addWidgetGenerator(new BasicSequenceParser());
+        widgetFactory.addWidgetGenerator(new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\Components\\CommonTypes.xsd"));
+        widgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR + "config\\Components\\StructuredTypes.xsd"));
 
         // Read the XSD and start parsing
         try {
@@ -94,7 +94,7 @@ public class XsdParserApp extends Application {
             Document doc = documentBuilder.parse(xsdFilename);
 
             // Generated widgets are added to the root node
-            widgetGeneratorController.parseXsd(doc, root);
+            widgetFactory.parseXsd(doc, root);
 
         } catch (Exception ex) {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);

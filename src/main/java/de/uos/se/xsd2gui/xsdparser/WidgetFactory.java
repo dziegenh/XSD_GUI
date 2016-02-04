@@ -15,12 +15,12 @@ import org.w3c.dom.NodeList;
  *
  * @author dziegenhagen
  */
-public class WidgetGeneratorController {
+public class WidgetFactory {
 
     /**
      * The widget generators which parse specific XSD elements.
      */
-    List<WidgetGenerator> generators = new LinkedList<>();
+    private List<WidgetGenerator> generators = new LinkedList<>();
 
     /**
      * A namespace context which the widget generators can access.
@@ -63,7 +63,7 @@ public class WidgetGeneratorController {
                 rootWidget.getChildren().add(nodeWidget);
                 
                 if (guiNodeCreated) {
-                    Logger.getLogger(WidgetGeneratorController.class.getName()).log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
+                    Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
                 }
 
                 guiNodeCreated = true;
@@ -72,7 +72,7 @@ public class WidgetGeneratorController {
 
         if (!guiNodeCreated) {
 
-           // Logger.getLogger(WidgetGeneratorController.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
+           Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
 
             if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                 Element nodeEl = (Element) xsdNode;
