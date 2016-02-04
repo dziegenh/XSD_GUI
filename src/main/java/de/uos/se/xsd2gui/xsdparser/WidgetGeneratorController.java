@@ -72,7 +72,7 @@ public class WidgetGeneratorController {
 
         if (!guiNodeCreated) {
 
-            Logger.getLogger(WidgetGeneratorController.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
+           // Logger.getLogger(WidgetGeneratorController.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
 
             if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                 Element nodeEl = (Element) xsdNode;

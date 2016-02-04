@@ -1,9 +1,7 @@
 package de.uos.se.xsd2gui.app;
 
-import de.uos.se.xsd2gui.generators.BasicAttributeParser;
-import de.uos.se.xsd2gui.generators.ContainerParser;
-import de.uos.se.xsd2gui.generators.CustomTypesParser;
-import de.uos.se.xsd2gui.generators.SimpleTypeParser;
+import de.uos.se.xsd2gui.generators.*;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -36,7 +34,7 @@ public class XsdParserApp extends Application {
         // add XSD Filename to arguments 
         // TODO check if argument already exists :)
         String[] args2 = Arrays.copyOf(args, args.length + 1);
-        args2[args.length] = "--xsdFile=" + XSD_BASE_DIR + "config\\components\\PWM.xsd";
+        args2[args.length] = "--xsdFile=" + XSD_BASE_DIR + "config\\components\\Debug.xsd";
 
         launch(args2);
     }
@@ -81,6 +79,7 @@ public class XsdParserApp extends Application {
         widgetGeneratorController.addWidgetGenerator(new BasicAttributeParser());
         widgetGeneratorController.addWidgetGenerator(new SimpleTypeParser());
         widgetGeneratorController.addWidgetGenerator(new ContainerParser());
+        widgetGeneratorController.addWidgetGenerator(new BasicSequenceParser());
         widgetGeneratorController.addWidgetGenerator(new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\Components\\CommonTypes.xsd"));
         widgetGeneratorController.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR + "config\\Components\\StructuredTypes.xsd"));
 
