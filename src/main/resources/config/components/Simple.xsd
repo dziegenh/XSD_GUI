@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:ct="CommonTypes" xmlns:st="StructuredTypes" elementFormDefault="qualified"
+	targetNamespace="Components">
+	<xs:import schemaLocation="CommonTypes.xsd" namespace="CommonTypes" />
+	<xs:import schemaLocation="StructuredTypes.xsd" namespace="StructuredTypes" />
+
+	<xs:simpleType name="43">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="42" />
+
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:asd>
+		<xs:simpleType name="RefinedType">
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="uint8" />
+				<xs:enumeration value="uint16" />
+				<xs:enumeration value="uint32" />
+				<xs:enumeration value="uint64" />
+				<xs:enumeration value="int8" />
+				<xs:enumeration value="int16" />
+				<xs:enumeration value="int32" />
+				<xs:enumeration value="int64" />
+				<xs:enumeration value="char" />
+				<xs:enumeration value="float32"/>
+				<xs:enumeration value="float64"/>
+				<xs:enumeration value="bitvector8" />
+				<xs:enumeration value="bitvector16" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:asd>
+
+	<xs:complexType name="ct:FieldType">
+		<xs:all>
+			<xs:element name="raw">
+				<xs:complexType>
+					<xs:attribute name="numBytes" type="xs:int" use="required" />
+					<xs:attribute name="byteOrder" type="ct:EndianType"
+						use="required" />
+					<xs:attribute name="min" type="xs:int" use="required" />
+					<xs:attribute name="max" type="xs:int" use="required" />
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="refined">
+				<xs:complexType>
+					<xs:attribute name="type" type="ct:RefinedType" use="required" />
+					<xs:attribute name="min" type="xs:int" use="required" />
+					<xs:attribute name="max" type="xs:int" use="required" />
+					<xs:attribute name="unit" type="xs:string" use="required" />
+				</xs:complexType>
+			</xs:element>
+		</xs:all>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="index" type="xs:int" use="optional" default="0" />
+	</xs:complexType>
+
+	<xs:element id="componentRoot" name="field" minOccurs="1" maxOccurs="unbounded"
+								type="st:FieldType" />
+
+</xs:schema>

@@ -1,0 +1,15 @@
+<DigitalIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../components/DigitalIO.xsd">
+	<input>
+		<field name="DigitalInByte">
+			<raw numBytes="1" byteOrder="BigEndian" min="0" max="255" />
+			<refined type="uint8" unit="None" min="0" max="255" />
+		</field>
+	</input>
+	<output>
+		<field name="DigitalOutByte">
+			<raw numBytes="1" byteOrder="BigEndian" min="0" max="255" />
+			<refined type="uint8" unit="None" min="0" max="255" />
+		</field>
+	</output>
+</DigitalIO>

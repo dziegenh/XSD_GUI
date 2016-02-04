@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="DigitalIn">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="field" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="length" type="xs:int" use="required"/>
+                        <xs:attribute name="type" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="NoBytes" type="xs:int" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DigitalOut">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="field" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="length" type="xs:int" use="required"/>
+                        <xs:attribute name="type" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="NoBytes" type="xs:int" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DigitalIO">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="InField" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="length" type="xs:int" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="OutField" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="length" type="xs:int" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="InBytes" type="xs:int" use="required"/>
+            <xs:attribute name="OutBytes" type="xs:int" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

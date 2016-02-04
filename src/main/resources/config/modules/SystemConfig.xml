@@ -1,0 +1,25 @@
+<SystemConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../components/SystemConfig.xsd">
+
+	<input>
+		<cycleCount name="cycleCounter">
+			<raw numBytes="2" byteOrder="BigEndian" min="0" max="65535" />
+			<refined type="uint32" unit="None" min="0" max="255" />
+		</cycleCount>
+		<cycleTime name="cycleTimer">
+			<raw numBytes="4" byteOrder="BigEndian" min="0" max="4294967295"/>
+			<refined type="float32" min="0" max="300.0" unit="None"/>
+		</cycleTime>
+	</input>
+	<output>
+		<cycleTime name="cycleTime">
+			<raw numBytes="3" byteOrder="BigEndian" min="0" max="16777215"/>
+			<refined type="float32" min="0" max="300.0" unit="ms"/>
+		</cycleTime>
+		<shutdownCycles name="abortCycles">
+			<raw numBytes="1" byteOrder="BigEndian" min="0" max="255"/>
+			<refined type="uint8" min="0" max="255" unit="None"/>
+		</shutdownCycles>
+	</output>
+
+</SystemConfig>

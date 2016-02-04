@@ -1,0 +1,15 @@
+<Debug xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../components/Debug.xsd">
+	<input>
+		<field name="DebugIn">
+			<raw numBytes="1" byteOrder="BigEndian" min="0" max="255" />
+			<refined type="uint8" unit="None" min="0" max="255" />
+		</field>
+	</input>
+	<output>
+		<field name="DebugOut">
+			<raw numBytes="1" byteOrder="BigEndian" min="0" max="255" />
+			<refined type="uint8" unit="None" min="0" max="255" />
+		</field>
+	</output>
+</Debug>

@@ -1,0 +1,39 @@
+<AnalogDigitalConverter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="../components/AnalogDigitalConverter.xsd">
+    <restrictions numberOfChannels="8" byteOrder="BigEndian" channelWidth="12" />
+    <input>
+        <channel name="Channel0">
+            <raw numBytes="16" byteOrder="BigEndian" min="0" max="65535"/>
+            <refined type="uint16" min="0" max="65535" unit="None"/>
+        </channel>
+        <channel name="Channel1">
+            <raw numBytes="16" byteOrder="BigEndian" min="0" max="65535"/>
+            <refined type="uint16" min="0" max="65535" unit="None"/>
+        </channel>
+        <channel name="IMU_ACC_X">
+            <raw numBytes="16" byteOrder="BigEndian" min="0" max="65535"/>
+            <refined type="float32" min="-1.0" max="1.0" unit="N"/>
+        </channel>
+        <channel name="IMU_ACC_Y">
+            <raw numBytes="16" byteOrder="BigEndian" min="0" max="65535"/>
+            <refined type="float32" min="-1.0" max="1.0" unit="N"/>
+        </channel>
+        <channel name="IMU_ACC_Z">
+            <raw numBytes="16" byteOrder="BigEndian" min="0" max="65535"/>
+            <refined type="float32" min="-1.0" max="1.0" unit="N"/>
+        </channel>
+        <channel name="IMU_ROT_X">
+            <raw numBytes="16" byteOrder="BigEndian" min="0" max="65535"/>
+            <refined type="float32" min="-90.0" max="90.0" unit="Deg"/>
+        </channel>
+        <channel name="IMU_ROT_Y">
+            <raw numBytes="16" byteOrder="BigEndian" min="0" max="65535"/>
+            <refined type="float32" min="-90.0" max="90.0" unit="Deg"/>
+        </channel>
+        <channel name="IMU_ROT_Z">
+            <raw numBytes="16" byteOrder="BigEndian" min="0" max="65535"/>
+            <refined type="float32" min="-90.0" max="90.0" unit="Deg"/>
+        </channel>
+    </input>
+
+</AnalogDigitalConverter>

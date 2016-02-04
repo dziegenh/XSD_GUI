@@ -1,0 +1,20 @@
+<PWM xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="../components/PWM.xsd"
+resolution="24">
+    <input>
+        <counter name="currentTimeInPeriod">
+            <raw numBytes="3" byteOrder="BigEndian" min="0" max="8388607"/>
+            <refined type="float32" min="0.0" max="100.0" unit="percent"/>
+        </counter>
+    </input>
+    <output>
+        <frequency name="frequency">
+            <raw numBytes="3" byteOrder="BigEndian" min="0" max="8388607"/>
+            <refined type="float32" min="0" max="40000" unit="Hz"/>
+        </frequency>
+        <dutyCycle name="dutyCycle">
+            <raw numBytes="3" byteOrder="BigEndian" min="0" max="8388607"/>
+            <refined type="float32" min="-100.0" max="100.0" unit="percent"/>
+        </dutyCycle>
+    </output>
+</PWM>

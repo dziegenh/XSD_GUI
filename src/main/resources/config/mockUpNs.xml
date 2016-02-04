@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Nodeserver xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="ns"
+            xsi:noNamespaceSchemaLocation="schema.xsd">
+    <configuration cycleTime="5" profiling="false" />
+    <children>
+        <node name="simpleSlave" id="0">
+            <children>
+                <module name="DigitalIO" id="0" parameterFile="./modules/DigitalIO.xml"/>
+                <module name="PWM" id="0" parameterFile="./modules/PWM.xml" />
+                <module name="ADC" id="0" parameterFile="./modules/ADC.xml" />
+                <module name="Debug" id="0" parameterFile="./modules/Debug.xml"/>
+                <module name="SystemConfig" id="0"  parameterFile="./modules/SystemConfig.xml" />
+            </children>
+        </node>
+    </children>
+</Nodeserver>
