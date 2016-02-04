@@ -4,20 +4,13 @@
 .idea/
 ## Compiler output
 target/
+*.class
 
 ##sqlite files
 *.db
 
 ## IntelliJ reports
 reports/
-
-## testdata csv-file
-## evaluate csv data
-*.csv
-*.json
-
-##lucene index
-luceneindex/
 
 ##logfile
 *.log
