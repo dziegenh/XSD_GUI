@@ -1,13 +1,15 @@
 package de.uos.se.xsd2gui.generators;
 
+import de.uos.se.xsd2gui.models.ElementModel;
+import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 
 /**
  * Creates titled GUI component for named container tags without any type (e.g.
@@ -18,7 +20,7 @@ import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 public class ContainerParser implements WidgetGenerator {
 
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode) {
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel) {
 
         if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE)) {
             return null;
@@ -36,14 +38,14 @@ public class ContainerParser implements WidgetGenerator {
         if (name.isEmpty() || !type.isEmpty()) {
             return null;
         }
-
+        XSDModel model = new ElementModel(elementNode);
         // Create the content pane for the child nodes
         Pane contentNodesPane = new VBox(10);
 
         // create and add child GUI components to the container
         NodeList childNodes = elementNode.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
-            controller.parseXsdNode(contentNodesPane, childNodes.item(i));
+            controller.parseXsdNode(contentNodesPane, childNodes.item(i), model);
         }
 
         // Use the value of the "name" attribute as the container title.

@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.generators;
 
+import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.Label;
@@ -43,7 +44,7 @@ public class CustomTypesParser implements WidgetGenerator {
     }
     
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode) {
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel) {
         if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE)) {
             return null;
         }
@@ -83,7 +84,7 @@ public class CustomTypesParser implements WidgetGenerator {
             // create the GUI widget for the current element type
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             HBox hBox = new HBox(10, textFieldLabel);
-            controller.parseXsdNode(hBox, matchingTypeNodes.item(0));
+            controller.parseXsdNode(hBox, matchingTypeNodes.item(0), parentModel);
             return hBox;
             
         } catch (Exception ex) {

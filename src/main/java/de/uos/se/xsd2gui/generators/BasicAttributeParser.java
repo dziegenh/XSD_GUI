@@ -1,17 +1,14 @@
 package de.uos.se.xsd2gui.generators;
 
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
+import javafx.scene.control.*;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 
 /**
  * Creates GUI components for attribute tags with basic XSMLSchema types (e.g.
@@ -22,7 +19,7 @@ import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 public class BasicAttributeParser implements WidgetGenerator {
 
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode) {
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel) {
 
         if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE)) {
             return null;

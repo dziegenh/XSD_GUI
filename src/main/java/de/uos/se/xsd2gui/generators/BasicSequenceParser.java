@@ -1,5 +1,7 @@
 package de.uos.se.xsd2gui.generators;
 
+import de.uos.se.xsd2gui.models.SequenceModel;
+import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.XPathUtil;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
@@ -24,7 +26,7 @@ public class BasicSequenceParser implements WidgetGenerator {
    public static final Logger LOGGER = Logger.getLogger(BasicSequenceParser.class.getName());
 
    @Override
-   public Node createWidget(WidgetFactory controller, Pane parentWidget, org.w3c.dom.Node xsdNode) {
+   public Node createWidget(WidgetFactory controller, Pane parentWidget, org.w3c.dom.Node xsdNode, XSDModel parentModel) {
       if (!(xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)) {
          return null;
       }
@@ -33,12 +35,13 @@ public class BasicSequenceParser implements WidgetGenerator {
       if (!elementNode.getLocalName().equals(ELEMENT_NAME)) {
          return null;
       }
+      XSDModel model = new SequenceModel(elementNode);
 
       try {
          NodeList matchingTypeNodes = XPathUtil.evaluateXPath(controller.getNamespaceContext(), xsdNode, "./xs:element[@minOccurs and @maxOccurs]");
          Pane contentNodesPane = new HBox(20);
          final Pane nestedContent = new VBox();
-         final SequenceReparser reparser = new SequenceReparser(matchingTypeNodes);
+         final SequenceReparser reparser = new SequenceReparser(matchingTypeNodes, model);
          Pane addContent = new VBox();
          List<Button> addButtons = new LinkedList<>();
          reparser.elementNames().forEach(name -> addButtons.add(new Button("+" + name)));
@@ -62,7 +65,7 @@ public class BasicSequenceParser implements WidgetGenerator {
                Button delete = new Button("-");
                delete.setOnAction(ev -> nestedContent.getChildren().remove(elementPane));
                elementPane.getChildren().add(delete);
-               controller.parseXsdNode(elementPane, item);
+               controller.parseXsdNode(elementPane, item, model);
                nestedContent.getChildren().add(elementPane);
             }
          }
@@ -75,8 +78,9 @@ public class BasicSequenceParser implements WidgetGenerator {
 
    public class SequenceReparser {
       private final Map<String, Element> _elements;
+      private final XSDModel _model;
 
-      private SequenceReparser(NodeList elements) {
+      private SequenceReparser(NodeList elements, XSDModel model) {
          this._elements = new HashMap<>();
          for (int i = 0; i < elements.getLength(); i++) {
             if (elements.item(i).getNodeType() != org.w3c.dom.Node.ELEMENT_NODE)
@@ -87,6 +91,7 @@ public class BasicSequenceParser implements WidgetGenerator {
                throw new IllegalArgumentException("node does not have a name attribute: " + elem);
             this._elements.put(name, elem);
          }
+         this._model = model;
       }
 
       public void add(Pane widget, String name, WidgetFactory factory) {
@@ -94,7 +99,7 @@ public class BasicSequenceParser implements WidgetGenerator {
          Button delete = new Button("-");
          delete.setOnAction(ev -> widget.getChildren().remove(elementPane));
          elementPane.getChildren().add(delete);
-         factory.parseXsdNode(elementPane, this._elements.get(name));
+         factory.parseXsdNode(elementPane, this._elements.get(name), this._model);
          widget.getChildren().add(elementPane);
       }
 

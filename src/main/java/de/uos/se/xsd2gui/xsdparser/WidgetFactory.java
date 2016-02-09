@@ -1,5 +1,7 @@
 package de.uos.se.xsd2gui.xsdparser;
 
+import de.uos.se.xsd2gui.models.RootModel;
+import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.DefaultNamespaceContext;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -59,9 +61,11 @@ public class WidgetFactory {
      * @param doc
      * @param rootWidget
      */
-    public void parseXsd(Document doc, Pane rootWidget) {
+    public XSDModel parseXsd(Document doc, Pane rootWidget) {
         Element documentRoot = doc.getDocumentElement();
-        parseXsdNode(rootWidget, documentRoot);
+        RootModel rootModel = new RootModel(doc.getDocumentElement());
+        parseXsdNode(rootWidget, documentRoot, rootModel);
+        return rootModel;
     }
 
     /**
@@ -71,11 +75,11 @@ public class WidgetFactory {
      * @param rootWidget
      * @param xsdNode
      */
-    public void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode) {
+    public void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel rootModel) {
 
         boolean guiNodeCreated = false;
         for (WidgetGenerator generator : generators) {
-            Node nodeWidget = generator.createWidget(this, rootWidget, xsdNode);
+            Node nodeWidget = generator.createWidget(this, rootWidget, xsdNode, rootModel);
             if (null != nodeWidget) {
                 rootWidget.getChildren().add(nodeWidget);
                 
@@ -96,7 +100,7 @@ public class WidgetFactory {
                 NodeList nodeElChildren = nodeEl.getChildNodes();
 
                 for (int i = 0; i < nodeElChildren.getLength(); i++) {
-                    parseXsdNode(rootWidget, nodeElChildren.item(i));
+                    parseXsdNode(rootWidget, nodeElChildren.item(i), rootModel);
                 }
             }
         }
