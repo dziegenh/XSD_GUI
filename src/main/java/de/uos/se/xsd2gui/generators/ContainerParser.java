@@ -32,8 +32,6 @@ public class ContainerParser implements WidgetGenerator {
         if (!localName.equals("element")) {
             return null;
         }
-        XSDModel model = new ElementModel(elementNode);
-        parentModel.addSubModel(model);
         String name = elementNode.getAttribute("name");
         String type = elementNode.getAttribute("type");
         if (name.isEmpty() || !type.isEmpty()) {
@@ -41,7 +39,8 @@ public class ContainerParser implements WidgetGenerator {
         }
         // Create the content pane for the child nodes
         Pane contentNodesPane = new VBox(10);
-
+        XSDModel model = new ElementModel(elementNode);
+        parentModel.addSubModel(model);
         // create and add child GUI components to the container
         NodeList childNodes = elementNode.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {

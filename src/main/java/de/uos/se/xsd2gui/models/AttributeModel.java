@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.models;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -13,7 +14,7 @@ public class AttributeModel extends XSDModel {
    }
 
    @Override
-   public void parseToXML(Element parent) {
+   public void parseToXML(Document doc, Element parent) {
       parent.setAttribute(this.getName(), this.getValue());
    }
 }

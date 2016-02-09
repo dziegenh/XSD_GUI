@@ -13,17 +13,21 @@ import javax.xml.xpath.XPathFactory;
  */
 public class XPathUtil {
 
-   public static NodeList evaluateXPath(NamespaceContext namespaceContext, org.w3c.dom.Node rootNode, String expression) throws XPathExpressionException {
+   public static NodeList evaluateXPath(NamespaceContext namespaceContext, org.w3c.dom.Node rootNode, String expression) {
       // setup the XPath object
       XPathFactory xp = XPathFactory.newInstance();
       XPath newXPath = xp.newXPath();
       newXPath.setNamespaceContext(namespaceContext);
 
       // Find the node which defines the current element type
-      return (NodeList) newXPath.evaluate(expression, rootNode, XPathConstants.NODESET);
+      try {
+         return (NodeList) newXPath.evaluate(expression, rootNode, XPathConstants.NODESET);
+      } catch (XPathExpressionException e) {
+         return null;
+      }
    }
 
-   public static NodeList evaluateXPath(org.w3c.dom.Node rootNode, String expression) throws XPathExpressionException {
+   public static NodeList evaluateXPath(org.w3c.dom.Node rootNode, String expression) {
       return evaluateXPath(new DefaultNamespaceContext(), rootNode, expression);
    }
 }

@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.generators;
 
+import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
@@ -35,7 +36,8 @@ public class BasicAttributeParser implements WidgetGenerator {
         if (null == type) {
             return null;
         }
-
+        XSDModel model = new AttributeModel(elementNode);
+        parentModel.addSubModel(model);
         // TODO create the desired GUI element (Textfield, integer input etc.)
         // TODO use the attribute constraints ("required", "default" etc.)
         Control inputWidget = null;

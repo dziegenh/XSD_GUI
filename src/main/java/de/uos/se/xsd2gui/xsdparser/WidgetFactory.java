@@ -3,6 +3,7 @@ package de.uos.se.xsd2gui.xsdparser;
 import de.uos.se.xsd2gui.models.RootModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.DefaultNamespaceContext;
+import de.uos.se.xsd2gui.util.XPathUtil;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Document;
@@ -12,6 +13,8 @@ import org.w3c.dom.NodeList;
 import javax.xml.namespace.NamespaceContext;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -61,8 +64,9 @@ public class WidgetFactory {
      */
     public XSDModel parseXsd(Document doc, Pane rootWidget) {
         Element documentRoot = doc.getDocumentElement();
-        RootModel rootModel = new RootModel(doc.getDocumentElement());
-        parseXsdNode(rootWidget, documentRoot, rootModel);
+        org.w3c.dom.Node intermediateNode = XPathUtil.evaluateXPath(documentRoot, "current()/xs:element/xs:complexType").item(0);
+        RootModel rootModel = new RootModel((Element) intermediateNode.getParentNode());
+        parseXsdNode(rootWidget, intermediateNode, rootModel);
         return rootModel;
     }
 
@@ -82,7 +86,7 @@ public class WidgetFactory {
                 rootWidget.getChildren().add(nodeWidget);
                 
                 if (guiNodeCreated) {
-                    // Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
+                    Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
                 }
 
                 guiNodeCreated = true;
@@ -91,7 +95,7 @@ public class WidgetFactory {
 
         if (!guiNodeCreated) {
 
-            //Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
+            Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
 
             if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                 Element nodeEl = (Element) xsdNode;

@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.models;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -13,10 +14,11 @@ public class RootModel extends XSDModel {
    }
 
    @Override
-   public void parseToXML(Element root) {
+   public void parseToXML(Document doc, Element parent) {
+      Element root = doc.createElement(this.getName());
+      doc.appendChild(root);
       for (XSDModel xsdm : getSubModels()) {
-         xsdm.parseToXML(root);
+         xsdm.parseToXML(doc, root);
       }
    }
-
 }

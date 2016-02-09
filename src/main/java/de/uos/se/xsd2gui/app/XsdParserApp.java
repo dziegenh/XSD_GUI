@@ -8,11 +8,14 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,12 +74,19 @@ public class XsdParserApp extends Application {
             Document doc = documentBuilder.parse(xsdFilename);
 
             // Generated widgets are added to the root node
-            String rootName = xsdFilename.substring(xsdFilename.lastIndexOf(File.separator) + 1, xsdFilename.lastIndexOf(".xsd"));
             XSDModel xsdModel = widgetFactory.parseXsd(doc, root);
             Document newDoc = documentBuilder.newDocument();
-            Element element = newDoc.createElement(rootName);
-            newDoc.appendChild(element);
-            xsdModel.parseToXML(element);
+            xsdModel.parseToXML(newDoc, null);
+            try (FileOutputStream out = new FileOutputStream("text.xml")) {
+                TransformerFactory tFactory =
+                      TransformerFactory.newInstance();
+                Transformer transformer =
+                      tFactory.newTransformer();
+
+                DOMSource source = new DOMSource(newDoc);
+                StreamResult result = new StreamResult(out);
+                transformer.transform(source, result);
+            }
 
         } catch (Exception ex) {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);

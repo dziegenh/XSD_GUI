@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -38,43 +37,38 @@ public class BasicSequenceParser implements WidgetGenerator {
       XSDModel model = new SequenceModel(elementNode);
       parentModel.addSubModel(model);
 
-      try {
-         NodeList matchingTypeNodes = XPathUtil.evaluateXPath(controller.getNamespaceContext(), xsdNode, "./xs:element[@minOccurs and @maxOccurs]");
-         Pane contentNodesPane = new HBox(20);
-         final Pane nestedContent = new VBox();
-         final SequenceReparser reparser = new SequenceReparser(matchingTypeNodes, model);
-         Pane addContent = new VBox();
-         List<Button> addButtons = new LinkedList<>();
-         reparser.elementNames().forEach(name -> addButtons.add(new Button("+" + name)));
-         addButtons.forEach(button -> button.setOnAction(ev -> reparser.add(nestedContent, button.getText().substring(1), controller)));
-         addContent.getChildren().addAll(addButtons);
+      NodeList matchingTypeNodes = XPathUtil.evaluateXPath(controller.getNamespaceContext(), xsdNode, "./xs:element[@minOccurs and @maxOccurs]");
+      Pane contentNodesPane = new HBox(20);
+      final Pane nestedContent = new VBox();
+      final SequenceReparser reparser = new SequenceReparser(matchingTypeNodes, model);
+      Pane addContent = new VBox();
+      List<Button> addButtons = new LinkedList<>();
+      reparser.elementNames().forEach(name -> addButtons.add(new Button("+" + name)));
+      addButtons.forEach(button -> button.setOnAction(ev -> reparser.add(nestedContent, button.getText().substring(1), controller)));
+      addContent.getChildren().addAll(addButtons);
 
 
-         contentNodesPane.getChildren().add(nestedContent);
-         contentNodesPane.getChildren().add(addContent);
-         for (int i = 0; i < matchingTypeNodes.getLength(); i++) {
-            final Element item = (Element) matchingTypeNodes.item(i);
-            final int minOccurs = Integer.parseInt(item.getAttribute("minOccurs"));
-            final String maxOccursString = item.getAttribute("maxOccurs");
-            int maxOccurs = maxOccursString.matches("\\d+") ? Integer.parseInt(maxOccursString) : Integer.MAX_VALUE;
-            if (minOccurs > maxOccurs) {
-               LOGGER.warning("minOccurs > maxOccurs for element " + item);
-               continue;
-            }
-            for (int j = 0; j < minOccurs; j++) {
-               Pane elementPane = new HBox(20);
-               Button delete = new Button("-");
-               delete.setOnAction(ev -> nestedContent.getChildren().remove(elementPane));
-               elementPane.getChildren().add(delete);
-               controller.parseXsdNode(elementPane, item, model);
-               nestedContent.getChildren().add(elementPane);
-            }
+      contentNodesPane.getChildren().add(nestedContent);
+      contentNodesPane.getChildren().add(addContent);
+      for (int i = 0; i < matchingTypeNodes.getLength(); i++) {
+         final Element item = (Element) matchingTypeNodes.item(i);
+         final int minOccurs = Integer.parseInt(item.getAttribute("minOccurs"));
+         final String maxOccursString = item.getAttribute("maxOccurs");
+         int maxOccurs = maxOccursString.matches("\\d+") ? Integer.parseInt(maxOccursString) : Integer.MAX_VALUE;
+         if (minOccurs > maxOccurs) {
+            LOGGER.warning("minOccurs > maxOccurs for element " + item);
+            continue;
          }
-         return contentNodesPane;
-      } catch (XPathExpressionException e) {
-         e.printStackTrace();
+         for (int j = 0; j < minOccurs; j++) {
+            Pane elementPane = new HBox(20);
+            Button delete = new Button("-");
+            delete.setOnAction(ev -> nestedContent.getChildren().remove(elementPane));
+            elementPane.getChildren().add(delete);
+            controller.parseXsdNode(elementPane, item, model);
+            nestedContent.getChildren().add(elementPane);
+         }
       }
-      return null;
+      return contentNodesPane;
    }
 
    public class SequenceReparser {

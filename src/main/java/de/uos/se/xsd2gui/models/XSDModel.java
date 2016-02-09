@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.models;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.util.Collections;
@@ -38,7 +39,7 @@ public abstract class XSDModel {
       return Collections.unmodifiableList(this._subModels);
    }
 
-   public abstract void parseToXML(Element parent);
+   public abstract void parseToXML(Document doc, Element parent);
 
    public String getValue() {
       return this._value;
