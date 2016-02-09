@@ -1,5 +1,7 @@
 package de.uos.se.xsd2gui.generators;
 
+import de.uos.se.xsd2gui.models.AttributeModel;
+import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
@@ -28,70 +30,75 @@ import java.util.logging.Logger;
  */
 public class CustomTypesParser implements WidgetGenerator {
 
-    /**
-     * The namespace prefix of the matching type (e.g. "ct:").
-     */
-    private final String typeNamespacePrefix;
+   /**
+    * The namespace prefix of the matching type (e.g. "ct:").
+    */
+   private final String typeNamespacePrefix;
 
-    /**
-     * The XSD file that contains the type definition.
-     */
-    private final String xsdFilename;
-    
-    public CustomTypesParser(String typeNamespacePrefix, String xsdFilename) {
-        this.typeNamespacePrefix = typeNamespacePrefix;
-        this.xsdFilename = xsdFilename;
-    }
-    
-    @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel) {
-        if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE)) {
-            return null;
-        }
-        
-        final Element elementNode = (Element) xsdNode;
-        final String localName = elementNode.getLocalName();
-        if (!localName.equals("element") && !localName.equals("attribute")) {
-            return null;
-        }
-        
-        final String type = elementNode.getAttribute("type");
-        if (null != type && !type.startsWith(typeNamespacePrefix)) {
-            return null;
-        }
-        
-        final String localType = type.substring(typeNamespacePrefix.length());
-        
-        try {
-            // load and setup the XSD document 
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setIgnoringComments(true);
-            factory.setIgnoringElementContentWhitespace(true);
-            factory.setNamespaceAware(true);
-            DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-            Document doc = documentBuilder.parse(new FileInputStream(xsdFilename));
+   /**
+    * The XSD file that contains the type definition.
+    */
+   private final String xsdFilename;
 
-            // setup the XPath object
-            XPathFactory xp = XPathFactory.newInstance();
-            XPath newXPath = xp.newXPath();
-            newXPath.setNamespaceContext(controller.getNamespaceContext());
+   public CustomTypesParser(String typeNamespacePrefix, String xsdFilename) {
+      this.typeNamespacePrefix = typeNamespacePrefix;
+      this.xsdFilename = xsdFilename;
+   }
 
-            // Find the node which defines the current element type
-            NodeList matchingTypeNodes;
-            matchingTypeNodes = (NodeList) newXPath.evaluate("/xs:schema/node()[@name='" + localType + "']", doc, XPathConstants.NODESET);
+   @Override
+   public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel) {
+      if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE)) {
+         return null;
+      }
 
-            // TODO check length of the matching node list (should be 1!!)
-            // create the GUI widget for the current element type
-            Label textFieldLabel = new Label(elementNode.getAttribute("name"));
-            HBox hBox = new HBox(10, textFieldLabel);
-            controller.parseXsdNode(hBox, matchingTypeNodes.item(0), parentModel);
-            return hBox;
-            
-        } catch (Exception ex) {
-            Logger.getLogger(CustomTypesParser.class.getName()).log(Level.SEVERE, "{0}", ex);
-        }
-        
-        return null;
-    }
-    
+      final Element elementNode = (Element) xsdNode;
+      final String localName = elementNode.getLocalName();
+      if (!localName.equals("element") && !localName.equals("attribute")) {
+         return null;
+      }
+
+      final String type = elementNode.getAttribute("type");
+      if (null != type && !type.startsWith(typeNamespacePrefix)) {
+         return null;
+      }
+      XSDModel model;
+      if (localName.equals("element"))
+         model = new ElementModel(elementNode);
+      else
+         model = new AttributeModel(elementNode);
+      parentModel.addSubModel(model);
+      final String localType = type.substring(typeNamespacePrefix.length());
+
+      try {
+         // load and setup the XSD document
+         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+         factory.setIgnoringComments(true);
+         factory.setIgnoringElementContentWhitespace(true);
+         factory.setNamespaceAware(true);
+         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+         Document doc = documentBuilder.parse(new FileInputStream(xsdFilename));
+
+         // setup the XPath object
+         XPathFactory xp = XPathFactory.newInstance();
+         XPath newXPath = xp.newXPath();
+         newXPath.setNamespaceContext(controller.getNamespaceContext());
+
+         // Find the node which defines the current element type
+         NodeList matchingTypeNodes;
+         matchingTypeNodes = (NodeList) newXPath.evaluate("/xs:schema/node()[@name='" + localType + "']", doc, XPathConstants.NODESET);
+
+         // TODO check length of the matching node list (should be 1!!)
+         // create the GUI widget for the current element type
+         Label textFieldLabel = new Label(elementNode.getAttribute("name"));
+         HBox hBox = new HBox(10, textFieldLabel);
+         controller.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
+         return hBox;
+
+      } catch (Exception ex) {
+         Logger.getLogger(CustomTypesParser.class.getName()).log(Level.SEVERE, "{0}", ex);
+      }
+
+      return null;
+   }
+
 }

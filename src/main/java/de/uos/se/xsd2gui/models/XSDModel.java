@@ -1,8 +1,6 @@
 package de.uos.se.xsd2gui.models;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -17,14 +15,14 @@ public abstract class XSDModel {
    public static final String NAME = "name";
    private final Element _xsdNode;
    private final List<XSDModel> _subModels;
-   private final String _name;
+   private String _elementName;
    private String _value;
 
    public XSDModel(Element xsdNode, List<? extends XSDModel> subModels) {
       this._xsdNode = (Element) xsdNode.cloneNode(true);
-      this._name = this._xsdNode.getAttribute(NAME);
-      if (this._name == null)
-         throw new IllegalArgumentException("provided element node does not have an attribute name");
+      this._elementName = this._xsdNode.getAttribute(NAME);
+      if (this._elementName == null)
+         throw new IllegalArgumentException("provided element node does not have an attribute name ");
       if (subModels == null)
          throw new NullPointerException("provided submodels are null");
       this._subModels = new LinkedList<>(subModels);
@@ -40,7 +38,7 @@ public abstract class XSDModel {
       return Collections.unmodifiableList(this._subModels);
    }
 
-   public abstract Node parseToXML(Document owner);
+   public abstract void parseToXML(Element parent);
 
    public String getValue() {
       return this._value;
@@ -63,7 +61,7 @@ public abstract class XSDModel {
    }
 
    public String getName() {
-      return _name;
+      return _elementName;
    }
 
    public void addSubModel(XSDModel xsdm) {
@@ -76,5 +74,9 @@ public abstract class XSDModel {
 
    public Element getXSDNode() {
       return _xsdNode;
+   }
+
+   protected void setElementName(String elementName) {
+      this._elementName = elementName;
    }
 }

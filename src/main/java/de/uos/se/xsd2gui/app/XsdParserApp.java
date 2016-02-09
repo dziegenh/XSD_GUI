@@ -1,15 +1,18 @@
 package de.uos.se.xsd2gui.app;
 
 import de.uos.se.xsd2gui.generators.*;
+import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,7 +71,12 @@ public class XsdParserApp extends Application {
             Document doc = documentBuilder.parse(xsdFilename);
 
             // Generated widgets are added to the root node
-            widgetFactory.parseXsd(doc, root);
+            String rootName = xsdFilename.substring(xsdFilename.lastIndexOf(File.separator) + 1, xsdFilename.lastIndexOf(".xsd"));
+            XSDModel xsdModel = widgetFactory.parseXsd(doc, root);
+            Document newDoc = documentBuilder.newDocument();
+            Element element = newDoc.createElement(rootName);
+            newDoc.appendChild(element);
+            xsdModel.parseToXML(element);
 
         } catch (Exception ex) {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);

@@ -1,8 +1,6 @@
 package de.uos.se.xsd2gui.models;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * created: 09.02.2016
@@ -15,7 +13,9 @@ public class SequenceModel extends XSDModel {
    }
 
    @Override
-   public Node parseToXML(Document owner) {
-      return null;
+   public void parseToXML(Element root) {
+      for (XSDModel xsdModel : this.getSubModels()) {
+         xsdModel.parseToXML(root);
+      }
    }
 }

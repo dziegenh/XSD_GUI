@@ -36,6 +36,7 @@ public class BasicSequenceParser implements WidgetGenerator {
          return null;
       }
       XSDModel model = new SequenceModel(elementNode);
+      parentModel.addSubModel(model);
 
       try {
          NodeList matchingTypeNodes = XPathUtil.evaluateXPath(controller.getNamespaceContext(), xsdNode, "./xs:element[@minOccurs and @maxOccurs]");

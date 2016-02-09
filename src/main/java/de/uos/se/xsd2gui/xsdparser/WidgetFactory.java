@@ -12,8 +12,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.namespace.NamespaceContext;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -84,7 +82,7 @@ public class WidgetFactory {
                 rootWidget.getChildren().add(nodeWidget);
                 
                 if (guiNodeCreated) {
-                    Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
+                    // Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
                 }
 
                 guiNodeCreated = true;
@@ -93,7 +91,7 @@ public class WidgetFactory {
 
         if (!guiNodeCreated) {
 
-           Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
+            //Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
 
             if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                 Element nodeEl = (Element) xsdNode;

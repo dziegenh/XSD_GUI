@@ -1,9 +1,6 @@
 package de.uos.se.xsd2gui.models;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * created: 09.02.2016
@@ -16,9 +13,7 @@ public class AttributeModel extends XSDModel {
    }
 
    @Override
-   public Node parseToXML(Document owner) {
-      Attr attribute = owner.createAttribute(this.getName());
-      attribute.setValue(this.getValue());
-      return attribute;
+   public void parseToXML(Element parent) {
+      parent.setAttribute(this.getName(), this.getValue());
    }
 }

@@ -32,13 +32,13 @@ public class ContainerParser implements WidgetGenerator {
         if (!localName.equals("element")) {
             return null;
         }
-
+        XSDModel model = new ElementModel(elementNode);
+        parentModel.addSubModel(model);
         String name = elementNode.getAttribute("name");
         String type = elementNode.getAttribute("type");
         if (name.isEmpty() || !type.isEmpty()) {
             return null;
         }
-        XSDModel model = new ElementModel(elementNode);
         // Create the content pane for the child nodes
         Pane contentNodesPane = new VBox(10);
 

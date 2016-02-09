@@ -1,8 +1,6 @@
 package de.uos.se.xsd2gui.models;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import java.util.List;
 
@@ -22,11 +20,13 @@ public class ElementModel extends XSDModel {
 
    @Override
 
-   public Node parseToXML(Document owner) {
-      Element root = owner.createElement(this.getName());
+   public void parseToXML(Element parent) {
+      //System.out.println(this.getName());
+      Element root = parent.getOwnerDocument().createElement(this.getName());
+      //System.out.println(root);
       for (XSDModel xsdm : getSubModels()) {
-         root.appendChild(xsdm.parseToXML(owner));
+         xsdm.parseToXML(root);
       }
-      return root;
+      parent.appendChild(root);
    }
 }
