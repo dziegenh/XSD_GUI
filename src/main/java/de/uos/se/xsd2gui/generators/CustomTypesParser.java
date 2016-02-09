@@ -1,23 +1,23 @@
 package de.uos.se.xsd2gui.generators;
 
-import java.io.FileInputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
+import java.io.FileInputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Creates the GUI component for elements which have a common type (e.g.
@@ -73,7 +73,7 @@ public class CustomTypesParser implements WidgetGenerator {
             // setup the XPath object
             XPathFactory xp = XPathFactory.newInstance();
             XPath newXPath = xp.newXPath();
-            newXPath.setNamespaceContext(controller.getDefaultNamespaceContext());
+            newXPath.setNamespaceContext(controller.getNamespaceContext());
 
             // Find the node which defines the current element type
             NodeList matchingTypeNodes;

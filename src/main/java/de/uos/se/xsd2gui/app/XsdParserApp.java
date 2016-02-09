@@ -1,21 +1,18 @@
 package de.uos.se.xsd2gui.app;
 
 import de.uos.se.xsd2gui.generators.*;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
+import org.w3c.dom.Document;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Test application for the XSD-to-GUI parser/generator.
@@ -48,31 +45,8 @@ public class XsdParserApp extends Application {
         // JavaFX SceneGraph root element.
         VBox root = new VBox();
 
-        // The Parsers/Generators can use this common namespace context.
-        NamespaceContext namespaceContext = new NamespaceContext() {
-            public String getNamespaceURI(String prefix) {
-                if (prefix == null) {
-                    throw new NullPointerException("Null prefix");
-                } else if ("xs".equals(prefix)) {
-                    return "http://www.w3.org/2001/XMLSchema";
-                }
-                return XMLConstants.NULL_NS_URI;
-            }
-
-            // not used
-            public String getPrefix(String uri) {
-                return null;
-            }
-
-            // not used
-            public Iterator getPrefixes(String uri) {
-                return null;
-            }
-        };
-
         // Create the main widget generator controller with the shared namespace.
         WidgetFactory widgetFactory = new WidgetFactory();
-        widgetFactory.setDefaultNamespaceContext(namespaceContext);
 
         // Add the Generators
         // TODO create missing parsers (e.g. for sequence tags)

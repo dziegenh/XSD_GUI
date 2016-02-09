@@ -1,15 +1,17 @@
 package de.uos.se.xsd2gui.xsdparser;
 
+import de.uos.se.xsd2gui.util.DefaultNamespaceContext;
+import javafx.scene.Node;
+import javafx.scene.layout.Pane;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.NamespaceContext;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.Node;
-import javafx.scene.layout.Pane;
-import javax.xml.namespace.NamespaceContext;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  *
@@ -18,16 +20,31 @@ import org.w3c.dom.NodeList;
 public class WidgetFactory {
 
     /**
+     * A namespace context which the widget generators can access.
+     */
+    private final NamespaceContext namespaceContext;
+    /**
      * The widget generators which parse specific XSD elements.
      */
     private List<WidgetGenerator> generators = new LinkedList<>();
 
     /**
-     * A namespace context which the widget generators can access.
+     * The constructor, making this object use the provided {@linkplain NamespaceContext}
+     * @param namespaceContext the context to use
      */
-    private NamespaceContext defaultNamespaceContext = null;
+    public WidgetFactory(NamespaceContext namespaceContext) {
+        this.namespaceContext = namespaceContext;
+    }
 
     /**
+     * Same as calling <i>new WidgetFactory(new DefaultNamespaceContext())</i>
+     */
+    public WidgetFactory() {
+        this(new DefaultNamespaceContext());
+    }
+
+    /**
+
      * Adds a widget generator.
      *
      * @param generator
@@ -91,17 +108,8 @@ public class WidgetFactory {
      *
      * @return
      */
-    public NamespaceContext getDefaultNamespaceContext() {
-        return this.defaultNamespaceContext;
-    }
-
-    /**
-     * Sets the shared default namespace.
-     *
-     * @param defaultNamespaceContext
-     */
-    public void setDefaultNamespaceContext(NamespaceContext defaultNamespaceContext) {
-        this.defaultNamespaceContext = defaultNamespaceContext;
+    public NamespaceContext getNamespaceContext() {
+        return this.namespaceContext;
     }
 
 }

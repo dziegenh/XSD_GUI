@@ -1,15 +1,18 @@
 package de.uos.se.xsd2gui.generators;
 
 import de.uos.se.xsd2gui.util.XPathUtil;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -32,8 +35,19 @@ public class BasicSequenceParser implements WidgetGenerator {
       }
 
       try {
-         NodeList matchingTypeNodes = XPathUtil.evaluateXPath(controller.getDefaultNamespaceContext(), xsdNode);
-         Pane contentNodesPane = new VBox();
+         NodeList matchingTypeNodes = XPathUtil.evaluateXPath(controller.getNamespaceContext(), xsdNode, "./xs:element[@minOccurs and @maxOccurs]");
+         Pane contentNodesPane = new HBox(20);
+         final Pane nestedContent = new VBox();
+         final SequenceReparser reparser = new SequenceReparser(matchingTypeNodes);
+         Pane addContent = new VBox();
+         List<Button> addButtons = new LinkedList<>();
+         reparser.elementNames().forEach(name -> addButtons.add(new Button("+" + name)));
+         addButtons.forEach(button -> button.setOnAction(ev -> reparser.add(nestedContent, button.getText().substring(1), controller)));
+         addContent.getChildren().addAll(addButtons);
+
+
+         contentNodesPane.getChildren().add(nestedContent);
+         contentNodesPane.getChildren().add(addContent);
          for (int i = 0; i < matchingTypeNodes.getLength(); i++) {
             final Element item = (Element) matchingTypeNodes.item(i);
             final int minOccurs = Integer.parseInt(item.getAttribute("minOccurs"));
@@ -44,7 +58,12 @@ public class BasicSequenceParser implements WidgetGenerator {
                continue;
             }
             for (int j = 0; j < minOccurs; j++) {
-               controller.parseXsdNode(contentNodesPane, item);
+               Pane elementPane = new HBox(20);
+               Button delete = new Button("-");
+               delete.setOnAction(ev -> nestedContent.getChildren().remove(elementPane));
+               elementPane.getChildren().add(delete);
+               controller.parseXsdNode(elementPane, item);
+               nestedContent.getChildren().add(elementPane);
             }
          }
          return contentNodesPane;
@@ -52,6 +71,37 @@ public class BasicSequenceParser implements WidgetGenerator {
          e.printStackTrace();
       }
       return null;
+   }
+
+   public class SequenceReparser {
+      private final Map<String, Element> _elements;
+
+      private SequenceReparser(NodeList elements) {
+         this._elements = new HashMap<>();
+         for (int i = 0; i < elements.getLength(); i++) {
+            if (elements.item(i).getNodeType() != org.w3c.dom.Node.ELEMENT_NODE)
+               throw new IllegalArgumentException("a nom-element node was found: " + elements.item(i));
+            Element elem = (Element) elements.item(i);
+            String name = elem.getAttribute("name");
+            if (name == null)
+               throw new IllegalArgumentException("node does not have a name attribute: " + elem);
+            this._elements.put(name, elem);
+         }
+      }
+
+      public void add(Pane widget, String name, WidgetFactory factory) {
+         Pane elementPane = new HBox(20);
+         Button delete = new Button("-");
+         delete.setOnAction(ev -> widget.getChildren().remove(elementPane));
+         elementPane.getChildren().add(delete);
+         factory.parseXsdNode(elementPane, this._elements.get(name));
+         widget.getChildren().add(elementPane);
+      }
+
+      public Set<String> elementNames() {
+         return Collections.unmodifiableSet(this._elements.keySet());
+      }
+
    }
 
 }

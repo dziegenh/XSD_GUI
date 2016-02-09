@@ -1,20 +1,20 @@
 package de.uos.se.xsd2gui.generators;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import de.uos.se.xsd2gui.app.XsdParserApp;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import de.uos.se.xsd2gui.app.XsdParserApp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Creates GUI components for simpleType tags.
@@ -33,7 +33,7 @@ public class SimpleTypeParser implements WidgetGenerator {
 
         XPathFactory xp = XPathFactory.newInstance();
         XPath newXPath = xp.newXPath();
-        newXPath.setNamespaceContext(controller.getDefaultNamespaceContext());
+        newXPath.setNamespaceContext(controller.getNamespaceContext());
 
         NodeList enumValues;
         try {

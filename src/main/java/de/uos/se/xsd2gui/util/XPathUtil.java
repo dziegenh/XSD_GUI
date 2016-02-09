@@ -13,13 +13,17 @@ import javax.xml.xpath.XPathFactory;
  */
 public class XPathUtil {
 
-   public static NodeList evaluateXPath(NamespaceContext namespaceContext, org.w3c.dom.Node rootNode) throws XPathExpressionException {
+   public static NodeList evaluateXPath(NamespaceContext namespaceContext, org.w3c.dom.Node rootNode, String expression) throws XPathExpressionException {
       // setup the XPath object
       XPathFactory xp = XPathFactory.newInstance();
       XPath newXPath = xp.newXPath();
       newXPath.setNamespaceContext(namespaceContext);
 
       // Find the node which defines the current element type
-      return (NodeList) newXPath.evaluate("./xs:element[@minOccurs and @maxOccurs]", rootNode, XPathConstants.NODESET);
+      return (NodeList) newXPath.evaluate(expression, rootNode, XPathConstants.NODESET);
+   }
+
+   public static NodeList evaluateXPath(org.w3c.dom.Node rootNode, String expression) throws XPathExpressionException {
+      return evaluateXPath(new DefaultNamespaceContext(), rootNode, expression);
    }
 }
