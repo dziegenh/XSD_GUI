@@ -48,6 +48,7 @@ public class SimpleTypeParser implements WidgetGenerator {
                 Node item = enumValues.item(i);
                 comboBox.getItems().add(item.getNodeValue());
             }
+            comboBox.valueProperty().addListener((observable, oldValue, newValue) -> parentModel.setValue(newValue));
 
             return comboBox;
             

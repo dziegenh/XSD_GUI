@@ -46,14 +46,19 @@ public class BasicAttributeParser implements WidgetGenerator {
                 IntegerSpinnerValueFactory factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE,0);
                 Spinner spinner = new Spinner(factory);
                 spinner.setEditable(true);
+                model.setValue("0");
+                spinner.valueProperty().addListener((observable, oldValue, newValue) -> model.setValue(newValue.toString()));
                 inputWidget = spinner;
                 break;
 
             case "xs:string":
-                inputWidget = new TextField();
+                TextField textField = new TextField();
+                textField.textProperty().addListener((observable, oldValue, newValue) -> model.setValue(newValue));
+                ;
+                inputWidget = textField;
                 break;
         }
-        
+
         if (null != inputWidget) {
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             Label typeLabel = new Label(" (" + elementNode.getAttribute("type") + ")");
