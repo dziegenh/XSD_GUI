@@ -44,14 +44,7 @@ public class BasicAttributeParser implements WidgetGenerator {
       String use = elementNode.getAttribute("use");
       switch (elementNode.getAttribute("type")) {
          case "xs:int":
-            switch (use) {
-               case "required":
-                  model = new AttributeModel(elementNode, Patterns.XS_INT_PATTERN_REQUIRED, true);
-                  break;
-               default:
-                  model = new AttributeModel(elementNode, Patterns.XS_INT_PATTERN_NOT_REQUIRED, false);
-                  break;
-            }
+            model = getXsdModelForString(elementNode, use);
 
             IntegerSpinnerValueFactory factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
             Spinner spinner = new Spinner(factory);
@@ -62,14 +55,7 @@ public class BasicAttributeParser implements WidgetGenerator {
             break;
 
          case "xs:string":
-            switch (use) {
-               case "required":
-                  model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_REQUIRED, true);
-                  break;
-               default:
-                  model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_NOT_REQUIRED, false);
-                  break;
-            }
+            model = getXsdModelForInt(elementNode, use);
             TextField textField = new TextField();
             textField.textProperty().addListener((observable, oldValue, newValue) -> model.setValue(newValue));
             inputWidget = textField;
@@ -88,5 +74,31 @@ public class BasicAttributeParser implements WidgetGenerator {
 
       return null;
 
+   }
+
+   private XSDModel getXsdModelForInt(Element elementNode, String use) {
+      XSDModel model;
+      switch (use) {
+         case "required":
+            model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_REQUIRED, true);
+            break;
+         default:
+            model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_NOT_REQUIRED, false);
+            break;
+      }
+      return model;
+   }
+
+   private XSDModel getXsdModelForString(Element elementNode, String use) {
+      XSDModel model;
+      switch (use) {
+         case "required":
+            model = new AttributeModel(elementNode, Patterns.XS_INT_PATTERN_REQUIRED, true);
+            break;
+         default:
+            model = new AttributeModel(elementNode, Patterns.XS_INT_PATTERN_NOT_REQUIRED, false);
+            break;
+      }
+      return model;
    }
 }
