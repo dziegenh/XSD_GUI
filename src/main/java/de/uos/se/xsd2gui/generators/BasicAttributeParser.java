@@ -2,6 +2,7 @@ package de.uos.se.xsd2gui.generators;
 
 import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.util.Patterns;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.*;
@@ -36,13 +37,22 @@ public class BasicAttributeParser implements WidgetGenerator {
         if (null == type) {
             return null;
         }
-        XSDModel model = new AttributeModel(elementNode);
-        parentModel.addSubModel(model);
+        XSDModel model;
         // TODO create the desired GUI element (Textfield, integer input etc.)
         // TODO use the attribute constraints ("required", "default" etc.)
         Control inputWidget = null;
+        String use = elementNode.getAttribute("use");
         switch (elementNode.getAttribute("type")) {
             case "xs:int":
+                switch (use) {
+                    case "required":
+                        model = new AttributeModel(elementNode, Patterns.XS_INT_PATTERN_REQUIRED);
+                        break;
+                    default:
+                        model = new AttributeModel(elementNode, Patterns.XS_INT_PATTERN_NOT_REQUIRED);
+                        break;
+                }
+
                 IntegerSpinnerValueFactory factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE,0);
                 Spinner spinner = new Spinner(factory);
                 spinner.setEditable(true);
@@ -52,14 +62,25 @@ public class BasicAttributeParser implements WidgetGenerator {
                 break;
 
             case "xs:string":
+                switch (use) {
+                    case "required":
+                        model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_REQUIRED);
+                        break;
+                    default:
+                        model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_NOT_REQUIRED);
+                        break;
+                }
                 TextField textField = new TextField();
                 textField.textProperty().addListener((observable, oldValue, newValue) -> model.setValue(newValue));
-                ;
                 inputWidget = textField;
+                break;
+            default:
+                model = null;
                 break;
         }
 
         if (null != inputWidget) {
+            parentModel.addSubModel(model);
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             Label typeLabel = new Label(" (" + elementNode.getAttribute("type") + ")");
             return new HBox(10, textFieldLabel, inputWidget, typeLabel);

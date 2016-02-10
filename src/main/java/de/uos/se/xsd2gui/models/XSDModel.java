@@ -41,24 +41,19 @@ public abstract class XSDModel {
 
    public abstract void parseToXML(Document doc, Element parent);
 
+   protected abstract boolean validate(String value);
+
+   protected abstract String getValueErrorMessage(String value);
+
    public String getValue() {
       return this._value;
    }
 
-   //   public Node parseToXML()
-//   {
-//      DocumentBuilderFactory factory =
-//            DocumentBuilderFactory.newInstance();
-//      try {
-//         DocumentBuilder builder = factory.newDocumentBuilder();
-//         return this.parseToXML(builder.newDocument());
-//      } catch (ParserConfigurationException e) {
-//         e.printStackTrace();
-//      }
-//      return null;
-//   }
-   public void setValue(String value) {
+   public void setValue(String value) throws IllegalArgumentException {
+      if (validate(value))
       this._value = value;
+      else
+         throw new IllegalArgumentException(getValueErrorMessage(value));
    }
 
    public String getName() {
@@ -77,7 +72,4 @@ public abstract class XSDModel {
       return _xsdNode;
    }
 
-   protected void setElementName(String elementName) {
-      this._elementName = elementName;
-   }
 }

@@ -39,7 +39,7 @@ public class XsdParserApp extends Application {
       // add XSD Filename to arguments
       // TODO check if argument already exists :)
       String[] args2 = Arrays.copyOf(args, args.length + 1);
-      args2[args.length] = "--xsdFile=" + XSD_BASE_DIR + "config\\components\\Debug.xsd";
+      args2[args.length] = "--xsdFile=" + XSD_BASE_DIR + "config\\components\\PWM.xsd";
 
       launch(args2);
    }

@@ -28,4 +28,14 @@ public class ElementModel extends XSDModel {
          xsdm.parseToXML(doc, root);
       }
    }
+
+   @Override
+   protected boolean validate(String value) {
+      return false;
+   }
+
+   @Override
+   protected String getValueErrorMessage(String value) {
+      return null;
+   }
 }
