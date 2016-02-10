@@ -11,9 +11,6 @@ import java.util.List;
  * @author Falk Wilke
  */
 public class ElementModel extends XSDModel {
-   public ElementModel(Element xsdNode, List<? extends XSDModel> subModels) {
-      super(xsdNode, subModels);
-   }
 
    public ElementModel(Element xsdNode) {
       super(xsdNode);

@@ -16,6 +16,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -76,7 +77,7 @@ public class XsdParserApp extends Application {
          Document doc = documentBuilder.parse(xsdFilename);
 
          // Generated widgets are added to the root node
-         XSDModel xsdModel = widgetFactory.parseXsd(doc, root);
+         XSDModel xsdModel = widgetFactory.parseXsd(doc, root,xsdFilename.replaceAll("\\"+File.separator,"/"));
          Document newDoc = documentBuilder.newDocument();
          Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             xsdModel.parseToXML(newDoc, null);

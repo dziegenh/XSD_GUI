@@ -12,27 +12,33 @@ import java.util.regex.Pattern;
  */
 public class AttributeModel extends XSDModel {
    private final Pattern _validationPattern;
-   private final String error_string;
+   private final String _error_string;
+   private final boolean _required;
 
-   public AttributeModel(Element xsdNode, Pattern validationPattern) {
+   public AttributeModel(Element xsdNode, Pattern validationPattern, boolean required) {
       super(xsdNode);
       this._validationPattern = validationPattern;
-      error_string = "value does not match: " + _validationPattern.pattern();
+      this._error_string = "value does not match: " + _validationPattern.pattern();
+      this._required = required;
+
    }
 
    @Override
    public void parseToXML(Document doc, Element parent) {
-      parent.setAttribute(this.getName(), this.getValue());
+      if (!this.getValue().isEmpty() && !this._required)
+         parent.setAttribute(this.getName(), this.getValue());
 
    }
 
    @Override
    protected boolean validate(String value) {
+      if(value.isEmpty() && ! this._required)
+         return true;
       return _validationPattern.matcher(value).matches();
    }
 
    @Override
    protected String getValueErrorMessage(String value) {
-      return error_string;
+      return _error_string;
    }
 }

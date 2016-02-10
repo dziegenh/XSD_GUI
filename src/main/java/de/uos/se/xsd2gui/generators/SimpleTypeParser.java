@@ -42,14 +42,16 @@ public class SimpleTypeParser implements WidgetGenerator {
             if (enumValues.getLength() < 1) {
                 return null;
             }
-
-            ComboBox<String> comboBox = new ComboBox<String>();
+            ComboBox<String> comboBox = new ComboBox<>();
+            if(!((Element)xsdNode).getAttribute("use").equals("required")) {
+                    comboBox.getItems().add("");
+            }
             for (int i = 0; i < enumValues.getLength(); i++) {
                 Node item = enumValues.item(i);
                 comboBox.getItems().add(item.getNodeValue());
             }
             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> parentModel.setValue(newValue));
-
+            comboBox.getSelectionModel().selectFirst();
             return comboBox;
             
         } catch (XPathExpressionException ex) {

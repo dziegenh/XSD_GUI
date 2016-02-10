@@ -66,7 +66,7 @@ public class CustomTypesParser implements WidgetGenerator {
       if (localName.equals("element"))
          model = new ElementModel(elementNode);
       else
-         model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_NOT_REQUIRED);
+         model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_NOT_REQUIRED,false);
       parentModel.addSubModel(model);
       final String localType = type.substring(typeNamespacePrefix.length());
 

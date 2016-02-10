@@ -9,13 +9,18 @@ import org.w3c.dom.Element;
  * @author Falk Wilke
  */
 public class RootModel extends XSDModel {
-   public RootModel(Element xsdNode) {
+   private final String _schemaLocation;
+
+   public RootModel(Element xsdNode, String schemaLocation) {
       super(xsdNode);
+      this._schemaLocation = schemaLocation;
    }
 
    @Override
    public void parseToXML(Document doc, Element parent) {
       Element root = doc.createElement(this.getName());
+      root.setAttribute("xsi:noNamespaceSchemaLocation",this._schemaLocation);
+      root.setAttribute("xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance");
       doc.appendChild(root);
       for (XSDModel xsdm : getSubModels()) {
          xsdm.parseToXML(doc, root);
