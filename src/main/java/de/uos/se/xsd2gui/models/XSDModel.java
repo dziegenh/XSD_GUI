@@ -1,5 +1,7 @@
 package de.uos.se.xsd2gui.models;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -18,7 +20,7 @@ public abstract class XSDModel {
    private final List<XSDModel> _subModels;
    private final boolean _required;
    private String _elementName;
-   private String _value;
+   private StringProperty _value;
 
    public XSDModel(Element xsdNode, List<? extends XSDModel> subModels) {
       this._xsdNode = (Element) xsdNode.cloneNode(true);
@@ -28,7 +30,7 @@ public abstract class XSDModel {
       if (subModels == null)
          throw new NullPointerException("provided submodels are null");
       this._subModels = new LinkedList<>(subModels);
-      this._value = "";
+      this._value = new SimpleStringProperty("");
       this._required = this._xsdNode.getAttribute("use").equals("required");
    }
 
@@ -47,20 +49,8 @@ public abstract class XSDModel {
 
    public abstract void parseToXML(Document doc, Element parent);
 
-   protected abstract boolean validate(String value);
-
-   protected abstract String getValueErrorMessage(String value);
-
-   public String getValue() {
-      return this._value;
-   }
-
-   public boolean setValue(String value) throws IllegalArgumentException {
-      if (validate(value)) {
-         this._value = value;
-         return true;
-      } else
-         return false;
+   public StringProperty valueProperty() {
+      return _value;
    }
 
    public String getName() {

@@ -3,8 +3,6 @@ package de.uos.se.xsd2gui.models;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.List;
-
 /**
  * created: 09.02.2016
  *
@@ -26,13 +24,4 @@ public class ElementModel extends XSDModel {
       }
    }
 
-   @Override
-   protected boolean validate(String value) {
-      return false;
-   }
-
-   @Override
-   protected String getValueErrorMessage(String value) {
-      return null;
-   }
 }

@@ -3,7 +3,6 @@ package de.uos.se.xsd2gui.generators;
 import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
-import de.uos.se.xsd2gui.util.Patterns;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.Label;
@@ -66,7 +65,7 @@ public class CustomTypesParser implements WidgetGenerator {
       if (localName.equals("element"))
          model = new ElementModel(elementNode);
       else
-         model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_NOT_REQUIRED,false);
+         model = new AttributeModel(elementNode);
       parentModel.addSubModel(model);
       final String localType = type.substring(typeNamespacePrefix.length());
 

@@ -44,26 +44,23 @@ public class BasicAttributeParser implements WidgetGenerator {
       String use = elementNode.getAttribute("use");
       switch (elementNode.getAttribute("type")) {
          case "xs:int":
-            model = getXsdModelForString(elementNode, use);
+            model = new AttributeModel(elementNode);
 
             IntegerSpinnerValueFactory factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
             Spinner<Integer> spinner = new Spinner<>(factory);
             spinner.setEditable(false);
-            model.setValue("0");
-            spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-               if (!model.setValue(newValue.toString()))
-                  spinner.getValueFactory().setValue(oldValue);
-            });
+            model.valueProperty().setValue("0");
+            spinner.editorProperty().getValue().textProperty().bindBidirectional(model.valueProperty());
             inputWidget = spinner;
             break;
 
          case "xs:string":
-            model = getXsdModelForInt(elementNode, use);
+            model = new AttributeModel(elementNode);
             TextField textField = new TextField();
-            textField.textProperty().addListener((observable, oldValue, newValue) -> {
-               if (!model.setValue(newValue))
-                  textField.textProperty().setValue(oldValue);
-            });
+            TextFormatter<String> formatter = getFormatter(use, Patterns.XS_STRING_PATTERN, Patterns.XS_STRING_PATTERN);
+            textField.textProperty().bindBidirectional(model.valueProperty());
+            textField.setTextFormatter(formatter);
+            model.valueProperty().setValue("");
             inputWidget = textField;
             break;
          default:
@@ -82,29 +79,13 @@ public class BasicAttributeParser implements WidgetGenerator {
 
    }
 
-   private XSDModel getXsdModelForInt(Element elementNode, String use) {
-      XSDModel model;
+   private TextFormatter<String> getFormatter(String use, String requiredPattern, String notRequiredPattern) {
       switch (use) {
          case "required":
-            model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_REQUIRED, true);
-            break;
+            return new TextFormatter<>(change -> change.getControlNewText().matches(requiredPattern) ? change : null);
          default:
-            model = new AttributeModel(elementNode, Patterns.XS_STRING_PATTERN_NOT_REQUIRED, false);
-            break;
+            return new TextFormatter<>(change -> change.getControlNewText().matches(notRequiredPattern) ? change : null);
       }
-      return model;
    }
 
-   private XSDModel getXsdModelForString(Element elementNode, String use) {
-      XSDModel model;
-      switch (use) {
-         case "required":
-            model = new AttributeModel(elementNode, Patterns.XS_INT_PATTERN_REQUIRED, true);
-            break;
-         default:
-            model = new AttributeModel(elementNode, Patterns.XS_INT_PATTERN_NOT_REQUIRED, false);
-            break;
-      }
-      return model;
-   }
 }

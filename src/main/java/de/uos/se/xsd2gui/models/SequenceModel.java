@@ -20,13 +20,5 @@ public class SequenceModel extends XSDModel {
       }
    }
 
-   @Override
-   protected boolean validate(String value) {
-      return false;
-   }
 
-   @Override
-   protected String getValueErrorMessage(String value) {
-      return "";
-   }
 }
