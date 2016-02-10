@@ -55,11 +55,12 @@ public abstract class XSDModel {
       return this._value;
    }
 
-   public void setValue(String value) throws IllegalArgumentException {
-      if (validate(value))
+   public boolean setValue(String value) throws IllegalArgumentException {
+      if (validate(value)) {
          this._value = value;
-      else
-         throw new IllegalArgumentException(getValueErrorMessage(value));
+         return true;
+      } else
+         return false;
    }
 
    public String getName() {

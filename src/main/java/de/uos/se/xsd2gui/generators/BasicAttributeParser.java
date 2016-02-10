@@ -47,17 +47,23 @@ public class BasicAttributeParser implements WidgetGenerator {
             model = getXsdModelForString(elementNode, use);
 
             IntegerSpinnerValueFactory factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
-            Spinner spinner = new Spinner(factory);
-            spinner.setEditable(true);
+            Spinner<Integer> spinner = new Spinner<>(factory);
+            spinner.setEditable(false);
             model.setValue("0");
-            spinner.valueProperty().addListener((observable, oldValue, newValue) -> model.setValue(newValue.toString()));
+            spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+               if (!model.setValue(newValue.toString()))
+                  spinner.getValueFactory().setValue(oldValue);
+            });
             inputWidget = spinner;
             break;
 
          case "xs:string":
             model = getXsdModelForInt(elementNode, use);
             TextField textField = new TextField();
-            textField.textProperty().addListener((observable, oldValue, newValue) -> model.setValue(newValue));
+            textField.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (!model.setValue(newValue))
+                  textField.textProperty().setValue(oldValue);
+            });
             inputWidget = textField;
             break;
          default:
