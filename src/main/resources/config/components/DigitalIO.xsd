@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		   xmlns:st="StructuredTypes" elementFormDefault="qualified"
-		   targetNamespace="Components">
+		   xmlns:st="StructuredTypes" elementFormDefault="qualified">
 	<xs:import schemaLocation="../predefined/CommonTypes.xsd"/>
 	<xs:import schemaLocation="../predefined/StructuredTypes.xsd"/>
 	<xs:element name="DigitalIO">
