@@ -4,13 +4,17 @@ import de.uos.se.xsd2gui.generators.*;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -31,6 +35,22 @@ import java.util.logging.Logger;
 public class XsdParserApp extends Application {
 
    private static final String XSD_BASE_DIR = "src\\main\\resources\\";
+   private final DocumentBuilder _documentBuilder;
+   private XSDModel _currentModel;
+
+   public XsdParserApp() {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setIgnoringComments(true);
+      factory.setIgnoringElementContentWhitespace(true);
+      factory.setNamespaceAware(true);
+
+      try {
+         _documentBuilder = factory.newDocumentBuilder();
+      } catch (ParserConfigurationException e) {
+         throw new RuntimeException(e);
+      }
+
+   }
 
    /**
     * @param args the command line arguments
@@ -40,7 +60,7 @@ public class XsdParserApp extends Application {
       // add XSD Filename to arguments
       // TODO check if argument already exists :)
       String[] args2 = Arrays.copyOf(args, args.length + 1);
-      args2[args.length] = "--xsdFile=" + XSD_BASE_DIR + "config\\components\\PWM.xsd";
+      args2[args.length] = "--xsdFiles=" + XSD_BASE_DIR + "config\\components";
 
       launch(args2);
    }
@@ -49,7 +69,7 @@ public class XsdParserApp extends Application {
    public void start(Stage primaryStage) {
 
       // get the XSD filename argument
-      String xsdFilename = this.getParameters().getNamed().get("xsdFile");
+      String xsdFilesname = this.getParameters().getNamed().get("xsdFiles");
 
       // JavaFX SceneGraph root element.
       VBox root = new VBox();
@@ -63,25 +83,36 @@ public class XsdParserApp extends Application {
       widgetFactory.addWidgetGenerator(new SimpleTypeParser());
       widgetFactory.addWidgetGenerator(new ContainerParser());
       widgetFactory.addWidgetGenerator(new BasicSequenceParser());
-      widgetFactory.addWidgetGenerator(new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\Components\\CommonTypes.xsd"));
-      widgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR + "config\\Components\\StructuredTypes.xsd"));
+      widgetFactory.addWidgetGenerator(new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\predefined\\CommonTypes.xsd"));
+      widgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR + "config\\predefined\\StructuredTypes.xsd"));
+
+
+      ComboBox<File> fc = new ComboBox<>();
+      root.getChildren().add(fc);
+      File dir = new File(xsdFilesname);
+      fc.getItems().addAll(dir.listFiles(f -> f.isFile() && f.toString().endsWith(".xsd")));
+      fc.valueProperty().addListener((observable, oldValue, newValue) -> {
+         try {
+            ObservableList<Node> rootChildren = root.getChildren();
+            if (rootChildren.size() > 1)
+               rootChildren.remove(1);
+            VBox currentContent = new VBox();
+            rootChildren.add(currentContent);
+            Document doc = _documentBuilder.parse(newValue.getPath());
+            // Generated widgets are added to the root node
+            _currentModel = widgetFactory.parseXsd(doc, currentContent, newValue.getPath().replaceAll("\\" + File.separator, "/"));
+         } catch (Exception ex) {
+            Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      });
+
 
       // Read the XSD and start parsing
       try {
-         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-         factory.setIgnoringComments(true);
-         factory.setIgnoringElementContentWhitespace(true);
-         factory.setNamespaceAware(true);
-
-         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-         Document doc = documentBuilder.parse(xsdFilename);
-
-         // Generated widgets are added to the root node
-         XSDModel xsdModel = widgetFactory.parseXsd(doc, root,xsdFilename.replaceAll("\\"+File.separator,"/"));
-         Document newDoc = documentBuilder.newDocument();
+         Document newDoc = _documentBuilder.newDocument();
          Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            xsdModel.parseToXML(newDoc, null);
-            try (FileOutputStream out = new FileOutputStream("text.xml")) {
+            _currentModel.parseToXML(newDoc, null);
+            try (FileOutputStream out = new FileOutputStream("out.xml")) {
                TransformerFactory tFactory =
                      TransformerFactory.newInstance();
                Transformer transformer =

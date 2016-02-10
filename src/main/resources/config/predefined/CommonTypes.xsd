@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified" targetNamespace="CommonTypes">
+
+    <xs:simpleType name="EndianType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="BigEndian"/>
+            <xs:enumeration value="LittleEndian"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RefinedType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="uint8"/>
+            <xs:enumeration value="uint16"/>
+            <xs:enumeration value="uint32"/>
+            <xs:enumeration value="uint64"/>
+            <xs:enumeration value="int8"/>
+            <xs:enumeration value="int16"/>
+            <xs:enumeration value="int32"/>
+            <xs:enumeration value="int64"/>
+            <xs:enumeration value="char"/>
+            <xs:enumeration value="float32"/>
+            <xs:enumeration value="float64"/>
+            <xs:enumeration value="bitvector8"/>
+            <xs:enumeration value="bitvector16"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

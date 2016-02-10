@@ -2,8 +2,8 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 		   xmlns:st="StructuredTypes" elementFormDefault="qualified"
 		   targetNamespace="Components">
-	<xs:import schemaLocation="CommonTypes.xsd" namespace="CommonTypes" />
-	<xs:import schemaLocation="StructuredTypes.xsd" namespace="StructuredTypes" />
+	<xs:import schemaLocation="../predefined/CommonTypes.xsd"/>
+	<xs:import schemaLocation="../predefined/StructuredTypes.xsd"/>
 	<xs:element name="Debug">
 		<xs:complexType>
 			<xs:all>
