@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
@@ -131,7 +132,7 @@ public class XsdParserApp extends Application {
          Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
       }
 
-      Scene scene = new Scene(root, 1200, 750);
+      Scene scene = new Scene(new ScrollPane(root), 1200, 750);
       scene.getStylesheets().add("style.css");
 
       primaryStage.setTitle("XSD-to-GUI Prototype");
