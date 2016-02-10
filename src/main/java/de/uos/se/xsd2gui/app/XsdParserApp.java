@@ -132,6 +132,7 @@ public class XsdParserApp extends Application {
       }
 
       Scene scene = new Scene(root, 1200, 750);
+      scene.getStylesheets().add("style.css");
 
       primaryStage.setTitle("XSD-to-GUI Prototype");
       primaryStage.setScene(scene);

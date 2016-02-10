@@ -57,10 +57,10 @@ public class BasicAttributeParser implements WidgetGenerator {
          case "xs:string":
             model = new AttributeModel(elementNode);
             TextField textField = new TextField();
-            TextFormatter<String> formatter = getFormatter(use, Patterns.XS_STRING_PATTERN, Patterns.XS_STRING_PATTERN);
+            TextFormatter<String> formatter = getFormatter(use, Patterns.XS_STRING_PATTERN_REQUIRED, Patterns.XS_STRING_PATTERN);
             textField.textProperty().bindBidirectional(model.valueProperty());
-            textField.setTextFormatter(formatter);
             model.valueProperty().setValue("");
+            textField.setTextFormatter(formatter);
             inputWidget = textField;
             break;
          default:

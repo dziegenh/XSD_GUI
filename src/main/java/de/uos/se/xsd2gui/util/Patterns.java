@@ -6,6 +6,6 @@ package de.uos.se.xsd2gui.util;
  * @author Falk Wilke
  */
 public interface Patterns {
-   String XS_INT_PATTERN = "\\d*";
    String XS_STRING_PATTERN = ".*";
+   String XS_STRING_PATTERN_REQUIRED = ".+";
 }
