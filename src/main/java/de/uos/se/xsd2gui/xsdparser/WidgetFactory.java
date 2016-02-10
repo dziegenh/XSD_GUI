@@ -62,7 +62,7 @@ public class WidgetFactory {
      * @param doc
      * @param rootWidget
      */
-    public XSDModel parseXsd(Document doc, Pane rootWidget,String nameSpaceSchemaLocation) {
+    public RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation) {
         Element documentRoot = doc.getDocumentElement();
         org.w3c.dom.Node intermediateNode = XPathUtil.evaluateXPath(documentRoot, "current()/xs:element/node()[not(self::text())]").item(0);
         RootModel rootModel = new RootModel((Element) intermediateNode.getParentNode(),nameSpaceSchemaLocation);
