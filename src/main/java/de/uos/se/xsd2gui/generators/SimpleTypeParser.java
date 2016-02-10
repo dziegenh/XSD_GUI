@@ -43,9 +43,8 @@ public class SimpleTypeParser implements WidgetGenerator {
                 return null;
             }
             ComboBox<String> comboBox = new ComboBox<>();
-            if(!((Element)xsdNode).getAttribute("use").equals("required")) {
-                    comboBox.getItems().add("");
-            }
+            if (!parentModel.isRequired())
+                comboBox.getItems().add("");
             for (int i = 0; i < enumValues.getLength(); i++) {
                 Node item = enumValues.item(i);
                 comboBox.getItems().add(item.getNodeValue());

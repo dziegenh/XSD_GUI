@@ -16,6 +16,7 @@ public abstract class XSDModel {
    public static final String NAME = "name";
    private final Element _xsdNode;
    private final List<XSDModel> _subModels;
+   private final boolean _required;
    private String _elementName;
    private String _value;
 
@@ -28,11 +29,16 @@ public abstract class XSDModel {
          throw new NullPointerException("provided submodels are null");
       this._subModels = new LinkedList<>(subModels);
       this._value = "";
+      this._required = this._xsdNode.getAttribute("use").equals("required");
    }
 
    public XSDModel(Element xsdNode) {
       this(xsdNode, Collections.emptyList());
 
+   }
+
+   public boolean isRequired() {
+      return _required;
    }
 
    public List<XSDModel> getSubModels() {
@@ -51,7 +57,7 @@ public abstract class XSDModel {
 
    public void setValue(String value) throws IllegalArgumentException {
       if (validate(value))
-      this._value = value;
+         this._value = value;
       else
          throw new IllegalArgumentException(getValueErrorMessage(value));
    }
