@@ -5,6 +5,7 @@ import javafx.beans.property.StringProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +22,7 @@ public abstract class XSDModel {
    private final boolean _required;
    private String _elementName;
    private StringProperty _value;
+   private List<XSDModel> _lastAdded;
 
    public XSDModel(Element xsdNode, List<? extends XSDModel> subModels) {
       this._xsdNode = (Element) xsdNode.cloneNode(true);
@@ -32,6 +34,7 @@ public abstract class XSDModel {
       this._subModels = new LinkedList<>(subModels);
       this._value = new SimpleStringProperty("");
       this._required = this._xsdNode.getAttribute("use").equals("required");
+      this._lastAdded = new LinkedList<>();
    }
 
    public XSDModel(Element xsdNode) {
@@ -43,7 +46,7 @@ public abstract class XSDModel {
       return _required;
    }
 
-   public List<XSDModel> getSubModels() {
+   public synchronized List<XSDModel> getSubModels() {
       return Collections.unmodifiableList(this._subModels);
    }
 
@@ -57,16 +60,43 @@ public abstract class XSDModel {
       return _elementName;
    }
 
-   public void addSubModel(XSDModel xsdm) {
-      this._subModels.add(xsdm);
+   @Override
+   public synchronized String toString() {
+      return "XSDModel{" +
+            "_xsdNode=" + _xsdNode +
+            ", _subModels=" + _subModels +
+            ", _required=" + _required +
+            ", _elementName='" + _elementName + '\'' +
+            ", _value=" + _value +
+            ", _lastAdded=" + _lastAdded +
+            '}';
    }
 
-   public void removeSubModel(XSDModel xsdm) {
+   public synchronized void addSubModel(XSDModel xsdm) {
+      this._subModels.add(xsdm);
+      this._lastAdded.add(xsdm);
+   }
+
+   public synchronized void removeSubModel(XSDModel xsdm) {
       this._subModels.remove(xsdm);
+   }
+
+   public synchronized void removeSubModels(Collection<XSDModel> xsdm) {
+      this._subModels.removeAll(xsdm);
+   }
+
+   public synchronized List<XSDModel> getLastAddedModels() {
+      List<XSDModel> tmp = new LinkedList<>(this._lastAdded);
+      this._lastAdded.clear();
+      return tmp;
    }
 
    public Element getXSDNode() {
       return _xsdNode;
+   }
+
+   public int size() {
+      return this._subModels.size();
    }
 
 }

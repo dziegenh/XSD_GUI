@@ -10,10 +10,7 @@ import javafx.scene.layout.Pane;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -55,10 +52,12 @@ public class SequenceReparser {
       int currentOcc = this._currentOccurences.get(name);
       if (currentOcc < maxOccurs) {
          Pane elementPane = new HBox(20);
-         Button delete = new Button("-");
-         delete.setOnAction(ev -> deletePane(widget, elementPane, name));
-         elementPane.getChildren().add(delete);
          factory.parseXsdNode(elementPane, elem, this._model);
+         List<XSDModel> models = this._model.getLastAddedModels();
+         System.out.println(models);
+         Button delete = new Button("-");
+         delete.setOnAction(ev -> delete(widget, elementPane, name, models));
+         elementPane.getChildren().add(delete);
          widget.getChildren().add(elementPane);
          this._currentOccurences.put(name, this._currentOccurences.get(name) + 1);
       }
@@ -81,7 +80,7 @@ public class SequenceReparser {
       return minOccursString.matches("\\d+") ? Integer.parseInt(minOccursString) : defaultValue;
    }
 
-   public synchronized void deletePane(Pane widget, Node element, String name) {
+   public synchronized void delete(Pane widget, Node element, String name, List<XSDModel> models) {
       if (!_currentOccurences.containsKey(name))
          return;
       int currentOcc = this._currentOccurences.get(name);
@@ -90,6 +89,7 @@ public class SequenceReparser {
       if (currentOcc > minOccurs) {
          widget.getChildren().remove(element);
          this._currentOccurences.put(name, this._currentOccurences.get(name) - 1);
+         this._model.removeSubModels(models);
       }
    }
 
