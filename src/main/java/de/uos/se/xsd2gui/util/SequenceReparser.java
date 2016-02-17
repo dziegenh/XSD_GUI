@@ -45,31 +45,15 @@ public class SequenceReparser {
       this._model = model;
    }
 
-   public synchronized void add(Pane widget, String name, WidgetFactory factory) {
-      if (!_elements.containsKey(name))
-         return;
-      Element elem = this._elements.get(name);
-      int maxOccurs = getOccurs(elem, MAX_OCCURS, Integer.MAX_VALUE);
-      int currentOcc = this._currentOccurences.get(name);
-      if (currentOcc < maxOccurs) {
-         Pane elementPane = new HBox(20);
-         factory.parseXsdNode(elementPane, elem, this._model);
-         List<XSDModel> models = this._model.getLastAddedModels();
-         System.out.println(models);
-         Button delete = new Button("-");
-         delete.setOnAction(ev -> delete(widget, elementPane, name, models));
-         elementPane.getChildren().add(delete);
-         widget.getChildren().add(elementPane);
-         this._currentOccurences.put(name, this._currentOccurences.get(name) + 1);
-      }
-   }
-
-   public synchronized void reparseToMinimumOcc(Pane widget, WidgetFactory factory) {
-      for (Element elem : this._elements.values()) {
+   public synchronized void reparseToMinimumOcc(Pane widget, WidgetFactory factory)
+   {
+      for (Element elem : this._elements.values())
+      {
          String name = elem.getAttribute(NAME);
          int minOccurs = getOccurs(elem, MIN_OCCURS, 0);
          int currentOccs = this._currentOccurences.get(name);
-         for (int i = 0; i < minOccurs - currentOccs; i++) {
+         for (int i = 0; i < minOccurs - currentOccs; i++)
+         {
             this.add(widget, name, factory);
          }
 
@@ -79,6 +63,27 @@ public class SequenceReparser {
    private synchronized int getOccurs(Element elem, String attName, int defaultValue) {
       String minOccursString = elem.getAttribute(attName);
       return minOccursString.matches("\\d+") ? Integer.parseInt(minOccursString) : defaultValue;
+   }
+
+   public synchronized void add(Pane widget, String name, WidgetFactory factory)
+   {
+      if (! _elements.containsKey(name))
+         return;
+      Element elem = this._elements.get(name);
+      int maxOccurs = getOccurs(elem, MAX_OCCURS, Integer.MAX_VALUE);
+      int currentOcc = this._currentOccurences.get(name);
+      if (currentOcc < maxOccurs)
+      {
+         Pane elementPane = new HBox(20);
+         factory.parseXsdNode(elementPane, elem, this._model);
+         List<XSDModel> models = this._model.pollLastAddedModels();
+         System.out.println(models);
+         Button delete = new Button("-");
+         delete.setOnAction(ev -> delete(widget, elementPane, name, models));
+         elementPane.getChildren().add(delete);
+         widget.getChildren().add(elementPane);
+         this._currentOccurences.put(name, this._currentOccurences.get(name) + 1);
+      }
    }
 
    public synchronized void delete(Pane widget, Node element, String name, List<XSDModel> models) {

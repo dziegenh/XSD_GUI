@@ -20,38 +20,49 @@ import java.util.logging.Logger;
 
 /**
  * Created by sem on 04.02.2016.
+ * Creates GUI components for attribute tags with basic XSMLSchema types (e.g.
+ * "<sequence></sequence>".
  */
 public class BasicSequenceParser implements WidgetGenerator {
 
+    //the name of the element
    public static final String ELEMENT_NAME = "sequence";
+    //the corresponding logger
    public static final Logger LOGGER = Logger.getLogger(BasicSequenceParser.class.getName());
 
    @Override
    public Node createWidget(WidgetFactory factory, Pane parentWidget, org.w3c.dom.Node xsdNode, XSDModel parentModel) {
+       //abortif wrong type
       if (!(xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)) {
          return null;
       }
 
       final Element elementNode = (Element) xsdNode;
+       //abort if wrong name
       if (!elementNode.getLocalName().equals(ELEMENT_NAME)) {
          return null;
       }
+       //create new sequence model and add to parentmodel
       XSDModel model = new SequenceModel(elementNode);
       parentModel.addSubModel(model);
 
+       //only see elements with min and maxoccurs
       NodeList matchingTypeNodes = XPathUtil.evaluateXPath(factory.getNamespaceContext(), xsdNode, "./xs:element[@minOccurs and @maxOccurs]");
       Pane contentNodesPane = new HBox(20);
       Pane nestedContent = new VBox();
+       //prepare reparsing
       SequenceReparser reparser = new SequenceReparser(matchingTypeNodes, model);
       Pane addContent = new VBox();
       List<Button> addButtons = new LinkedList<>();
+       //add buttons for adding new elements
       reparser.elementNames().forEach(name -> addButtons.add(new Button("+" + name)));
       addButtons.forEach(button -> button.setOnAction(ev -> reparser.add(nestedContent, button.getText().substring(1), factory)));
       addContent.getChildren().addAll(addButtons);
 
-
+       //add to parent widget
       contentNodesPane.getChildren().add(nestedContent);
       contentNodesPane.getChildren().add(addContent);
+       //use reparser to parse to minimum occurrences
       reparser.reparseToMinimumOcc(nestedContent, factory);
       return contentNodesPane;
    }

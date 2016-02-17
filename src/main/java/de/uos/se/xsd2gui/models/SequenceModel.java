@@ -19,6 +19,4 @@ public class SequenceModel extends XSDModel {
          xsdModel.parseToXML(doc, parent);
       }
    }
-
-
 }
