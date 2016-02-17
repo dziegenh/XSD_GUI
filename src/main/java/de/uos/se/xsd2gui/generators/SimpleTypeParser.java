@@ -6,7 +6,6 @@ import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -27,11 +26,10 @@ public class SimpleTypeParser implements WidgetGenerator {
     @Override
     public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel) {
 
-        // TODO das kann ggf. auch als XPath ausgedrueckt werden...
-        if (xsdNode.getNodeType() != Node.ELEMENT_NODE || !((Element) xsdNode).getLocalName().equals("simpleType")) {
+        if (xsdNode.getNodeType() != Node.ELEMENT_NODE || ! xsdNode.getLocalName().equals("simpleType"))
+        {
             return null;
         }
-
         XPathFactory xp = XPathFactory.newInstance();
         XPath newXPath = xp.newXPath();
         newXPath.setNamespaceContext(controller.getNamespaceContext());

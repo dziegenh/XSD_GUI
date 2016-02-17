@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 /**
  * created: 04.02.2016
- *
+ * The {@linkplain NamespaceContext} to be used as a project default
  * @author Falk Wilke
  */
 public class DefaultNamespaceContext implements NamespaceContext {

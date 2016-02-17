@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 
 /**
  * created: 09.02.2016
- *
+ * A model representing an <xs:element name="..."></xs:element>
  * @author Falk Wilke
  */
 public class ElementModel extends XSDModel {
