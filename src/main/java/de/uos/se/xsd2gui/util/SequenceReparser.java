@@ -1,6 +1,5 @@
 package de.uos.se.xsd2gui.util;
 
-import com.sun.istack.internal.logging.Logger;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import javafx.scene.Node;
@@ -12,6 +11,7 @@ import org.w3c.dom.NodeList;
 
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * created: 10.02.2016
@@ -37,7 +37,8 @@ public class SequenceReparser {
          if (name == null)
             throw new IllegalArgumentException("node does not have a name attribute: " + elem);
          if (!elem.hasAttribute(MIN_OCCURS) || !elem.hasAttribute(MAX_OCCURS))
-            Logger.getLogger(this.getClass()).log(Level.WARNING, "element {0} does not have both maxOccurs and minOccurs attribute set while being inside a sequence, possible bug", elem);
+              Logger.getLogger(SequenceReparser.class.getName()).log(Level.WARNING, "element {0} does not have both maxOccurs and minOccurs attribute set while being inside a sequence, possible bug", elem);
+//            Logger.getLogger(this.getClass().log(Level.WARNING, "element {0} does not have both maxOccurs and minOccurs attribute set while being inside a sequence, possible bug", elem);
          this._elements.put(name, elem);
          this._currentOccurences.put(name, 0);
       }
