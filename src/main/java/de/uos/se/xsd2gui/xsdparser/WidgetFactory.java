@@ -32,18 +32,20 @@ public class WidgetFactory {
     private List<WidgetGenerator> generators = new LinkedList<>();
 
     /**
-     * The constructor, making this object use the provided {@linkplain NamespaceContext}
-     * @param namespaceContext the context to use
+     * Same as calling <i>new WidgetFactory(new DefaultNamespaceContext())</i>
      */
-    public WidgetFactory(NamespaceContext namespaceContext) {
-        this.namespaceContext = namespaceContext;
+    public WidgetFactory()
+    {
+        this(new DefaultNamespaceContext());
     }
 
     /**
-     * Same as calling <i>new WidgetFactory(new DefaultNamespaceContext())</i>
+     * The constructor, making this object use the provided {@linkplain NamespaceContext}
+     * @param namespaceContext the context to use
      */
-    public WidgetFactory() {
-        this(new DefaultNamespaceContext());
+    public WidgetFactory(NamespaceContext namespaceContext)
+    {
+        this.namespaceContext = namespaceContext;
     }
 
     /**
@@ -64,9 +66,14 @@ public class WidgetFactory {
      */
     public RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation) {
         Element documentRoot = doc.getDocumentElement();
-        org.w3c.dom.Node intermediateNode = XPathUtil.evaluateXPath(documentRoot, "current()/xs:element/node()[not(self::text())]").item(0);
-        RootModel rootModel = new RootModel((Element) intermediateNode.getParentNode(),nameSpaceSchemaLocation);
-        parseXsdNode(rootWidget, intermediateNode, rootModel);
+        NodeList list = XPathUtil.evaluateXPath(documentRoot, "current()/xs:element/node()[not(self::text())]");
+        org.w3c.dom.Element firstElement = (Element) XPathUtil.evaluateXPath(documentRoot, "current()/xs:element")
+                                                              .item(0);
+        RootModel rootModel = new RootModel(firstElement, nameSpaceSchemaLocation);
+        for (int i = 0; i < list.getLength(); i++)
+        {
+            parseXsdNode(rootWidget, list.item(0), rootModel);
+        }
         return rootModel;
     }
 

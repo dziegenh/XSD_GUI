@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 
 /**
  * created: 09.02.2016
- *
+ * A model representing a <xsd:sequence></xsd:sequence>. As such all submodels are handled in row
  * @author Falk Wilke
  */
 public class SequenceModel extends XSDModel {

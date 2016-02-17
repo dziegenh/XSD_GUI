@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * created: 09.02.2016
  * A Class representing an XML-Model generated from an xsd. Every model can have (like in xml) submodels of various kinds
- * It provides base functionality, subclasses will want to use
+ * It provides base functionality, subclasses will want to use. The last added submodels can be polled which supplements deleting of models without knowing which where created exactly
  * @author Falk Wilke
  */
 public abstract class XSDModel {
@@ -84,7 +84,7 @@ public abstract class XSDModel {
    }
 
     /**
-     * parses this model to a xml element ad appends it to the given parent element
+     * Parses this model to a xml element and appends it to the given parent element. For a xml-root-element it may be appened to the document instead
      * @param doc the document (used for creating new elements)
      * @param parent the parent element to append elements to
      */

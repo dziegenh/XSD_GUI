@@ -15,12 +15,15 @@ import java.util.logging.Logger;
 
 /**
  * created: 10.02.2016
- *
+ * A class handling reparsing of sequence elements. In its current state this class does not handle sequence ordering
  * @author Falk Wilke
  */
 public class SequenceReparser {
+   //the name attributes name
    private static final String NAME = "name";
+   //the minOccurs attributes name
    private static final String MIN_OCCURS = "minOccurs";
+   //the maxOccurs attributes name
    private static final String MAX_OCCURS = "maxOccurs";
    private final Map<String, Element> _elements;
    private final XSDModel _model;
