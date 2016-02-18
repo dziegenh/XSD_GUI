@@ -91,6 +91,8 @@ public class BasicAttributeParser
             case "xs:string":
                 model = new AttributeModel(elementNode);
                 String defaultStringValue = getDefaultValueFromElement(elementNode, "");
+                if (elementNode.getAttribute("name").equals("unit"))
+                    System.out.println();
                 if (model.isRequired())
                     model.addConstraint(new NoEmptyStringConstraint());
                 if (! fixed.trim().isEmpty())
@@ -98,7 +100,6 @@ public class BasicAttributeParser
                     model.addConstraint(new FixedValueConstraint(fixed));
                     defaultStringValue = fixed;
                 }
-                model = new AttributeModel(elementNode);
                 TextField textField = new TextField();
                 textField.textProperty().bindBidirectional(model.valueProperty());
                 model.valueProperty().setValue(defaultStringValue);

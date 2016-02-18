@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -132,11 +131,7 @@ public class XsdParserApp
         {
             Document newDoc = _documentBuilder.newDocument();
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                Optional<String> s = _currentModel.checkConstraints();
-                if (s.isPresent())
-                    System.err.println(s.get());
-                else
-                {
+                if (! _currentModel.checkViolationDeep())
                     _currentModel.parseToXML(newDoc, null);
                     try (FileOutputStream out = new FileOutputStream("out.xml"))
                     {
@@ -152,7 +147,6 @@ public class XsdParserApp
                         Logger.getLogger(this.getClass().getName())
                               .log(Level.SEVERE, "fata error while writing output", e);
                     }
-                }
             }));
 
 

@@ -1,6 +1,8 @@
 package de.uos.se.xsd2gui.models;
 
 import de.uos.se.xsd2gui.models.constraints.IXSDConstraint;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.w3c.dom.Document;
@@ -37,7 +39,11 @@ public abstract class XSDModel
     //the last added  xsdmodels
     private final List<XSDModel> _lastAdded;
     //the constraints placed on this model
-    private final List<IXSDConstraint> _contraints;
+    private final List<IXSDConstraint> _constraints;
+    //the text of a violation of constraints
+    private final StringProperty _violationText;
+    //the boolean property holding if constraints have been violated
+    private final BooleanProperty _violated;
 
     /**
      * Same as {@linkplain #XSDModel(Element, Comparator)}, uses (x1, x2) -> 0 as comparator
@@ -96,7 +102,45 @@ public abstract class XSDModel
         //create last added
         this._lastAdded = new LinkedList<>();
         this._comparator = comparator;
-        this._contraints = new LinkedList<>();
+        this._constraints = new LinkedList<>();
+        this._violationText = new SimpleStringProperty("");
+        this._value.addListener((observable, oldValue, newValue) -> checkConstraints());
+        this._violated = new SimpleBooleanProperty(false);
+    }
+
+    /**
+     * checks all constraints for this model and all of its submodels.
+     * the {@linkplain}
+     */
+    private void checkConstraints()
+    {
+        StringBuilder builder = new StringBuilder();
+        boolean violated = false;
+        for (IXSDConstraint constraint : _constraints)
+        {
+            String value = this._value.getValue();
+            if (constraint.isViolatedBy(value))
+            {
+                violated = true;
+                builder.append(constraint.getViolationMessage(value)).append(" for field ")
+                       .append(this.getName()).append(LINE_SEP);
+            }
+        }
+        if (violated)
+        {
+            this._violationText.setValue(builder.toString());
+            System.err.println(builder.toString());
+        } else
+        {
+            System.out.println("OK");
+            this._violationText.setValue("");
+        }
+        this._violated.setValue(violated);
+    }
+
+    public String getName()
+    {
+        return _elementName;
     }
 
     /**
@@ -128,11 +172,6 @@ public abstract class XSDModel
     public StringProperty valueProperty()
     {
         return _value;
-    }
-
-    public String getName()
-    {
-        return _elementName;
     }
 
     @Override
@@ -179,12 +218,12 @@ public abstract class XSDModel
 
     public boolean addConstraint(IXSDConstraint constr)
     {
-        return this._contraints.add(constr);
+        return this._constraints.add(constr);
     }
 
-    public boolean removeContraint(IXSDConstraint constr)
+    public boolean removeConstraint(IXSDConstraint constr)
     {
-        return this._contraints.remove(constr);
+        return this._constraints.remove(constr);
     }
 
     public Element getXSDNode()
@@ -197,44 +236,26 @@ public abstract class XSDModel
         return this._subModels.size();
     }
 
-    /**
-     * checks all constraints for this model and all of its subodels. If the optional is present
-     * a constraint was violated and the error message is the string contained here
-     *
-     * @return an optional holding an error message (if an error is found) or an empty optional
-     * if everything is all right
-     */
-    public final Optional<String> checkConstraints()
+    public final boolean checkViolationDeep()
     {
-        StringBuilder builder = new StringBuilder();
-        boolean violated = false;
-        for (IXSDConstraint constraint : _contraints)
+        if (this._violated.get())
+            return true;
+        for (XSDModel subModel : this._subModels)
         {
-            String value = this._value.getValue();
-            if (constraint.isViolatedBy(value))
-            {
-                violated = true;
-                builder.append(constraint.getViolationMessage(value)).append(" for field ")
-                       .append(this.getName()).append(LINE_SEP);
-            }
+            if (subModel._violated.get())
+                return true;
         }
-        if (! _subModels.isEmpty() && this.hasName())
-            builder.append(this.getName()).append(":").append(LINE_SEP);
-        for (XSDModel submodel : _subModels)
-        {
-            Optional<String> s = submodel.checkConstraints();
-            if (s.isPresent())
-            {
-                builder.append(s.get());
-                violated = true;
-            }
-        }
-        if (_subModels.isEmpty())
-            builder.append("---------------------").append(LINE_SEP);
-        if (violated)
-            return Optional.of(builder.toString());
-        else
-            return Optional.empty();
+        return false;
+    }
+
+    public BooleanProperty violatedProperty()
+    {
+        return _violated;
+    }
+
+    public StringProperty violationTextProperty()
+    {
+        return _violationText;
     }
 
     private boolean hasName()
