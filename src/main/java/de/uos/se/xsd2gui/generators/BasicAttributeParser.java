@@ -91,8 +91,6 @@ public class BasicAttributeParser
             case "xs:string":
                 model = new AttributeModel(elementNode);
                 String defaultStringValue = getDefaultValueFromElement(elementNode, "");
-                if (elementNode.getAttribute("name").equals("unit"))
-                    System.out.println();
                 if (model.isRequired())
                     model.addConstraint(new NoEmptyStringConstraint());
                 if (! fixed.trim().isEmpty())
