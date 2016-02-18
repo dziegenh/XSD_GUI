@@ -26,30 +26,38 @@ import java.util.logging.Logger;
  * Creates GUI components for attribute tags with basic XSMLSchema types (e.g.
  * "<sequence></sequence>".
  */
-public class BasicSequenceParser implements WidgetGenerator {
+public class BasicSequenceParser
+        implements WidgetGenerator
+{
 
     //the name of the element
-   public static final String ELEMENT_NAME = "sequence";
+    public static final String ELEMENT_NAME = "sequence";
     //the corresponding logger
-   public static final Logger LOGGER = Logger.getLogger(BasicSequenceParser.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(BasicSequenceParser.class.getName());
     //the attribute name for the "name" of the elements contained in the parsed sequence
     private static final String NAME = "name";
 
     @Override
-   public Node createWidget(WidgetFactory factory, Pane parentWidget, org.w3c.dom.Node xsdNode, XSDModel parentModel) {
-       //abortif wrong type
-      if (!(xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)) {
-         return null;
-      }
+    public Node createWidget(WidgetFactory factory, Pane parentWidget, org.w3c.dom.Node xsdNode,
+                             XSDModel parentModel)
+    {
+        //abortif wrong type
+        if (! (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE))
+        {
+            return null;
+        }
 
-      final Element elementNode = (Element) xsdNode;
-       //abort if wrong name
-      if (!elementNode.getLocalName().equals(ELEMENT_NAME)) {
-         return null;
-      }
+        final Element elementNode = (Element) xsdNode;
+        //abort if wrong name
+        if (! elementNode.getLocalName().equals(ELEMENT_NAME))
+        {
+            return null;
+        }
 
-       //only see elements with min and maxoccurs
-      NodeList matchingTypeNodes = XPathUtil.evaluateXPath(factory.getNamespaceContext(), xsdNode, "./xs:element[@minOccurs and @maxOccurs]");
+        //only see elements with min and maxoccurs
+        NodeList matchingTypeNodes = XPathUtil.evaluateXPath(factory.getNamespaceContext(), xsdNode,
+                                                             "./xs:element[@minOccurs and " +
+                                                             "@maxOccurs]");
         //the map the internal comparator shall use since sequence is ordered!
         final Map<String, Integer> indexMap = new HashMap<>();
         for (int i = 0; i < matchingTypeNodes.getLength(); i++)
@@ -60,23 +68,24 @@ public class BasicSequenceParser implements WidgetGenerator {
         XSDModel model = new SequenceModel(elementNode, new XSDModelIndexMapComparator(indexMap));
         parentModel.addSubModel(model);
 
-      Pane contentNodesPane = new HBox(20);
-      Pane nestedContent = new VBox();
-       //prepare reparsing
-      SequenceReparser reparser = new SequenceReparser(matchingTypeNodes, model);
-      Pane addContent = new VBox();
-      List<Button> addButtons = new LinkedList<>();
-       //add buttons for adding new elements
-      reparser.elementNames().forEach(name -> addButtons.add(new Button("+" + name)));
-      addButtons.forEach(button -> button.setOnAction(ev -> reparser.add(nestedContent, button.getText().substring(1), factory)));
-      addContent.getChildren().addAll(addButtons);
+        Pane contentNodesPane = new HBox(20);
+        Pane nestedContent = new VBox();
+        //prepare reparsing
+        SequenceReparser reparser = new SequenceReparser(matchingTypeNodes, model);
+        Pane addContent = new VBox();
+        List<Button> addButtons = new LinkedList<>();
+        //add buttons for adding new elements
+        reparser.elementNames().forEach(name -> addButtons.add(new Button("+" + name)));
+        addButtons.forEach(button -> button.setOnAction(
+                ev -> reparser.add(nestedContent, button.getText().substring(1), factory)));
+        addContent.getChildren().addAll(addButtons);
 
-       //add to parent widget
-      contentNodesPane.getChildren().add(nestedContent);
-      contentNodesPane.getChildren().add(addContent);
-       //use reparser to parse to minimum occurrences
-      reparser.reparseToMinimumOcc(nestedContent, factory);
-      return contentNodesPane;
-   }
+        //add to parent widget
+        contentNodesPane.getChildren().add(nestedContent);
+        contentNodesPane.getChildren().add(addContent);
+        //use reparser to parse to minimum occurrences
+        reparser.reparseToMinimumOcc(nestedContent, factory);
+        return contentNodesPane;
+    }
 
 }

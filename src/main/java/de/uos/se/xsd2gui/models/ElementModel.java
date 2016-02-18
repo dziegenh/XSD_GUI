@@ -6,22 +6,28 @@ import org.w3c.dom.Element;
 /**
  * created: 09.02.2016
  * A model representing an <xs:element name="..."></xs:element>
+ *
  * @author Falk Wilke
  */
-public class ElementModel extends XSDModel {
+public class ElementModel
+        extends XSDModel
+{
 
-   public ElementModel(Element xsdNode) {
-      super(xsdNode);
-   }
+    public ElementModel(Element xsdNode)
+    {
+        super(xsdNode);
+    }
 
-   @Override
+    @Override
 
-   public void parseToXML(Document doc, Element parent) {
-      Element root = doc.createElement(this.getName());
-      parent.appendChild(root);
-      for (XSDModel xsdm : getSubModels()) {
-         xsdm.parseToXML(doc, root);
-      }
-   }
+    public void parseToXML(Document doc, Element parent)
+    {
+        Element root = doc.createElement(this.getName());
+        parent.appendChild(root);
+        for (XSDModel xsdm : getSubModels())
+        {
+            xsdm.parseToXML(doc, root);
+        }
+    }
 
 }

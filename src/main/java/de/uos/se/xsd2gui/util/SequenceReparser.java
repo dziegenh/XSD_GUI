@@ -15,7 +15,8 @@ import java.util.logging.Logger;
 
 /**
  * created: 10.02.2016
- * A class handling reparsing of sequence elements. In its current state this class does not handle sequence ordering
+ * A class handling reparsing of sequence elements. In its current state this class does not
+ * handle sequence ordering
  *
  * @author Falk Wilke
  */
@@ -35,7 +36,8 @@ public class SequenceReparser
     private final Map<String, Integer> _currentOccurences;
 
     /**
-     * The Constructor. Attempts to extract all elements from the given {@linkplain NodeList} and map them to their name attribute
+     * The Constructor. Attempts to extract all elements from the given {@linkplain NodeList} and
+     * map them to their name attribute
      * Attempts to deepclone all encountered elements.
      *
      * @param elements
@@ -44,8 +46,10 @@ public class SequenceReparser
      *         the xsd model to manipulate
      *
      * @throws IllegalArgumentException
-     *         If there are elements present within the given {@linkplain NodeList} where {@linkplain org.w3c.dom.Node#getNodeType()}
-     *         oes not return the value of {@linkplain org.w3c.dom.Node#ELEMENT_NODE} or no attribute having the same name as the value of {@linkplain #NAME} is present
+     *         If there are elements present within the given
+     *         {@linkplain NodeList} where {@linkplain org.w3c.dom.Node#getNodeType()}
+     *         oes not return the value of
+     *         {@linkplain org.w3c.dom.Node#ELEMENT_NODE} or no attribute having the same name as the value of {@linkplain #NAME} is present
      */
     public SequenceReparser(NodeList elements, XSDModel model) throws IllegalArgumentException
     {
@@ -56,13 +60,18 @@ public class SequenceReparser
         {
             //check nodetype and name attribute
             if (elements.item(i).getNodeType() != org.w3c.dom.Node.ELEMENT_NODE)
-                throw new IllegalArgumentException("a nom-element node was found: " + elements.item(i));
+                throw new IllegalArgumentException(
+                        "a nom-element node was found: " + elements.item(i));
             Element elem = (Element) elements.item(i).cloneNode(true);
             if (! elem.hasAttribute(NAME))
                 throw new IllegalArgumentException("node does not have a name attribute: " + elem);
             if (! elem.hasAttribute(MIN_OCCURS) || ! elem.hasAttribute(MAX_OCCURS))
                 Logger.getLogger(SequenceReparser.class.getName()).log(Level.WARNING,
-                                                                       "element {0} does not have both maxOccurs and minOccurs attribute set while being inside a sequence, possible bug",
+                                                                       "element {0} does not have" +
+                                                                       " both maxOccurs and " +
+                                                                       "minOccurs attribute set " +
+                                                                       "while being inside a " +
+                                                                       "sequence, possible bug",
                                                                        elem);
             String name = elem.getAttribute(NAME);
             this._elements.put(name, elem);
@@ -72,7 +81,8 @@ public class SequenceReparser
     }
 
     /**
-     * This method will call {@linkplain #add(Pane, String, WidgetFactory)} for every element which is handled by this instance until there are minOccurs many elements present
+     * This method will call {@linkplain #add(Pane, String, WidgetFactory)} for every element
+     * which is handled by this instance until there are minOccurs many elements present
      *
      * @param widget
      *         the widget to reparse for
@@ -96,7 +106,8 @@ public class SequenceReparser
     }
 
     /**
-     * This method simply gets the amount of occurs stored at the given attribute. If it is not present (or has an illegal value) the provided default value is returned
+     * This method simply gets the amount of occurs stored at the given attribute. If it is not
+     * present (or has an illegal value) the provided default value is returned
      *
      * @param elem
      *         the elem to evaluate for
@@ -105,7 +116,8 @@ public class SequenceReparser
      * @param defaultValue
      *         the default value
      *
-     * @return The amount of occurs stored at the given attribute. If it is not present (or has an illegal value) the provided default value is returned
+     * @return The amount of occurs stored at the given attribute. If it is not present (or has
+     * an illegal value) the provided default value is returned
      */
     private synchronized int getIntAtt(Element elem, String attName, int defaultValue)
     {
@@ -114,7 +126,8 @@ public class SequenceReparser
     }
 
     /**
-     * This method adds another instance (view and model) of the named element to the provided widget and the internal model
+     * This method adds another instance (view and model) of the named element to the provided
+     * widget and the internal model
      * In fact the provided factory will be asked to parse the named element anew
      *
      * @param widget
@@ -155,9 +168,12 @@ public class SequenceReparser
     }
 
     /**
-     * This method deletes the provided {@linkplain XSDModel}s from the internal model and the provided {@linkplain Node} from the given {@linkplain Pane}.
-     * Essentially this method is to be used by listeners which do not want to hold a reference to the node.
-     * This is simply for convenience and could easily be changed if splitting of this functionality is desired.
+     * This method deletes the provided
+     * {@linkplain XSDModel}s from the internal model and the provided {@linkplain Node} from the given {@linkplain Pane}.
+     * Essentially this method is to be used by listeners which do not want to hold a reference
+     * to the node.
+     * This is simply for convenience and could easily be changed if splitting of this
+     * functionality is desired.
      *
      * @param widget
      *         the widet to delete from

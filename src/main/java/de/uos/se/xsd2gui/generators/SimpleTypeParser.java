@@ -18,15 +18,20 @@ import java.util.logging.Logger;
 
 /**
  * Creates GUI components for simpleType tags.
- * 
+ *
  * @author dziegenhagen
  */
-public class SimpleTypeParser implements WidgetGenerator {
+public class SimpleTypeParser
+        implements WidgetGenerator
+{
 
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel) {
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node
+            xsdNode, XSDModel parentModel)
+    {
 
-        if (xsdNode.getNodeType() != Node.ELEMENT_NODE || ! xsdNode.getLocalName().equals("simpleType"))
+        if (xsdNode.getNodeType() != Node.ELEMENT_NODE ||
+            ! xsdNode.getLocalName().equals("simpleType"))
         {
             return null;
         }
@@ -35,23 +40,30 @@ public class SimpleTypeParser implements WidgetGenerator {
         newXPath.setNamespaceContext(controller.getNamespaceContext());
 
         NodeList enumValues;
-        try {
-            enumValues = (NodeList) newXPath.evaluate("xs:restriction[@base='xs:string']/xs:enumeration/@value", xsdNode, XPathConstants.NODESET);
-            if (enumValues.getLength() < 1) {
+        try
+        {
+            enumValues = (NodeList) newXPath
+                    .evaluate("xs:restriction[@base='xs:string']/xs:enumeration/@value", xsdNode,
+                              XPathConstants.NODESET);
+            if (enumValues.getLength() < 1)
+            {
                 return null;
             }
             ComboBox<String> comboBox = new ComboBox<>();
-            if (!parentModel.isRequired())
+            if (! parentModel.isRequired())
                 comboBox.getItems().add("");
-            for (int i = 0; i < enumValues.getLength(); i++) {
+            for (int i = 0; i < enumValues.getLength(); i++)
+            {
                 Node item = enumValues.item(i);
                 comboBox.getItems().add(item.getNodeValue());
             }
             comboBox.valueProperty().bindBidirectional(parentModel.valueProperty());
             comboBox.getSelectionModel().selectFirst();
             return comboBox;
-            
-        } catch (XPathExpressionException ex) {
+
+        }
+        catch (XPathExpressionException ex)
+        {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
         }
 

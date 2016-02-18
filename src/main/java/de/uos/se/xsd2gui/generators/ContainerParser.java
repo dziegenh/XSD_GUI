@@ -17,24 +17,31 @@ import org.w3c.dom.NodeList;
  *
  * @author dziegenhagen
  */
-public class ContainerParser implements WidgetGenerator {
+public class ContainerParser
+        implements WidgetGenerator
+{
 
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel) {
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node
+            xsdNode, XSDModel parentModel)
+    {
 
-        if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE)) {
+        if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
+        {
             return null;
         }
 
         final Element elementNode = (Element) xsdNode;
         final String localName = elementNode.getLocalName();
 
-        if (!localName.equals("element")) {
+        if (! localName.equals("element"))
+        {
             return null;
         }
         String name = elementNode.getAttribute("name");
         String type = elementNode.getAttribute("type");
-        if (name.isEmpty() || !type.isEmpty()) {
+        if (name.isEmpty() || ! type.isEmpty())
+        {
             return null;
         }
         // Create the content pane for the child nodes
@@ -43,7 +50,8 @@ public class ContainerParser implements WidgetGenerator {
         parentModel.addSubModel(model);
         // create and add child GUI components to the container
         NodeList childNodes = elementNode.getChildNodes();
-        for (int i = 0; i < childNodes.getLength(); i++) {
+        for (int i = 0; i < childNodes.getLength(); i++)
+        {
             controller.parseXsdNode(contentNodesPane, childNodes.item(i), model);
         }
 

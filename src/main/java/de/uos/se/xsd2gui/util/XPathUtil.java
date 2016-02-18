@@ -16,7 +16,8 @@ import javax.xml.xpath.XPathFactory;
 public class XPathUtil
 {
     /**
-     * Essentially the same as {@linkplain #evaluateXPath(NamespaceContext, Node, String)}, but is using {@linkplain DefaultNamespaceContext}
+     * Essentially the same as
+     * {@linkplain #evaluateXPath(NamespaceContext, Node, String)}, but is using {@linkplain DefaultNamespaceContext}
      *
      * @param rootNode
      *         the node from where the expression shall be evaluated
@@ -31,7 +32,8 @@ public class XPathUtil
     }
 
     /**
-     * This method evaluates the given xpath expression on the given {@linkplain org.w3c.dom.Node}using the provided {@linkplain NamespaceContext}.
+     * This method evaluates the given xpath expression on the given
+     * {@linkplain org.w3c.dom.Node}using the provided {@linkplain NamespaceContext}.
      * Can return null if the expression is malformed
      *
      * @param namespaceContext
@@ -43,7 +45,8 @@ public class XPathUtil
      *
      * @return a nodelist containing all matches or null if the expression was malformed
      */
-    public static NodeList evaluateXPath(NamespaceContext namespaceContext, org.w3c.dom.Node rootNode, String expression)
+    public static NodeList evaluateXPath(NamespaceContext namespaceContext, org.w3c.dom.Node
+            rootNode, String expression)
     {
         // setup the XPath object
         XPathFactory xp = XPathFactory.newInstance();
@@ -54,7 +57,8 @@ public class XPathUtil
         try
         {
             return (NodeList) newXPath.evaluate(expression, rootNode, XPathConstants.NODESET);
-        } catch (XPathExpressionException e)
+        }
+        catch (XPathExpressionException e)
         {
             return null;
         }
