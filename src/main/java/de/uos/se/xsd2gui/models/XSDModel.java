@@ -5,44 +5,56 @@ import javafx.beans.property.StringProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * created: 09.02.2016
  * A Class representing an XML-Model generated from an xsd. Every model can have (like in xml) submodels of various kinds
  * It provides base functionality, subclasses will want to use. The last added submodels can be polled which supplements deleting of models without knowing which where created exactly
+ *
  * @author Falk Wilke
  */
-public abstract class XSDModel {
+public abstract class XSDModel
+{
     //the name constant
-   public static final String NAME = "name";
+    public static final String NAME = "name";
     //the node it corresponds to
-   private final Element _xsdNode;
+    private final Element _xsdNode;
     //the submodels
     private final LinkedList<XSDModel> _subModels;
     //if this is required or not
-   private final boolean _required;
+    private final boolean _required;
+    //the comparator
+    private final Comparator<XSDModel> _comparator;
     //the name of the element
-   private String _elementName;
+    private String _elementName;
     //the value contained inside this element
-   private StringProperty _value;
+    private StringProperty _value;
     //the last added  xsdmodels
-   private List<XSDModel> _lastAdded;
+    private List<XSDModel> _lastAdded;
 
     /**
-     * Same as {@linkplain #XSDModel(Element, List)}, uses {@linkplain Collections#emptyList()}
+     * Same as {@linkplain #XSDModel(Element, Comparator)}, uses (x1, x2) -> 0 as comparator
      *
      * @param xsdNode
      *         the node to be responsible for
      */
     public XSDModel(Element xsdNode)
     {
-        this(xsdNode, Collections.emptyList());
-
+        this(xsdNode, (x1, x2) -> 0);
     }
+
+    /**
+     * Same as {@linkplain #XSDModel(Element, List, Comparator)}, uses {@linkplain Collections#emptyList()}
+     *
+     * @param xsdNode
+     *         the node to be responsible for
+     */
+    public XSDModel(Element xsdNode, Comparator<XSDModel> comparator)
+    {
+        this(xsdNode, Collections.emptyList(), comparator);
+    }
+
 
     /**
      * The Constructor creating a new xsdmodel from scratch
@@ -51,96 +63,117 @@ public abstract class XSDModel {
      *         the node to be responsible for
      * @param subModels
      *         the submodels to be responsible for
+     * @param comparator
+     *         the comparator to use for sorting
      */
-   public XSDModel(Element xsdNode, List<? extends XSDModel> subModels) {
-       //clone node to avoid sideeffects
-       this._xsdNode = (Element) xsdNode.cloneNode(true);
-       //get name
-      this._elementName = this._xsdNode.getAttribute(NAME);
-      if (this._elementName == null)
-         throw new IllegalArgumentException("provided element node does not have an attribute name ");
-      if (subModels == null)
-         throw new NullPointerException("provided submodels are null");
-       //create submodels list by copying
-       this._subModels = new LinkedList<>(subModels);
-       //create string property
-       this._value = new SimpleStringProperty("");
-       //set required
-      this._required = this._xsdNode.getAttribute("use").equals("required");
-       //create last added
-       this._lastAdded = new LinkedList<>();
-   }
+    public XSDModel(Element xsdNode, List<? extends XSDModel> subModels, Comparator<XSDModel> comparator)
+    {
+        //clone node to avoid sideeffects
+        this._xsdNode = (Element) xsdNode.cloneNode(true);
+        //get name
+        this._elementName = this._xsdNode.getAttribute(NAME);
+        if (this._elementName == null)
+            throw new IllegalArgumentException("provided element node does not have an attribute name ");
+        if (subModels == null)
+            throw new NullPointerException("provided submodels are null");
+        if (comparator == null)
+            throw new NullPointerException("comparator is null");
+        //create submodels list by copying
+        this._subModels = new LinkedList<>(subModels);
+        //create string property
+        this._value = new SimpleStringProperty("");
+        //set required
+        this._required = this._xsdNode.getAttribute("use").equals("required");
+        //create last added
+        this._lastAdded = new LinkedList<>();
+        this._comparator = comparator;
+    }
 
     /**
      * If this model has a required attribute set which equals "required"
+     *
      * @return If this model has a required attribute set which equals "required"
      */
-   public boolean isRequired() {
-      return _required;
-   }
+    public boolean isRequired()
+    {
+        return _required;
+    }
 
-   public synchronized List<XSDModel> getSubModels() {
-      return Collections.unmodifiableList(this._subModels);
-   }
+    public synchronized List<XSDModel> getSubModels()
+    {
+        return Collections.unmodifiableList(this._subModels);
+    }
 
     /**
      * Parses this model to a xml element and appends it to the given parent element. For a xml-root-element it may be appened to the document instead
-     * @param doc the document (used for creating new elements)
-     * @param parent the parent element to append elements to
+     *
+     * @param doc
+     *         the document (used for creating new elements)
+     * @param parent
+     *         the parent element to append elements to
      */
-   public abstract void parseToXML(Document doc, Element parent);
+    public abstract void parseToXML(Document doc, Element parent);
 
-   public StringProperty valueProperty() {
-      return _value;
-   }
+    public StringProperty valueProperty()
+    {
+        return _value;
+    }
 
-   public String getName() {
-      return _elementName;
-   }
+    public String getName()
+    {
+        return _elementName;
+    }
 
-   @Override
-   public synchronized String toString() {
-      return "XSDModel{" +
-            "_xsdNode=" + _xsdNode +
-            ", _subModels=" + _subModels +
-            ", _required=" + _required +
-            ", _elementName='" + _elementName + '\'' +
-            ", _value=" + _value +
-            ", _lastAdded=" + _lastAdded +
-            '}';
-   }
+    @Override
+    public synchronized String toString()
+    {
+        return "XSDModel{" +
+                "_xsdNode=" + _xsdNode +
+                ", _subModels=" + _subModels +
+                ", _required=" + _required +
+                ", _elementName='" + _elementName + '\'' +
+                ", _value=" + _value +
+                ", _lastAdded=" + _lastAdded +
+                '}';
+    }
 
-    public synchronized void addSubModel(XSDModel xsdm) {
-      this._subModels.push(xsdm);
-      this._lastAdded.add(xsdm);
-   }
+    public synchronized void addSubModel(XSDModel xsdm)
+    {
+        this._subModels.add(xsdm);
+        this._subModels.sort(this._comparator);
+        this._lastAdded.add(xsdm);
+    }
 
-    public synchronized void removeSubModel(XSDModel xsdm) {
-      this.removeSubModels(Collections.singleton(xsdm));
-   }
+    public synchronized void removeSubModel(XSDModel xsdm)
+    {
+        this.removeSubModels(Collections.singleton(xsdm));
+    }
 
-   public synchronized void removeSubModels(Collection<XSDModel> xsdm)
-   {
-       this._subModels.removeAll(xsdm);
-   }
+    public synchronized void removeSubModels(Collection<XSDModel> xsdm)
+    {
+        this._subModels.removeAll(xsdm);
+    }
 
     /**
      * gets the last added submodels an removes them from the internal list
      *
      * @return the last added submodels
      */
-    public synchronized List<XSDModel> pollLastAddedModels() {
-      List<XSDModel> tmp = new LinkedList<>(this._lastAdded);
-      this._lastAdded.clear();
+    public synchronized List<XSDModel> pollLastAddedModels()
+    {
+        List<XSDModel> tmp = new LinkedList<>(this._lastAdded);
+        this._lastAdded.clear();
         return tmp;
     }
 
-    public Element getXSDNode() {
-      return (Element)_xsdNode.cloneNode(true);
-   }
+    public Element getXSDNode()
+    {
+        return (Element) _xsdNode.cloneNode(true);
+    }
 
-   public int size() {
-      return this._subModels.size();
-   }
+    public int size()
+    {
+        return this._subModels.size();
+    }
 
 }
