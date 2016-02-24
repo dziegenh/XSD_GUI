@@ -6,6 +6,7 @@ import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -25,21 +26,27 @@ public class SimpleTypeParser
         implements WidgetGenerator
 {
 
+    //a constant for the fixed attribute
+    public static final String FIXED = "fixed";
+    //a constant for the name of the elements this attribute should apply to
+    public static final String SIMPLE_TYPE = "simpleType";
+
     @Override
     public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node
             xsdNode, XSDModel parentModel)
     {
 
         if (xsdNode.getNodeType() != Node.ELEMENT_NODE ||
-            ! xsdNode.getLocalName().equals("simpleType"))
+            ! xsdNode.getLocalName().equals(SIMPLE_TYPE))
         {
             return null;
         }
         XPathFactory xp = XPathFactory.newInstance();
         XPath newXPath = xp.newXPath();
         newXPath.setNamespaceContext(controller.getNamespaceContext());
-
         NodeList enumValues;
+        Element currentELement = (Element) xsdNode;
+        String fixed = currentELement.getAttribute(FIXED);
         try
         {
             enumValues = (NodeList) newXPath

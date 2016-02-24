@@ -3,18 +3,21 @@ package de.uos.se.xsd2gui.models.constraints;
 
 /**
  * created: 18.02.2016
+ * A constraint modelling a numeric constraing. {@linkplain Double} is used as base for checking
+ * values.
  *
  * @author Falk Wilke
  */
 public class NumericXSDConstraint
-        implements IXSDConstraint
+        extends NoPureWhitespaceStringConstraint
 {
-    public static final String NUMBER_REGEX = "\\d*.?\\d+";
+    //a double number regex
+    public static final String NUMBER_REGEX = "(-?\\d+\\.?\\d*)|(-?\\d*\\.?\\d+)";
 
     @Override
     public boolean isViolatedBy(String value)
     {
-        return value == null || ! value.trim().matches(NUMBER_REGEX);
+        return super.isViolatedBy(value) || ! value.trim().matches(NUMBER_REGEX);
     }
 
     @Override
@@ -22,8 +25,8 @@ public class NumericXSDConstraint
     {
         if (! isViolatedBy(value))
             return "";
-        if (value == null)
-            return "null value";
+        if (super.isViolatedBy(value))
+            return super.getViolationMessage(value);
         else
             return "value '" + value + "' is not a number";
     }

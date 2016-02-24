@@ -20,10 +20,13 @@ public class NumericRangeConstraint
     @Override
     public boolean isViolatedBy(String value)
     {
+        if (super.isViolatedBy(value))
+            return true;
         try
         {
-            return super.isViolatedBy(value) && down <= Double.parseDouble(value) &&
-                   up >= Double.parseDouble(value);
+            double parsed = Double.parseDouble(value);
+            return super.isViolatedBy(value) && down <= parsed &&
+                   up >= parsed;
         }
         catch (NumberFormatException ex)
         {

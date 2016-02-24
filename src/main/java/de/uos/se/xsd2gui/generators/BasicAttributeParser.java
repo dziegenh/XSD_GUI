@@ -3,8 +3,8 @@ package de.uos.se.xsd2gui.generators;
 import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
-import de.uos.se.xsd2gui.models.constraints.NoEmptyStringConstraint;
-import de.uos.se.xsd2gui.models.constraints.NumericXSDConstraint;
+import de.uos.se.xsd2gui.models.constraints.IntegerConstraint;
+import de.uos.se.xsd2gui.models.constraints.NoPureWhitespaceStringConstraint;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.*;
@@ -65,7 +65,7 @@ public class BasicAttributeParser
                 model = new AttributeModel(elementNode);
                 IntegerSpinnerValueFactory factory;
                 if (model.isRequired())
-                    model.addConstraint(new NumericXSDConstraint());
+                    model.addConstraint(new IntegerConstraint());
                 if (! fixed.trim().isEmpty())
                 {
                     model.addConstraint(new FixedValueConstraint(fixed));
@@ -92,7 +92,7 @@ public class BasicAttributeParser
                 model = new AttributeModel(elementNode);
                 String defaultStringValue = getDefaultValueFromElement(elementNode, "");
                 if (model.isRequired())
-                    model.addConstraint(new NoEmptyStringConstraint());
+                    model.addConstraint(new NoPureWhitespaceStringConstraint());
                 if (! fixed.trim().isEmpty())
                 {
                     model.addConstraint(new FixedValueConstraint(fixed));

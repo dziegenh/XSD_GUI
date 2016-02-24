@@ -3,6 +3,7 @@ package de.uos.se.xsd2gui.generators;
 import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.scene.control.Label;
@@ -32,6 +33,7 @@ public class CustomTypesParser
         implements WidgetGenerator
 {
 
+    public static final String FIXED = "fixed";
     /**
      * The namespace prefix of the matching type (e.g. "ct:").
      */
@@ -65,15 +67,19 @@ public class CustomTypesParser
         }
 
         final String type = elementNode.getAttribute("type");
-        if (null != type && ! type.startsWith(typeNamespacePrefix))
+        if (null == type || ! type.startsWith(typeNamespacePrefix))
         {
             return null;
         }
         XSDModel model;
+        String fixed = elementNode.getAttribute(FIXED);
         if (localName.equals("element"))
             model = new ElementModel(elementNode);
+
         else
             model = new AttributeModel(elementNode);
+        if (! fixed.trim().isEmpty())
+            model.addConstraint(new FixedValueConstraint(fixed));
         parentModel.addSubModel(model);
         final String localType = type.substring(typeNamespacePrefix.length());
 
@@ -103,6 +109,8 @@ public class CustomTypesParser
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             HBox hBox = new HBox(10, textFieldLabel);
             controller.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
+            if (! fixed.trim().isEmpty())
+                model.valueProperty().setValue(fixed);
             return hBox;
 
         }

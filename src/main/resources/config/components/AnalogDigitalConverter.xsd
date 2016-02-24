@@ -14,7 +14,7 @@
 						<xs:attribute name="channelWidth" type="xs:int"
 							fixed="12" />
 						<xs:attribute name="byteOrder" type="ct:EndianType"
-							fixed="BigEndian" />
+									  fixed="LittleEndian"/>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="input">

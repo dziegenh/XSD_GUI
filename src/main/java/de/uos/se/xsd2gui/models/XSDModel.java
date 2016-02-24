@@ -17,7 +17,17 @@ import java.util.logging.Logger;
  * A Class representing an XML-Model generated from an xsd. Every model can have (like in xml)
  * submodels of various kinds
  * It provides base functionality, subclasses will want to use. The last added submodels can be
- * polled which supplements deleting of models without knowing which where created exactly
+ * polled which supplements deleting of models without knowing which where created exactly.
+ * In addition {@linkplain IXSDConstraint} objects can be added which will be used for checking
+ * the value attribute.
+ * Such a check will be triggered whenever the value of
+ * {@linkplain #_value} is set. Also the method {@linkplain #checkViolationDeep()}
+ * can be used to check recursively if in this model or any submodel a attribute
+ * {@linkplain #_violated} with <i>true</i> as its
+ * value exists. This could possibly be used before calling
+ * {@linkplain #parseToXML(Document, Element)} since that method will not check any constraints.
+ * This was decided since a "manual" override of those violations could possibly be desirable but
+ * that is not up to the model to decide.
  *
  * @author Falk Wilke
  */
@@ -25,7 +35,10 @@ public abstract class XSDModel
 {
     //the name constant
     public static final String NAME = "name";
+    //the line separator
     public static final String LINE_SEP = System.getProperty("line.separator");
+    //the name of the use attribute
+    public static final String USE = "use";
     //the node it corresponds to
     private final Element _xsdNode;
     //the submodels
@@ -100,7 +113,8 @@ public abstract class XSDModel
         //create string property
         this._value = new SimpleStringProperty("");
         //set required
-        this._required = this._xsdNode.getAttribute("use").equals("required");
+        this._required = ! this._xsdNode.hasAttribute(USE) ||
+                         this._xsdNode.getAttribute(USE).equals("required");
         //create last added
         this._lastAdded = new LinkedList<>();
         this._comparator = comparator;
@@ -114,7 +128,7 @@ public abstract class XSDModel
      * checks all constraints for this model and all of its submodels.
      * the {@linkplain}
      */
-    private void checkConstraints()
+    private synchronized void checkConstraints()
     {
         StringBuilder builder = new StringBuilder();
         boolean violated = false;
@@ -218,12 +232,12 @@ public abstract class XSDModel
         return tmp;
     }
 
-    public boolean addConstraint(IXSDConstraint constr)
+    public synchronized boolean addConstraint(IXSDConstraint constr)
     {
         return this._constraints.add(constr);
     }
 
-    public boolean removeConstraint(IXSDConstraint constr)
+    public synchronized boolean removeConstraint(IXSDConstraint constr)
     {
         return this._constraints.remove(constr);
     }
@@ -238,7 +252,7 @@ public abstract class XSDModel
         return this._subModels.size();
     }
 
-    public final boolean checkViolationDeep()
+    public synchronized final boolean checkViolationDeep()
     {
         if (this._violated.get())
             return true;
