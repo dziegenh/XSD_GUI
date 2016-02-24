@@ -32,18 +32,18 @@ public class BasicAttributeParser
     public static final String DEFAULT = "default";
 
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node
-            xsdNode, XSDModel parentModel)
+    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel)
     {
 
         //check for correct types and attributes
-        if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
+        if (!(xsdNode.getNodeType() == Node.ELEMENT_NODE))
         {
             return null;
         }
 
         final Element elementNode = (Element) xsdNode;
-        if (! elementNode.getLocalName().equals("attribute"))
+        final String localName = elementNode.getLocalName();
+        if (!localName.equals("attribute") && !localName.equals("element"))
         {
             return null;
         }
@@ -61,30 +61,36 @@ public class BasicAttributeParser
         String fixed = elementNode.getAttribute(FIXED);
         switch (elementNode.getAttribute(TYPE))
         {
+            case "xs:unsignedInt":
+                // TODO create constraints for unsigned int type
+            
+            
             case "xs:int":
                 model = new AttributeModel(elementNode);
                 IntegerSpinnerValueFactory factory;
                 if (model.isRequired())
+                {
                     model.addConstraint(new NumericXSDConstraint());
-                if (! fixed.trim().isEmpty())
+                }
+                if (!fixed.trim().isEmpty())
                 {
                     model.addConstraint(new FixedValueConstraint(fixed));
                     int fixedIntValue = Integer.parseInt(fixed);
                     factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(fixedIntValue,
-                                                                                 fixedIntValue,
-                                                                                 fixedIntValue);
+                            fixedIntValue,
+                            fixedIntValue);
                 } else
                 {
                     int initialValue = Integer
                             .parseInt(getDefaultValueFromElement(elementNode, "0"));
                     factory = new IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE,
-                                                             initialValue);
+                            initialValue);
                 }
                 Spinner<Integer> spinner = new Spinner<>(factory);
                 spinner.setEditable(false);
                 model.valueProperty().setValue(factory.getValue().toString());
                 spinner.editorProperty().getValue().textProperty()
-                       .bindBidirectional(model.valueProperty());
+                        .bindBidirectional(model.valueProperty());
                 inputWidget = spinner;
                 break;
 
@@ -92,8 +98,10 @@ public class BasicAttributeParser
                 model = new AttributeModel(elementNode);
                 String defaultStringValue = getDefaultValueFromElement(elementNode, "");
                 if (model.isRequired())
+                {
                     model.addConstraint(new NoEmptyStringConstraint());
-                if (! fixed.trim().isEmpty())
+                }
+                if (!fixed.trim().isEmpty())
                 {
                     model.addConstraint(new FixedValueConstraint(fixed));
                     defaultStringValue = fixed;
@@ -125,6 +133,5 @@ public class BasicAttributeParser
         String defaultValue = elementNode.getAttribute(DEFAULT);
         return defaultValue.trim().isEmpty() ? notPresentValue : defaultValue;
     }
-
 
 }

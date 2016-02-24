@@ -20,7 +20,8 @@ import java.util.logging.Logger;
  *
  * @author dziegenhagen
  */
-public class WidgetFactory {
+public class WidgetFactory
+{
 
     /**
      * A namespace context which the widget generators can access.
@@ -40,7 +41,9 @@ public class WidgetFactory {
     }
 
     /**
-     * The constructor, making this object use the provided {@linkplain NamespaceContext}
+     * The constructor, making this object use the provided
+     * {@linkplain NamespaceContext}
+     *
      * @param namespaceContext the context to use
      */
     public WidgetFactory(NamespaceContext namespaceContext)
@@ -49,12 +52,13 @@ public class WidgetFactory {
     }
 
     /**
-
+     *
      * Adds a widget generator.
      *
      * @param generator
      */
-    public void addWidgetGenerator(WidgetGenerator generator) {
+    public void addWidgetGenerator(WidgetGenerator generator)
+    {
         this.generators.add(generator);
     }
 
@@ -64,11 +68,12 @@ public class WidgetFactory {
      * @param doc
      * @param rootWidget
      */
-    public RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation) {
+    public RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation)
+    {
         Element documentRoot = doc.getDocumentElement();
         NodeList list = XPathUtil.evaluateXPath(documentRoot, "current()/xs:element/node()[not(self::text())]");
         org.w3c.dom.Element firstElement = (Element) XPathUtil.evaluateXPath(documentRoot, "current()/xs:element")
-                                                              .item(0);
+                .item(0);
         RootModel rootModel = new RootModel(firstElement, nameSpaceSchemaLocation);
         for (int i = 0; i < list.getLength(); i++)
         {
@@ -78,21 +83,35 @@ public class WidgetFactory {
     }
 
     /**
+     * Removes a widget generator.
+     *
+     * @param localCustomTypeParser
+     */
+    public void removeWidgetGenerator(WidgetGenerator localCustomTypeParser)
+    {
+        this.generators.remove(localCustomTypeParser);
+    }
+
+    /**
      * Tries to parse the given xsdNode using the available widget generators.
      * If nothing was generated, the step is repeated for each child node.
      *
      * @param rootWidget
      * @param xsdNode
      */
-    public void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel rootModel) {
+    public void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel rootModel)
+    {
 
         boolean guiNodeCreated = false;
-        for (WidgetGenerator generator : generators) {
+        for (WidgetGenerator generator : generators)
+        {
             Node nodeWidget = generator.createWidget(this, rootWidget, xsdNode, rootModel);
-            if (null != nodeWidget) {
+            if (null != nodeWidget)
+            {
                 rootWidget.getChildren().add(nodeWidget);
-                
-                if (guiNodeCreated) {
+
+                if (guiNodeCreated)
+                {
                     Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
                 }
 
@@ -100,15 +119,18 @@ public class WidgetFactory {
             }
         }
 
-        if (!guiNodeCreated) {
+        if (!guiNodeCreated)
+        {
 
             Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
 
-            if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+            if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
+            {
                 Element nodeEl = (Element) xsdNode;
                 NodeList nodeElChildren = nodeEl.getChildNodes();
 
-                for (int i = 0; i < nodeElChildren.getLength(); i++) {
+                for (int i = 0; i < nodeElChildren.getLength(); i++)
+                {
                     parseXsdNode(rootWidget, nodeElChildren.item(i), rootModel);
                 }
             }
@@ -121,7 +143,8 @@ public class WidgetFactory {
      *
      * @return
      */
-    public NamespaceContext getNamespaceContext() {
+    public NamespaceContext getNamespaceContext()
+    {
         return this.namespaceContext;
     }
 

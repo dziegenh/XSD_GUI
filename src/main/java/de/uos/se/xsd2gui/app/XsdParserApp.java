@@ -3,6 +3,7 @@ package de.uos.se.xsd2gui.app;
 import de.uos.se.xsd2gui.generators.*;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -51,8 +52,7 @@ public class XsdParserApp
         try
         {
             _documentBuilder = factory.newDocumentBuilder();
-        }
-        catch (ParserConfigurationException e)
+        } catch (ParserConfigurationException e)
         {
             throw new RuntimeException(e);
         }
@@ -60,8 +60,7 @@ public class XsdParserApp
     }
 
     /**
-     * @param args
-     *         the command line arguments
+     * @param args the command line arguments
      */
     public static void main(String[] args)
     {
@@ -73,6 +72,11 @@ public class XsdParserApp
 
         launch(args2);
     }
+
+    /**
+     * A custom type parser is created for a XSD file itself when it is loaded.
+     */
+    private WidgetGenerator localCustomTypeParser = null;
 
     @Override
     public void start(Stage primaryStage)
@@ -95,63 +99,73 @@ public class XsdParserApp
         widgetFactory.addWidgetGenerator(new BasicSequenceParser());
         widgetFactory.addWidgetGenerator(
                 new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\predefined\\CommonTypes.xsd"));
-        widgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR +
-                                                                      "config\\predefined\\StructuredTypes.xsd"));
-
+        widgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR
+                + "config\\predefined\\StructuredTypes.xsd"));
 
         ComboBox<File> fc = new ComboBox<>();
         root.getChildren().add(fc);
         File dir = new File(xsdFilesname);
         fc.getItems().addAll(dir.listFiles(f -> f.isFile() && f.toString().endsWith(".xsd")));
-        fc.valueProperty().addListener((observable, oldValue, newValue) -> {
-            try
-            {
-                ObservableList<Node> rootChildren = root.getChildren();
-                if (rootChildren.size() > 1)
-                    rootChildren.remove(1);
-                VBox currentContent = new VBox();
-                rootChildren.add(currentContent);
-                Document doc = _documentBuilder.parse(newValue.getPath());
-                // Generated widgets are added to the root node
-                _currentModel = widgetFactory.parseXsd(doc, currentContent, newValue.getPath()
-                                                                                    .replaceAll(
-                                                                                            "\\" +
-                                                                                            File.separator,
-                                                                                            "/"));
-            }
-            catch (Exception ex)
-            {
-                Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
+        fc.valueProperty().addListener((observable, oldValue, newValue) -> 
+                {
 
+                    // Remove parser of the previously selected file.
+                    if (null != this.localCustomTypeParser)
+                    {
+                        widgetFactory.removeWidgetGenerator(this.localCustomTypeParser);
+                    }
+                    
+                    // Add local parser for the selected file.
+                    widgetFactory.addWidgetGenerator(new CustomTypesParser("", newValue.getAbsolutePath()));
+
+                    try
+                    {
+                        ObservableList<Node> rootChildren = root.getChildren();
+                        if (rootChildren.size() > 1)
+                        {
+                            rootChildren.remove(1);
+                        }
+                        VBox currentContent = new VBox();
+                        rootChildren.add(currentContent);
+                        Document doc = _documentBuilder.parse(newValue.getPath());
+                        // Generated widgets are added to the root node
+                        _currentModel = widgetFactory.parseXsd(doc, currentContent, newValue.getPath()
+                                .replaceAll(
+                                        "\\"
+                                        + File.separator,
+                                        "/"));
+                    } catch (Exception ex)
+                    {
+                        Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        });
 
         // Read the XSD and start parsing
         try
         {
             Document newDoc = _documentBuilder.newDocument();
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                if (! _currentModel.checkViolationDeep())
-                    _currentModel.parseToXML(newDoc, null);
-                    try (FileOutputStream out = new FileOutputStream("out.xml"))
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> 
                     {
-                        TransformerFactory tFactory = TransformerFactory.newInstance();
-                        Transformer transformer = tFactory.newTransformer();
+                        if (!_currentModel.checkViolationDeep())
+                        {
+                            _currentModel.parseToXML(newDoc, null);
+                        }
+                        try (FileOutputStream out = new FileOutputStream("out.xml"))
+                        {
+                            TransformerFactory tFactory = TransformerFactory.newInstance();
+                            Transformer transformer = tFactory.newTransformer();
 
-                        DOMSource source = new DOMSource(newDoc);
-                        StreamResult result = new StreamResult(out);
-                        transformer.transform(source, result);
-                    }
-                    catch (IOException | TransformerException e)
-                    {
-                        Logger.getLogger(this.getClass().getName())
-                              .log(Level.SEVERE, "fata error while writing output", e);
-                    }
+                            DOMSource source = new DOMSource(newDoc);
+                            StreamResult result = new StreamResult(out);
+                            transformer.transform(source, result);
+                        } catch (IOException | TransformerException e)
+                        {
+                            Logger.getLogger(this.getClass().getName())
+                                    .log(Level.SEVERE, "fata error while writing output", e);
+                        }
             }));
 
-
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
         }
