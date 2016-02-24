@@ -96,7 +96,8 @@ public class SequenceReparser
         for (Element elem : this._elements.values())
         {
             String name = elem.getAttribute(NAME);
-            int minOccurs = getIntAtt(elem, MIN_OCCURS, 0);
+            int minOccurs = Math.max(getMinOcc(elem, MIN_OCCURS, 0),
+                                     factory.getMinimumAmountOfElements(this._model, name));
             int currentOccs = this._currentOccurences.get(name);
             for (int i = 0; i < minOccurs - currentOccs; i++)
             {
@@ -120,7 +121,7 @@ public class SequenceReparser
      * @return The amount of occurs stored at the given attribute. If it is not present (or has
      * an illegal value) the provided default value is returned
      */
-    private synchronized int getIntAtt(Element elem, String attName, int defaultValue)
+    private synchronized int getMinOcc(Element elem, String attName, int defaultValue)
     {
         String minOccursString = elem.getAttribute(attName);
         return minOccursString.matches("\\d+") ? Integer.parseInt(minOccursString) : defaultValue;
@@ -144,7 +145,7 @@ public class SequenceReparser
         if (! _elements.containsKey(name))
             return;
         Element elem = this._elements.get(name);
-        int maxOccurs = getIntAtt(elem, MAX_OCCURS, Integer.MAX_VALUE);
+        int maxOccurs = getMinOcc(elem, MAX_OCCURS, Integer.MAX_VALUE);
         int currentOcc = this._currentOccurences.get(name);
         //check occurrences do not exceed limit
         if (currentOcc < maxOccurs)
@@ -192,7 +193,7 @@ public class SequenceReparser
             return;
         int currentOcc = this._currentOccurences.get(name);
         Element item = this._elements.get(name);
-        int minOccurs = getIntAtt(item, MIN_OCCURS, 0);
+        int minOccurs = getMinOcc(item, MIN_OCCURS, 0);
         //check occurrences do not underflow
         if (currentOcc > minOccurs)
         {

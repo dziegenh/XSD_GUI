@@ -11,7 +11,7 @@ public class IntegerConstraint
         extends NumericXSDConstraint
 {
     //integer number regex
-    public static final String INTEGER_REGEX = "(\\s*)\\d+(\\s*)";
+    public static final String INTEGER_REGEX = "(\\s*)-?(\\s*)\\d+(\\s*)";
 
     @Override
     public boolean isViolatedBy(String value)

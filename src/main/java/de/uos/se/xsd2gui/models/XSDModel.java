@@ -76,6 +76,7 @@ public abstract class XSDModel
     private final StringProperty _violationText;
     //the boolean property holding if constraints have been violated
     private final BooleanProperty _violated;
+    private XSDModel _parentModel;
 
     /**
      * Same as {@linkplain #XSDModel(Element, Comparator)}, uses (x1, x2) -> 0 as comparator
@@ -141,6 +142,7 @@ public abstract class XSDModel
         this._violated = new SimpleBooleanProperty(false);
         this._fixed = this._xsdNode.hasAttribute(FIXED) &&
                       ! this._xsdNode.getAttribute(FIXED).trim().isEmpty();
+        this._parentModel = null;
     }
 
     /**
@@ -231,7 +233,13 @@ public abstract class XSDModel
     {
         this._subModels.add(xsdm);
         this._subModels.sort(this._comparator);
+        xsdm._parentModel = this;
         this._lastAdded.add(xsdm);
+    }
+
+    public XSDModel getParentModel()
+    {
+        return _parentModel;
     }
 
     public synchronized void removeSubModel(XSDModel xsdm)

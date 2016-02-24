@@ -6,7 +6,6 @@ import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -45,7 +44,6 @@ public class SimpleTypeParser
         XPath newXPath = xp.newXPath();
         newXPath.setNamespaceContext(controller.getNamespaceContext());
         NodeList enumValues;
-        Element currentELement = (Element) xsdNode;
         try
         {
             enumValues = (NodeList) newXPath

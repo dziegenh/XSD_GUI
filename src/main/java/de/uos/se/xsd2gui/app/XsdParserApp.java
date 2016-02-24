@@ -2,7 +2,8 @@ package de.uos.se.xsd2gui.app;
 
 import de.uos.se.xsd2gui.generators.*;
 import de.uos.se.xsd2gui.models.XSDModel;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.DefaultWidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.LoadValueFactory;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -85,18 +86,18 @@ public class XsdParserApp
         VBox root = new VBox();
 
         // Create the main widget generator controller with the shared namespace.
-        WidgetFactory widgetFactory = new WidgetFactory();
+        DefaultWidgetFactory defaultWidgetFactory = new DefaultWidgetFactory(new LoadValueFactory(new File("out.xml")));
 
         // Add the Generators
         // TODO create missing parsers (e.g. for sequence tags)
-        widgetFactory.addWidgetGenerator(new BasicAttributeParser());
-        widgetFactory.addWidgetGenerator(new SimpleTypeParser());
-        widgetFactory.addWidgetGenerator(new ContainerParser());
-        widgetFactory.addWidgetGenerator(new BasicSequenceParser());
-        widgetFactory.addWidgetGenerator(
+        defaultWidgetFactory.addWidgetGenerator(new BasicAttributeParser());
+        defaultWidgetFactory.addWidgetGenerator(new SimpleTypeParser());
+        defaultWidgetFactory.addWidgetGenerator(new ContainerParser());
+        defaultWidgetFactory.addWidgetGenerator(new BasicSequenceParser());
+        defaultWidgetFactory.addWidgetGenerator(
                 new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\predefined\\CommonTypes.xsd"));
-        widgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR +
-                                                                      "config\\predefined\\StructuredTypes.xsd"));
+        defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR +
+                                                                             "config\\predefined\\StructuredTypes.xsd"));
 
 
         ComboBox<File> fc = new ComboBox<>();
@@ -113,8 +114,9 @@ public class XsdParserApp
                 rootChildren.add(currentContent);
                 Document doc = _documentBuilder.parse(newValue.getPath());
                 // Generated widgets are added to the root node
-                _currentModel = widgetFactory.parseXsd(doc, currentContent, newValue.getPath()
-                                                                                    .replaceAll(
+                _currentModel = defaultWidgetFactory
+                        .parseXsd(doc, currentContent, newValue.getPath()
+                                                               .replaceAll(
                                                                                             "\\" +
                                                                                             File.separator,
                                                                                             "/"));

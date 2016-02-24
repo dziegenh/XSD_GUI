@@ -26,13 +26,15 @@ public abstract class AbstractWidgetFactory
      * The widget generators which parse specific XSD elements.
      */
     private final List<IWidgetGenerator> _generators;
+    private final IValueFactory _valueFactory;
 
     /**
-     * Same as calling <i>new WidgetFactory(new DefaultNamespaceContext())</i>
+     * Same as calling <i>new DefaultWidgetFactory(new DefaultNamespaceContext(), new
+     * DefaultValueFactory())</i>
      */
     protected AbstractWidgetFactory()
     {
-        this(new DefaultNamespaceContext());
+        this(new DefaultNamespaceContext(), new DefaultValueFactory());
     }
 
     /**
@@ -41,10 +43,19 @@ public abstract class AbstractWidgetFactory
      * @param namespaceContext
      *         the context to use
      */
-    protected AbstractWidgetFactory(NamespaceContext namespaceContext)
+    protected AbstractWidgetFactory(NamespaceContext namespaceContext, IValueFactory valueFactory)
     {
         this._namespaceContext = namespaceContext;
         this._generators = new LinkedList<>();
+        this._valueFactory = valueFactory;
+    }
+
+    /**
+     * Same as calling <i>new DefaultWidgetFactory(namespaceContext,new DefaultValueFactory())</i>
+     */
+    protected AbstractWidgetFactory(NamespaceContext namespaceContext)
+    {
+        this(namespaceContext, new DefaultValueFactory());
     }
 
     /**
@@ -78,5 +89,15 @@ public abstract class AbstractWidgetFactory
     public List<IWidgetGenerator> getGenerators()
     {
         return Collections.unmodifiableList(_generators);
+    }
+
+    public String getValueFor(XSDModel model, String defaultValue)
+    {
+        return this._valueFactory.getValueFor(model, defaultValue);
+    }
+
+    public int getMinimumAmountOfElements(XSDModel model, String prefixElementName)
+    {
+        return this._valueFactory.getMinimumNumberOfElements(model, prefixElementName);
     }
 }

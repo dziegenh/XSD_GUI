@@ -51,7 +51,7 @@ public class CustomTypesParser
     }
 
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory controller, Pane parentWidget, Node
+    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node
             xsdNode, XSDModel parentModel)
     {
         if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
@@ -75,7 +75,6 @@ public class CustomTypesParser
         String fixed = elementNode.getAttribute(FIXED);
         if (localName.equals("element"))
             model = new ElementModel(elementNode);
-
         else
             model = new AttributeModel(elementNode);
         if (model.isFixed())
@@ -86,17 +85,17 @@ public class CustomTypesParser
         try
         {
             // load and setup the XSD document
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setIgnoringComments(true);
-            factory.setIgnoringElementContentWhitespace(true);
-            factory.setNamespaceAware(true);
-            DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+            DocumentBuilderFactory documentBuilderFctory = DocumentBuilderFactory.newInstance();
+            documentBuilderFctory.setIgnoringComments(true);
+            documentBuilderFctory.setIgnoringElementContentWhitespace(true);
+            documentBuilderFctory.setNamespaceAware(true);
+            DocumentBuilder documentBuilder = documentBuilderFctory.newDocumentBuilder();
             Document doc = documentBuilder.parse(new FileInputStream(xsdFilename));
 
             // setup the XPath object
             XPathFactory xp = XPathFactory.newInstance();
             XPath newXPath = xp.newXPath();
-            newXPath.setNamespaceContext(controller.getNamespaceContext());
+            newXPath.setNamespaceContext(factory.getNamespaceContext());
 
             // Find the node which defines the current element type
             NodeList matchingTypeNodes;
@@ -108,9 +107,10 @@ public class CustomTypesParser
             // create the GUI widget for the current element type
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             HBox hBox = new HBox(10, textFieldLabel);
-            controller.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
-            if (model.isFixed())
-                model.valueProperty().setValue(fixed);
+            factory.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
+            System.out.println(parentModel);
+            model.valueProperty()
+                 .setValue(factory.getValueFor(model, model.valueProperty().getValue()));
             return hBox;
 
         }

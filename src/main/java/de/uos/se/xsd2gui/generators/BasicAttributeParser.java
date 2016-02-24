@@ -31,8 +31,6 @@ public class BasicAttributeParser
     public static final String FIXED = "fixed";
     //the tape attribute name
     public static final String TYPE = "type";
-    //the name of the default value attribute
-    public static final String DEFAULT = "default";
 
     @Override
     public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node
@@ -57,16 +55,19 @@ public class BasicAttributeParser
         {
             return null;
         }
-        XSDModel model;
+        XSDModel model = new AttributeModel(elementNode);
+        //important that the submodel is added before asking the factoryx for values since the
+        // location of the model is used for generating "paths"
+        parentModel.addSubModel(model);
         // TODO create the desired GUI element (Textfield, integer input etc.)
         // TODO use the attribute constraints ("required", "default" etc.)
         Control inputWidget = null;
         String fixed = elementNode.getAttribute(FIXED);
+        //System.out.println(XSDPathUtil.parseFromXMLNode(elementNode));
         switch (elementNode.getAttribute(TYPE))
         {
             case "xs:int":
-                model = new AttributeModel(elementNode);
-                int initialValue = Integer.parseInt(getDefaultFromElement(elementNode, "0"));
+                int initialValue = Integer.parseInt(factory.getValueFor(model, "0"));
                 model.addConstraint(new IntegerConstraint());
                 if (model.isRequired())
                     model.addConstraint(new NoPureWhitespaceStringConstraint());
@@ -87,8 +88,7 @@ public class BasicAttributeParser
                 break;
 
             case "xs:string":
-                model = new AttributeModel(elementNode);
-                String defaultStringValue = getDefaultFromElement(elementNode, "");
+                String defaultStringValue = factory.getValueFor(model, "");
                 if (model.isRequired())
                     model.addConstraint(new NoPureWhitespaceStringConstraint());
                 if (! fixed.trim().isEmpty())
@@ -101,14 +101,10 @@ public class BasicAttributeParser
                 model.valueProperty().setValue(defaultStringValue);
                 inputWidget = textField;
                 break;
-            default:
-                model = null;
-                break;
         }
 
         if (null != inputWidget)
         {
-            parentModel.addSubModel(model);
             inputWidget.setDisable(model.isFixed());
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             Label typeLabel = new Label(" (" + elementNode.getAttribute("type") + ")");
@@ -118,12 +114,4 @@ public class BasicAttributeParser
         return null;
 
     }
-
-    private String getDefaultFromElement(Element elementNode, String notPresentValue)
-    {
-        String defaultValue = elementNode.getAttribute(DEFAULT);
-        return defaultValue.trim().isEmpty() ? notPresentValue : defaultValue;
-    }
-
-
 }

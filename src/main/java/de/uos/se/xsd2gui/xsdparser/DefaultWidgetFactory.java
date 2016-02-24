@@ -18,14 +18,14 @@ import java.util.logging.Logger;
  *
  * @author dziegenhagen
  */
-public class WidgetFactory
+public class DefaultWidgetFactory
         extends AbstractWidgetFactory
 {
 
     /**
-     * Same as calling <i>new WidgetFactory(new DefaultNamespaceContext())</i>
+     * Same as calling <i>new DefaultWidgetFactory(new DefaultNamespaceContext())</i>
      */
-    public WidgetFactory()
+    public DefaultWidgetFactory()
     {
         this(new DefaultNamespaceContext());
     }
@@ -34,9 +34,14 @@ public class WidgetFactory
      * The constructor, making this object use the provided {@linkplain NamespaceContext}
      * @param namespaceContext the context to use
      */
-    public WidgetFactory(NamespaceContext namespaceContext)
+    public DefaultWidgetFactory(NamespaceContext namespaceContext)
     {
-        super(namespaceContext);
+        super(namespaceContext, new DefaultValueFactory());
+    }
+
+    public DefaultWidgetFactory(IValueFactory valueFactory)
+    {
+        super(new DefaultNamespaceContext(), valueFactory);
     }
 
     /**
@@ -78,7 +83,8 @@ public class WidgetFactory
                 rootWidget.getChildren().add(nodeWidget);
                 
                 if (guiNodeCreated) {
-                    Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
+                    Logger.getLogger(DefaultWidgetFactory.class.getName())
+                          .log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
                 }
 
                 guiNodeCreated = true;
@@ -87,7 +93,7 @@ public class WidgetFactory
 
         if (!guiNodeCreated) {
 
-            Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
+            //Logger.getLogger(DefaultWidgetFactory.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
 
             if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                 Element nodeEl = (Element) xsdNode;
