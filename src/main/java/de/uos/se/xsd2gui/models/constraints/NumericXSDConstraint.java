@@ -9,10 +9,10 @@ package de.uos.se.xsd2gui.models.constraints;
  * @author Falk Wilke
  */
 public class NumericXSDConstraint
-        extends NoPureWhitespaceStringConstraint
+        extends NoNullValueConstraint
 {
     //double number regex
-    public static final String DOUBLE_REGEX = "(-?\\d+\\.?\\d*)|(-?\\d*\\.?\\d+)";
+    public static final String DOUBLE_REGEX = "(\\s*)((-?\\d+\\.?\\d*)|(-?\\d*\\.?\\d+))(\\s*)";
 
     @Override
     public boolean isViolatedBy(String value)

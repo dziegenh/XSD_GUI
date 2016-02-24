@@ -67,13 +67,13 @@ public class BasicAttributeParser
             case "xs:int":
                 model = new AttributeModel(elementNode);
                 int initialValue = Integer.parseInt(getDefaultFromElement(elementNode, "0"));
+                model.addConstraint(new IntegerConstraint());
                 if (model.isRequired())
-                    model.addConstraint(new IntegerConstraint());
+                    model.addConstraint(new NoPureWhitespaceStringConstraint());
                 if (model.isFixed())
                 {
                     model.addConstraint(new FixedValueConstraint(fixed));
                     initialValue = Integer.parseInt(fixed);
-                    ;
                 }
 
                 IntegerSpinnerValueFactory factory = new IntegerSpinnerValueFactory(
