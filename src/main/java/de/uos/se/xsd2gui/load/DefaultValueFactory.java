@@ -25,7 +25,7 @@ public class DefaultValueFactory
     }
 
     @Override
-    public int getMinimumNumberOfElements(XSDModel model, String prefixElementName)
+    public int getMinimumNumberOfElements(XSDModel model, Element element)
     {
         return 0;
     }

@@ -97,7 +97,7 @@ public class SequenceReparser
         {
             String name = elem.getAttribute(NAME);
             int minOccurs = Math.max(getMinOcc(elem, MIN_OCCURS, 0),
-                                     factory.getMinimumAmountOfElements(this._model, name));
+                                     factory.getMinimumAmountOfElements(this._model, elem));
             int currentOccs = this._currentOccurences.get(name);
             for (int i = 0; i < minOccurs - currentOccs; i++)
             {

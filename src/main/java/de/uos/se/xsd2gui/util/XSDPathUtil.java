@@ -21,9 +21,18 @@ public class XSDPathUtil
 
     }
 
-    public static String parseFromXSDModel(XSDModel model, String prefixElementName)
+    public static String parseFromXSDModel(XSDModel model, Element element)
     {
+        String prefixElementName = element.getAttribute("name") + getCorrespondingType(element);
         return prefixElementName.trim().concat(PATH_SEPARATOR).concat(parseFromXSDModel(model));
+    }
+
+    private static short getCorrespondingType(Node element)
+    {
+        if (element.getNodeName().equals("xs:attribute"))
+            return Node.ATTRIBUTE_NODE;
+        else
+            return element.getNodeType();
     }
 
     public static String parseFromXSDModel(XSDModel model)
@@ -38,7 +47,7 @@ public class XSDPathUtil
             Element currentElement = current.getXSDNode();
             if (currentElement.hasAttribute(NAME))
                 sb.append(currentElement.getAttribute(NAME).replaceAll(PATH_SEPARATOR, REPLACEMENT))
-                  .append(PATH_SEPARATOR);
+                  .append(getCorrespondingType(currentElement)).append(PATH_SEPARATOR);
             current = current.getParentModel();
         }
         return sb.substring(0, sb.lastIndexOf(PATH_SEPARATOR));
@@ -53,7 +62,7 @@ public class XSDPathUtil
         while (current != null && current.getLocalName() != null)
         {
             sb.append(current.getLocalName().replaceAll(PATH_SEPARATOR, REPLACEMENT))
-              .append(PATH_SEPARATOR);
+              .append(getCorrespondingType(current)).append(PATH_SEPARATOR);
             current = getContainingNode(current);
         }
         return sb.substring(0, sb.lastIndexOf(PATH_SEPARATOR));

@@ -7,6 +7,7 @@ import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.DefaultNamespaceContext;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.namespace.NamespaceContext;
 import java.util.Collections;
@@ -98,9 +99,9 @@ public abstract class AbstractWidgetFactory
         return this._valueFactory.getValueFor(model, defaultValue);
     }
 
-    public int getMinimumAmountOfElements(XSDModel model, String prefixElementName)
+    public int getMinimumAmountOfElements(XSDModel model, Element element)
     {
-        return this._valueFactory.getMinimumNumberOfElements(model, prefixElementName);
+        return this._valueFactory.getMinimumNumberOfElements(model, element);
     }
 
     /**

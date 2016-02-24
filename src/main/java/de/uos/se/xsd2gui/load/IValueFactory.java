@@ -35,5 +35,5 @@ public interface IValueFactory
      */
     String getValueFor(XSDModel xsdNode, String defaultValue);
 
-    int getMinimumNumberOfElements(XSDModel model, String prefixElementName);
+    int getMinimumNumberOfElements(XSDModel model, Element element);
 }

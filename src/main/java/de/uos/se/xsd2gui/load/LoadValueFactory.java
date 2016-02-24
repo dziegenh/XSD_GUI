@@ -102,9 +102,9 @@ public class LoadValueFactory
     }
 
     @Override
-    public int getMinimumNumberOfElements(XSDModel model, String prefixElementName)
+    public int getMinimumNumberOfElements(XSDModel model, Element element)
     {
-        String path = XSDPathUtil.parseFromXSDModel(model, prefixElementName);
+        String path = XSDPathUtil.parseFromXSDModel(model, element);
         return this._amountOfElements.getOrDefault(path, 0);
     }
 }
