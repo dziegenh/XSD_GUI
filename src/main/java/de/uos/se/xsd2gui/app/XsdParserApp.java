@@ -75,6 +75,11 @@ public class XsdParserApp
         launch(args2);
     }
 
+    /**
+     * A custom type parser is created for a XSD file itself when it is loaded.
+     */
+    private WidgetGenerator localCustomTypeParser = null;
+
     @Override
     public void start(Stage primaryStage)
     {

@@ -66,6 +66,10 @@ public class BasicAttributeParser
         //System.out.println(XSDPathUtil.parseFromXMLNode(elementNode));
         switch (elementNode.getAttribute(TYPE))
         {
+            case "xs:unsignedInt":
+                // TODO create constraints for unsigned int type
+
+
             case "xs:int":
                 int initialValue = Integer.parseInt(factory.getValueFor(model, "0"));
                 model.addConstraint(new IntegerConstraint());
@@ -83,7 +87,7 @@ public class BasicAttributeParser
                 spinner.setEditable(false);
                 model.valueProperty().setValue(spinnerFactory.getValue().toString());
                 spinner.editorProperty().getValue().textProperty()
-                       .bindBidirectional(model.valueProperty());
+                        .bindBidirectional(model.valueProperty());
                 inputWidget = spinner;
                 break;
 
@@ -101,11 +105,14 @@ public class BasicAttributeParser
                 model.valueProperty().setValue(defaultStringValue);
                 inputWidget = textField;
                 break;
+            default:
+                model = null;
+                break;
         }
 
         if (null != inputWidget)
         {
-            inputWidget.setDisable(model.isFixed());
+            parentModel.addSubModel(model);
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             Label typeLabel = new Label(" (" + elementNode.getAttribute("type") + ")");
             return new HBox(10, textFieldLabel, inputWidget, typeLabel);
