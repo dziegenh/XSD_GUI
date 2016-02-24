@@ -3,6 +3,7 @@ package de.uos.se.xsd2gui.app;
 import de.uos.se.xsd2gui.generators.*;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.DefaultWidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import de.uos.se.xsd2gui.xsdparser.LoadValueFactory;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -41,6 +42,10 @@ public class XsdParserApp
     private static final String XSD_BASE_DIR = "src\\main\\resources\\";
     private final DocumentBuilder _documentBuilder;
     private XSDModel _currentModel;
+    /**
+     * A custom type parser is created for a XSD file itself when it is loaded.
+     */
+    private IWidgetGenerator localCustomTypeParser = null;
 
     public XsdParserApp()
     {
@@ -74,11 +79,6 @@ public class XsdParserApp
 
         launch(args2);
     }
-
-    /**
-     * A custom type parser is created for a XSD file itself when it is loaded.
-     */
-    private WidgetGenerator localCustomTypeParser = null;
 
     @Override
     public void start(Stage primaryStage)

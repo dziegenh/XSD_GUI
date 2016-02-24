@@ -102,32 +102,28 @@ public class CustomTypesParser
             matchingTypeNodes = (NodeList) newXPath
                     .evaluate("/xs:schema/node()[@name='" + localType + "']", doc,
                               XPathConstants.NODESET);
-
-            // TODO check length of the matching node list (should be 1!!)
-            // create the GUI widget for the current element type
-            Label textFieldLabel = new Label(elementNode.getAttribute("name"));
-            HBox hBox = new HBox(10, textFieldLabel);
-            factory.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
-            System.out.println(parentModel);
-            model.valueProperty()
-                 .setValue(factory.getValueFor(model, model.valueProperty().getValue()));
-            return hBox;
             if (1 == matchingTypeNodes.getLength())
             {
 
-                // create the GUI widget for the current element type
                 Label textFieldLabel = new Label(elementNode.getAttribute("name"));
                 HBox hBox = new HBox(10, textFieldLabel);
-                controller.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
+                factory.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
+                System.out.println(parentModel);
+                model.valueProperty()
+                     .setValue(factory.getValueFor(model, model.valueProperty().getValue()));
                 return hBox;
 
             } else
             {
-                Logger.getLogger(CustomTypesParser.class.getName()).log(Level.WARNING, "The XSD Node for the custom type {0} could not be found!", localType);
+                Logger.getLogger(CustomTypesParser.class.getName())
+                      .log(Level.WARNING, "The XSD Node for the " +
+                                          "custom type {0} could " +
+                                          "not be found!", localType);
 
             }
 
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             Logger.getLogger(CustomTypesParser.class.getName()).log(Level.SEVERE, "{0}", ex);
         }

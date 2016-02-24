@@ -87,7 +87,7 @@ public class BasicAttributeParser
                 spinner.setEditable(false);
                 model.valueProperty().setValue(spinnerFactory.getValue().toString());
                 spinner.editorProperty().getValue().textProperty()
-                        .bindBidirectional(model.valueProperty());
+                       .bindBidirectional(model.valueProperty());
                 inputWidget = spinner;
                 break;
 

@@ -100,4 +100,16 @@ public abstract class AbstractWidgetFactory
     {
         return this._valueFactory.getMinimumNumberOfElements(model, prefixElementName);
     }
+
+    /**
+     * Removes a widget generator.
+     *
+     * @param widgetGenerator
+     *         the parser to remove
+     */
+    public void removeWidgetGenerator(IWidgetGenerator widgetGenerator)
+    {
+        this._generators.remove(widgetGenerator);
+    }
+
 }

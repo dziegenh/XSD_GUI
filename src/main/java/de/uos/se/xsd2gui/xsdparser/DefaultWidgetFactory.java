@@ -65,16 +65,6 @@ public class DefaultWidgetFactory
     }
 
     /**
-     * Removes a widget generator.
-     *
-     * @param localCustomTypeParser
-     */
-    public void removeWidgetGenerator(WidgetGenerator localCustomTypeParser)
-    {
-        this.generators.remove(localCustomTypeParser);
-    }
-
-    /**
      * Tries to parse the given xsdNode using the available widget generators.
      * If nothing was generated, the step is repeated for each child node.
      *
@@ -103,7 +93,8 @@ public class DefaultWidgetFactory
 
         if (!guiNodeCreated) {
 
-            Logger.getLogger(WidgetFactory.class.getName()).log(Level.INFO, "No GUI node created for {0}", xsdNode);
+            Logger.getLogger(DefaultWidgetFactory.class.getName())
+                  .log(Level.INFO, "No GUI node created for {0}", xsdNode);
 
             if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                 Element nodeEl = (Element) xsdNode;
