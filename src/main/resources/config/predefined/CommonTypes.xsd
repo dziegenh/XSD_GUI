@@ -9,6 +9,13 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="UnitType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="physical"/>
+            <xs:enumeration value="string"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="RefinedType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="uint8"/>

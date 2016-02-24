@@ -103,8 +103,8 @@ public class XsdParserApp
                 new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\predefined\\CommonTypes.xsd"));
         defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR +
                                                                              "config\\predefined\\StructuredTypes.xsd"));
-
-
+        defaultWidgetFactory.addWidgetGenerator(
+                new CustomTypesParser("custom:", XSD_BASE_DIR + "config\\CustomTypes.xsd"));
         ComboBox<File> fc = new ComboBox<>();
         root.getChildren().add(fc);
         File dir = new File(xsdFilesname);
@@ -152,7 +152,7 @@ public class XsdParserApp
                     catch (IOException | TransformerException e)
                     {
                         Logger.getLogger(this.getClass().getName())
-                              .log(Level.SEVERE, "fata error while writing output", e);
+                              .log(Level.SEVERE, "fatal error while writing output", e);
                     }
             }));
 
