@@ -2,7 +2,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:ct="CommonTypes" elementFormDefault="qualified">
     <xs:import schemaLocation="../predefined/CommonTypes.xsd" namespace="CommonTypes"/>
-    <xs:import schemaLocation="../CustomTypes.xsd" namespace="custom"/>
     <xs:simpleType name="UnitType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="physical"/>
