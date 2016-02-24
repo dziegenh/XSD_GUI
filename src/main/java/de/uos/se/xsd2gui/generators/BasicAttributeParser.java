@@ -114,6 +114,7 @@ public class BasicAttributeParser
         if (null != inputWidget)
         {
             parentModel.addSubModel(model);
+            inputWidget.setDisable(model.isFixed());
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             Label typeLabel = new Label(" (" + elementNode.getAttribute("type") + ")");
             return new HBox(10, textFieldLabel, inputWidget, typeLabel);

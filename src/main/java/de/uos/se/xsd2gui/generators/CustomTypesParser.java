@@ -79,7 +79,6 @@ public class CustomTypesParser
             model = new AttributeModel(elementNode);
         if (model.isFixed())
             model.addConstraint(new FixedValueConstraint(fixed));
-        parentModel.addSubModel(model);
         final String localType = type.substring(typeNamespacePrefix.length());
 
         try
@@ -107,8 +106,8 @@ public class CustomTypesParser
 
                 Label textFieldLabel = new Label(elementNode.getAttribute("name"));
                 HBox hBox = new HBox(10, textFieldLabel);
+                parentModel.addSubModel(model);
                 factory.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
-                System.out.println(parentModel);
                 model.valueProperty()
                      .setValue(factory.getValueFor(model, model.valueProperty().getValue()));
                 return hBox;

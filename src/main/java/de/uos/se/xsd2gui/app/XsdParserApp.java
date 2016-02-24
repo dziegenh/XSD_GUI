@@ -90,21 +90,7 @@ public class XsdParserApp
         // JavaFX SceneGraph root element.
         VBox root = new VBox();
 
-        // Create the main widget generator controller with the shared namespace.
-        DefaultWidgetFactory defaultWidgetFactory = new DefaultWidgetFactory(new LoadValueFactory(new File("out.xml")));
 
-        // Add the Generators
-        // TODO create missing parsers (e.g. for sequence tags)
-        defaultWidgetFactory.addWidgetGenerator(new BasicAttributeParser());
-        defaultWidgetFactory.addWidgetGenerator(new SimpleTypeParser());
-        defaultWidgetFactory.addWidgetGenerator(new ContainerParser());
-        defaultWidgetFactory.addWidgetGenerator(new BasicSequenceParser());
-        defaultWidgetFactory.addWidgetGenerator(
-                new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\predefined\\CommonTypes.xsd"));
-        defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR +
-                                                                             "config\\predefined\\StructuredTypes.xsd"));
-        defaultWidgetFactory.addWidgetGenerator(
-                new CustomTypesParser("custom:", XSD_BASE_DIR + "config\\CustomTypes.xsd"));
         ComboBox<File> fc = new ComboBox<>();
         root.getChildren().add(fc);
         File dir = new File(xsdFilesname);
@@ -118,6 +104,22 @@ public class XsdParserApp
                 VBox currentContent = new VBox();
                 rootChildren.add(currentContent);
                 Document doc = _documentBuilder.parse(newValue.getPath());
+                // Create the main widget generator controller with the shared namespace.
+                DefaultWidgetFactory defaultWidgetFactory = new DefaultWidgetFactory(
+                        new LoadValueFactory(new File("out.xml")));
+
+                // Add the Generators
+                // TODO create missing parsers (e.g. for sequence tags)
+                defaultWidgetFactory.addWidgetGenerator(new BasicAttributeParser());
+                defaultWidgetFactory.addWidgetGenerator(new SimpleTypeParser());
+                defaultWidgetFactory.addWidgetGenerator(new ContainerParser());
+                defaultWidgetFactory.addWidgetGenerator(new BasicSequenceParser());
+                defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("ct:", XSD_BASE_DIR +
+                                                                                     "config\\predefined\\CommonTypes.xsd"));
+                defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR +
+                                                                                     "config\\predefined\\StructuredTypes.xsd"));
+                defaultWidgetFactory
+                        .addWidgetGenerator(new CustomTypesParser("", newValue.getPath()));
                 // Generated widgets are added to the root node
                 _currentModel = defaultWidgetFactory
                         .parseXsd(doc, currentContent, newValue.getPath()
