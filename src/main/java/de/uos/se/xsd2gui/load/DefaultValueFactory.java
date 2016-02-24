@@ -1,4 +1,4 @@
-package de.uos.se.xsd2gui.xsdparser;
+package de.uos.se.xsd2gui.load;
 
 import de.uos.se.xsd2gui.models.XSDModel;
 import org.w3c.dom.Element;

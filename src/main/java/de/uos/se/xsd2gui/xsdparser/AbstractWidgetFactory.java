@@ -1,5 +1,7 @@
 package de.uos.se.xsd2gui.xsdparser;
 
+import de.uos.se.xsd2gui.load.DefaultValueFactory;
+import de.uos.se.xsd2gui.load.IValueFactory;
 import de.uos.se.xsd2gui.models.RootModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.DefaultNamespaceContext;

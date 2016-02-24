@@ -1,10 +1,10 @@
 package de.uos.se.xsd2gui.app;
 
 import de.uos.se.xsd2gui.generators.*;
+import de.uos.se.xsd2gui.load.LoadValueFactory;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.DefaultWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
-import de.uos.se.xsd2gui.xsdparser.LoadValueFactory;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
