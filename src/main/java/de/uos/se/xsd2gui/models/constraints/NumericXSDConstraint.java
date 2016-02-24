@@ -11,13 +11,13 @@ package de.uos.se.xsd2gui.models.constraints;
 public class NumericXSDConstraint
         extends NoPureWhitespaceStringConstraint
 {
-    //a double number regex
-    public static final String NUMBER_REGEX = "(-?\\d+\\.?\\d*)|(-?\\d*\\.?\\d+)";
+    //double number regex
+    public static final String DOUBLE_REGEX = "(-?\\d+\\.?\\d*)|(-?\\d*\\.?\\d+)";
 
     @Override
     public boolean isViolatedBy(String value)
     {
-        return super.isViolatedBy(value) || ! value.trim().matches(NUMBER_REGEX);
+        return super.isViolatedBy(value) || ! value.trim().matches(DOUBLE_REGEX);
     }
 
     @Override

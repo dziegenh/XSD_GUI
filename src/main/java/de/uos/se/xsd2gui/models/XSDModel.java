@@ -39,13 +39,30 @@ public abstract class XSDModel
     public static final String LINE_SEP = System.getProperty("line.separator");
     //the name of the use attribute
     public static final String USE = "use";
+    //the name of the fixed attribute
+    public static final String FIXED = "fixed";
     //the node it corresponds to
     private final Element _xsdNode;
     //the submodels
     private final LinkedList<XSDModel> _subModels;
-    //if this is required or not
+    /**
+     * if the value of this model is required or not (the use attribute is not present or it
+     * equals "required")
+     * should be supplemented with a
+     * {@linkplain de.uos.se.xsd2gui.models.constraints.NoPureWhitespaceStringConstraint} since
+     * this field is
+     * only intended for informational purposes
+     */
     private final boolean _required;
-    //the comparator
+    /**
+     * if the value of this model is fixed or not (the fixed attribute is present and not pure
+     * whitespace)
+     * should be supplemented with a
+     * {@linkplain de.uos.se.xsd2gui.models.constraints.FixedValueConstraint} since this field is
+     * only intended for informational purposes
+     */
+    private final boolean _fixed;
+    //the comparator used for sorting the internal models (if some order is required)
     private final Comparator<XSDModel> _comparator;
     //the name of the element
     private final String _elementName;
@@ -122,6 +139,8 @@ public abstract class XSDModel
         this._violationText = new SimpleStringProperty("");
         this._value.addListener((observable, oldValue, newValue) -> checkConstraints());
         this._violated = new SimpleBooleanProperty(false);
+        this._fixed = this._xsdNode.hasAttribute(FIXED) &&
+                      ! this._xsdNode.getAttribute(FIXED).trim().isEmpty();
     }
 
     /**
@@ -157,6 +176,11 @@ public abstract class XSDModel
     public String getName()
     {
         return _elementName;
+    }
+
+    public boolean isFixed()
+    {
+        return _fixed;
     }
 
     /**

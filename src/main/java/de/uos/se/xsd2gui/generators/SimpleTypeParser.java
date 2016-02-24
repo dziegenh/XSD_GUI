@@ -46,7 +46,6 @@ public class SimpleTypeParser
         newXPath.setNamespaceContext(controller.getNamespaceContext());
         NodeList enumValues;
         Element currentELement = (Element) xsdNode;
-        String fixed = currentELement.getAttribute(FIXED);
         try
         {
             enumValues = (NodeList) newXPath
@@ -66,6 +65,7 @@ public class SimpleTypeParser
             }
             comboBox.valueProperty().bindBidirectional(parentModel.valueProperty());
             comboBox.getSelectionModel().selectFirst();
+            comboBox.setDisable(parentModel.isFixed());
             return comboBox;
 
         }

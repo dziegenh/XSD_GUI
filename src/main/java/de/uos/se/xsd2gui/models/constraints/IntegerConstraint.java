@@ -2,7 +2,7 @@ package de.uos.se.xsd2gui.models.constraints;
 
 /**
  * created: 24.02.2016
- * A constraing modelling that only integer values are ok. Of course it extends
+ * A constraint modelling that only integer values are ok. Of course it extends
  * {@linkplain NumericXSDConstraint}
  *
  * @author Falk Wilke
@@ -10,7 +10,7 @@ package de.uos.se.xsd2gui.models.constraints;
 public class IntegerConstraint
         extends NumericXSDConstraint
 {
-    //a integer number regex
+    //integer number regex
     public static final String INTEGER_REGEX = "\\d+";
 
     @Override

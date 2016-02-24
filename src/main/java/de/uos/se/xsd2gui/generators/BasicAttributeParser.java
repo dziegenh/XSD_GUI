@@ -7,8 +7,11 @@ import de.uos.se.xsd2gui.models.constraints.IntegerConstraint;
 import de.uos.se.xsd2gui.models.constraints.NoPureWhitespaceStringConstraint;
 import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import javafx.scene.control.*;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Element;
@@ -63,23 +66,18 @@ public class BasicAttributeParser
         {
             case "xs:int":
                 model = new AttributeModel(elementNode);
-                IntegerSpinnerValueFactory factory;
+                int initialValue = Integer.parseInt(getDefaultFromElement(elementNode, "0"));
                 if (model.isRequired())
                     model.addConstraint(new IntegerConstraint());
-                if (! fixed.trim().isEmpty())
+                if (model.isFixed())
                 {
                     model.addConstraint(new FixedValueConstraint(fixed));
-                    int fixedIntValue = Integer.parseInt(fixed);
-                    factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(fixedIntValue,
-                                                                                 fixedIntValue,
-                                                                                 fixedIntValue);
-                } else
-                {
-                    int initialValue = Integer
-                            .parseInt(getDefaultValueFromElement(elementNode, "0"));
-                    factory = new IntegerSpinnerValueFactory(Integer.MIN_VALUE, Integer.MAX_VALUE,
-                                                             initialValue);
+                    initialValue = Integer.parseInt(fixed);
+                    ;
                 }
+
+                IntegerSpinnerValueFactory factory = new IntegerSpinnerValueFactory(
+                        Integer.MIN_VALUE, Integer.MAX_VALUE, initialValue);
                 Spinner<Integer> spinner = new Spinner<>(factory);
                 spinner.setEditable(false);
                 model.valueProperty().setValue(factory.getValue().toString());
@@ -90,7 +88,7 @@ public class BasicAttributeParser
 
             case "xs:string":
                 model = new AttributeModel(elementNode);
-                String defaultStringValue = getDefaultValueFromElement(elementNode, "");
+                String defaultStringValue = getDefaultFromElement(elementNode, "");
                 if (model.isRequired())
                     model.addConstraint(new NoPureWhitespaceStringConstraint());
                 if (! fixed.trim().isEmpty())
@@ -111,6 +109,7 @@ public class BasicAttributeParser
         if (null != inputWidget)
         {
             parentModel.addSubModel(model);
+            inputWidget.setDisable(model.isFixed());
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             Label typeLabel = new Label(" (" + elementNode.getAttribute("type") + ")");
             return new HBox(10, textFieldLabel, inputWidget, typeLabel);
@@ -120,7 +119,7 @@ public class BasicAttributeParser
 
     }
 
-    private String getDefaultValueFromElement(Element elementNode, String notPresentValue)
+    private String getDefaultFromElement(Element elementNode, String notPresentValue)
     {
         String defaultValue = elementNode.getAttribute(DEFAULT);
         return defaultValue.trim().isEmpty() ? notPresentValue : defaultValue;
