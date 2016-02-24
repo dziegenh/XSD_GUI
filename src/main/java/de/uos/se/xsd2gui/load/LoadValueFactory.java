@@ -91,13 +91,11 @@ public class LoadValueFactory
     public String getValueFor(XSDModel model, String defaultValue)
     {
         String path = XSDPathUtil.parseFromXSDModel(model);
-        System.out.println(path);
         if (! this._values.containsKey(path))
             return defaultValue;
         List<String> valuesForElement = this._values.get(path);
         if (valuesForElement.isEmpty())
             return defaultValue;
-        System.out.println(valuesForElement.get(0));
         return valuesForElement.remove(0);
     }
 
