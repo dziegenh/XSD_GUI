@@ -1,7 +1,7 @@
 package de.uos.se.xsd2gui.util;
 
 import de.uos.se.xsd2gui.models.XSDModel;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -81,7 +81,8 @@ public class SequenceReparser
     }
 
     /**
-     * This method will call {@linkplain #add(Pane, String, WidgetFactory)} for every element
+     * This method will call {@linkplain #add(Pane, String, AbstractWidgetFactory)} for every
+     * element
      * which is handled by this instance until there are minOccurs many elements present
      *
      * @param widget
@@ -89,7 +90,7 @@ public class SequenceReparser
      * @param factory
      *         the factory to use for parsing unknown elements
      */
-    public synchronized void reparseToMinimumOcc(Pane widget, WidgetFactory factory)
+    public synchronized void reparseToMinimumOcc(Pane widget, AbstractWidgetFactory factory)
     {
         //iterate since all elements have to be reparsed
         for (Element elem : this._elements.values())
@@ -137,7 +138,7 @@ public class SequenceReparser
      * @param factory
      *         the factory zto use for parsing elements
      */
-    public synchronized void add(Pane widget, String name, WidgetFactory factory)
+    public synchronized void add(Pane widget, String name, AbstractWidgetFactory factory)
     {
         //cannot parse unknown elements
         if (! _elements.containsKey(name))
@@ -150,7 +151,7 @@ public class SequenceReparser
         {
             /**
              * Does essentially the same
-             * {@linkplain de.uos.se.xsd2gui.generators.BasicSequenceParser#createWidget(WidgetFactory, Pane, org.w3c.dom.Node, XSDModel)}
+             * {@linkplain de.uos.se.xsd2gui.generators.BasicSequenceParser#createWidget(AbstractWidgetFactory, Pane, org.w3c.dom.Node, XSDModel)}
              * should do.
              */
             Pane elementPane = new HBox(20);

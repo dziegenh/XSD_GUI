@@ -5,8 +5,8 @@ import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
 import de.uos.se.xsd2gui.models.constraints.IntegerConstraint;
 import de.uos.se.xsd2gui.models.constraints.NoPureWhitespaceStringConstraint;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
+import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
@@ -24,7 +24,7 @@ import org.w3c.dom.Node;
  * @author dziegenhagen
  */
 public class BasicAttributeParser
-        implements WidgetGenerator
+        implements IWidgetGenerator
 {
 
     //the fixed attribute name
@@ -35,7 +35,7 @@ public class BasicAttributeParser
     public static final String DEFAULT = "default";
 
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node
+    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node
             xsdNode, XSDModel parentModel)
     {
 
@@ -76,11 +76,11 @@ public class BasicAttributeParser
                     initialValue = Integer.parseInt(fixed);
                 }
 
-                IntegerSpinnerValueFactory factory = new IntegerSpinnerValueFactory(
+                IntegerSpinnerValueFactory spinnerFactory = new IntegerSpinnerValueFactory(
                         Integer.MIN_VALUE, Integer.MAX_VALUE, initialValue);
-                Spinner<Integer> spinner = new Spinner<>(factory);
+                Spinner<Integer> spinner = new Spinner<>(spinnerFactory);
                 spinner.setEditable(false);
-                model.valueProperty().setValue(factory.getValue().toString());
+                model.valueProperty().setValue(spinnerFactory.getValue().toString());
                 spinner.editorProperty().getValue().textProperty()
                        .bindBidirectional(model.valueProperty());
                 inputWidget = spinner;

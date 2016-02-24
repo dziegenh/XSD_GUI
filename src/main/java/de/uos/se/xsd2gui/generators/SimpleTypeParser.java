@@ -2,8 +2,8 @@ package de.uos.se.xsd2gui.generators;
 
 import de.uos.se.xsd2gui.app.XsdParserApp;
 import de.uos.se.xsd2gui.models.XSDModel;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
+import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Element;
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author dziegenhagen
  */
 public class SimpleTypeParser
-        implements WidgetGenerator
+        implements IWidgetGenerator
 {
 
     //a constant for the fixed attribute
@@ -32,7 +32,7 @@ public class SimpleTypeParser
     public static final String SIMPLE_TYPE = "simpleType";
 
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node
+    public javafx.scene.Node createWidget(AbstractWidgetFactory controller, Pane parentWidget, Node
             xsdNode, XSDModel parentModel)
     {
 

@@ -5,8 +5,8 @@ import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.SequenceReparser;
 import de.uos.se.xsd2gui.util.XPathUtil;
 import de.uos.se.xsd2gui.util.XSDModelIndexMapComparator;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
+import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  * "<sequence></sequence>".
  */
 public class BasicSequenceParser
-        implements WidgetGenerator
+        implements IWidgetGenerator
 {
 
     //the name of the element
@@ -38,7 +38,8 @@ public class BasicSequenceParser
     private static final String NAME = "name";
 
     @Override
-    public Node createWidget(WidgetFactory factory, Pane parentWidget, org.w3c.dom.Node xsdNode,
+    public Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, org.w3c.dom.Node
+            xsdNode,
                              XSDModel parentModel)
     {
         //abortif wrong type

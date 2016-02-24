@@ -11,8 +11,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,16 +18,9 @@ import java.util.logging.Logger;
  *
  * @author dziegenhagen
  */
-public class WidgetFactory {
-
-    /**
-     * A namespace context which the widget generators can access.
-     */
-    private final NamespaceContext namespaceContext;
-    /**
-     * The widget generators which parse specific XSD elements.
-     */
-    private List<WidgetGenerator> generators = new LinkedList<>();
+public class WidgetFactory
+        extends AbstractWidgetFactory
+{
 
     /**
      * Same as calling <i>new WidgetFactory(new DefaultNamespaceContext())</i>
@@ -45,25 +36,16 @@ public class WidgetFactory {
      */
     public WidgetFactory(NamespaceContext namespaceContext)
     {
-        this.namespaceContext = namespaceContext;
-    }
-
-    /**
-
-     * Adds a widget generator.
-     *
-     * @param generator
-     */
-    public void addWidgetGenerator(WidgetGenerator generator) {
-        this.generators.add(generator);
+        super(namespaceContext);
     }
 
     /**
      * Starts the XSD parsing using the document node.
      *
-     * @param doc
-     * @param rootWidget
+     * @param doc the document from where the xml/xsd data shall be parsed
+     * @param rootWidget the root widget where every generated {@linkplain Node} shall appear
      */
+    @Override
     public RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation) {
         Element documentRoot = doc.getDocumentElement();
         NodeList list = XPathUtil.evaluateXPath(documentRoot, "current()/xs:element/node()[not(self::text())]");
@@ -81,13 +63,16 @@ public class WidgetFactory {
      * Tries to parse the given xsdNode using the available widget generators.
      * If nothing was generated, the step is repeated for each child node.
      *
-     * @param rootWidget
-     * @param xsdNode
+     * @param rootWidget rootWidget the root widget where every generated {@linkplain Node} shall
+     *                   appear
+     * @param xsdNode the {@link org.w3c.dom.Node} from where parsing shall start
      */
+    @Override
     public void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel rootModel) {
 
         boolean guiNodeCreated = false;
-        for (WidgetGenerator generator : generators) {
+        for (IWidgetGenerator generator : getGenerators())
+        {
             Node nodeWidget = generator.createWidget(this, rootWidget, xsdNode, rootModel);
             if (null != nodeWidget) {
                 rootWidget.getChildren().add(nodeWidget);
@@ -114,15 +99,6 @@ public class WidgetFactory {
             }
         }
 
-    }
-
-    /**
-     * If set, Generators can access a shared default namespace.
-     *
-     * @return
-     */
-    public NamespaceContext getNamespaceContext() {
-        return this.namespaceContext;
     }
 
 }

@@ -15,6 +15,9 @@ import javax.xml.xpath.XPathFactory;
  */
 public class XPathUtil
 {
+    private XPathUtil()
+    {
+    }
     /**
      * Essentially the same as
      * {@linkplain #evaluateXPath(NamespaceContext, Node, String)}, but is using {@linkplain DefaultNamespaceContext}
@@ -60,7 +63,7 @@ public class XPathUtil
         }
         catch (XPathExpressionException e)
         {
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }

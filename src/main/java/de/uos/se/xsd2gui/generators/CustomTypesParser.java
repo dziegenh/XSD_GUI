@@ -4,8 +4,8 @@ import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
+import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * @author dziegenhagen
  */
 public class CustomTypesParser
-        implements WidgetGenerator
+        implements IWidgetGenerator
 {
 
     public static final String FIXED = "fixed";
@@ -51,7 +51,7 @@ public class CustomTypesParser
     }
 
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node
+    public javafx.scene.Node createWidget(AbstractWidgetFactory controller, Pane parentWidget, Node
             xsdNode, XSDModel parentModel)
     {
         if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
