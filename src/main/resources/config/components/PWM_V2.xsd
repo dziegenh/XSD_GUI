@@ -28,7 +28,7 @@
             </xs:element>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="bufferIndex" type="xs:string"/>
-            <!-- <xs:element name="direction" type="ct:DirectionType" fixed="output"/>-->
+            <!--<xs:element name="direction" type="ct:DirectionType" fixed="output"/>-->
         </xs:all>
     </xs:complexType>
 

@@ -44,7 +44,8 @@ public class BasicAttributeParser
         }
 
         final Element elementNode = (Element) xsdNode;
-        if (! elementNode.getLocalName().equals("attribute"))
+        String localName = elementNode.getLocalName();
+        if (! localName.equals("attribute"))
         {
             return null;
         }
