@@ -156,6 +156,8 @@ public class SequenceReparser
              * should do.
              */
             Pane elementPane = new HBox(20);
+            //clear last added models
+            this._model.pollLastAddedModels();
             //parse elements
             factory.parseXsdNode(elementPane, elem, this._model);
             //poll lkast added models from stored model
