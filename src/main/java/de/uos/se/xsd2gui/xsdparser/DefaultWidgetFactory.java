@@ -60,6 +60,12 @@ public class DefaultWidgetFactory
     {
         Element documentRoot = doc.getDocumentElement();
         NodeList list = XPathUtil.evaluateXPath(documentRoot, "current()/xs:element/node()[not(self::text())]");
+        if (list.getLength() == 0)
+        {
+            Logger.getLogger(this.getClass().getName())
+                  .log(Level.SEVERE, "no elements present besides root element, aborting.....");
+            return null;
+        }
         org.w3c.dom.Element firstElement = (Element) XPathUtil.evaluateXPath(documentRoot, "current()/xs:element")
                                                               .item(0);
         RootModel rootModel = new RootModel(firstElement, nameSpaceSchemaLocation);

@@ -31,7 +31,7 @@ public class SimpleTypeParser
     public static final String SIMPLE_TYPE = "simpleType";
 
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel)
+    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node xsdNode, XSDModel parentModel)
     {
 
         if (xsdNode.getNodeType() != Node.ELEMENT_NODE || ! xsdNode.getLocalName().equals(SIMPLE_TYPE))
@@ -40,7 +40,7 @@ public class SimpleTypeParser
         }
         XPathFactory xp = XPathFactory.newInstance();
         XPath newXPath = xp.newXPath();
-        newXPath.setNamespaceContext(controller.getNamespaceContext());
+        newXPath.setNamespaceContext(factory.getNamespaceContext());
         NodeList enumValues;
         try
         {
@@ -60,8 +60,9 @@ public class SimpleTypeParser
                 comboBox.getItems().add(item.getNodeValue());
             }
             comboBox.valueProperty().bindBidirectional(parentModel.valueProperty());
-            comboBox.getSelectionModel().selectFirst();
+            String firstItem = comboBox.getItems().get(0);
             comboBox.setDisable(parentModel.isFixed());
+            parentModel.valueProperty().setValue(factory.getValueFor(parentModel, firstItem));
             return comboBox;
 
         } catch (XPathExpressionException ex)
