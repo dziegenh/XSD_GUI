@@ -29,7 +29,7 @@ public abstract class AbstractWidgetFactory
      * The widget generators which parse specific XSD elements.
      */
     private final List<IWidgetGenerator> _generators;
-    private final IValueFactory _valueFactory;
+    private IValueFactory _valueFactory;
 
     /**
      * Same as calling <i>new DefaultWidgetFactory(new DefaultNamespaceContext(), new
@@ -59,6 +59,11 @@ public abstract class AbstractWidgetFactory
     protected AbstractWidgetFactory(NamespaceContext namespaceContext)
     {
         this(namespaceContext, new DefaultValueFactory());
+    }
+
+    public void setValueFactory(IValueFactory valueFactory)
+    {
+        this._valueFactory = valueFactory;
     }
 
     /**
