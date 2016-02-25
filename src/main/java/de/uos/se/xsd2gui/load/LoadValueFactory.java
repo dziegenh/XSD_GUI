@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Falk Wilke
  */
 public class LoadValueFactory
-        implements IValueFactory
+        extends DefaultValueFactory
 {
     //the values to give
     private final Map<String, List<String>> _values;
@@ -123,10 +123,10 @@ public class LoadValueFactory
         //get path and check if it is known: if not or no values can be retrieved anymore return default
         String path = XSDPathUtil.parseFromXSDModel(model);
         if (! this._values.containsKey(path))
-            return defaultValue;
+            return super.getValueFor(model, defaultValue);
         List<String> valuesForElement = this._values.get(path);
         if (valuesForElement.isEmpty())
-            return defaultValue;
+            return super.getValueFor(model, defaultValue);
         return valuesForElement.remove(0);
     }
 
