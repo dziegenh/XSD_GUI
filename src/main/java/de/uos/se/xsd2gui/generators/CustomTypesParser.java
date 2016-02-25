@@ -4,6 +4,7 @@ import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
+import de.uos.se.xsd2gui.util.XPathUtil;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.control.Label;
@@ -16,9 +17,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,15 +88,9 @@ public class CustomTypesParser
             DocumentBuilder documentBuilder = documentBuilderFctory.newDocumentBuilder();
             Document doc = documentBuilder.parse(new FileInputStream(xsdFilename));
 
-            // setup the XPath object
-            XPathFactory xp = XPathFactory.newInstance();
-            XPath newXPath = xp.newXPath();
-            newXPath.setNamespaceContext(factory.getNamespaceContext());
-
             // Find the node which defines the current element type
             NodeList matchingTypeNodes;
-            matchingTypeNodes = (NodeList) newXPath
-                    .evaluate("/xs:schema/node()[@name='" + localType + "']", doc, XPathConstants.NODESET);
+            matchingTypeNodes = XPathUtil.evaluateXPath(doc, "/xs:schema/node()[@name='" + localType + "']");
             if (1 == matchingTypeNodes.getLength())
             {
 
