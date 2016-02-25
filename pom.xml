@@ -10,7 +10,7 @@
 
     <groupId>de.uos.se</groupId>
     <artifactId>xsd_gui</artifactId>
-    <version>0.1a</version>
+    <version>0.2a</version>
 
     <build>
         <resources>
