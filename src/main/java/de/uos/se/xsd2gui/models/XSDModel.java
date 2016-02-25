@@ -112,16 +112,14 @@ public abstract class XSDModel
      * @param comparator
      *         the comparator to use for sorting
      */
-    public XSDModel(Element xsdNode, List<? extends XSDModel> subModels, Comparator<XSDModel>
-            comparator)
+    public XSDModel(Element xsdNode, List<? extends XSDModel> subModels, Comparator<XSDModel> comparator)
     {
         //clone node to avoid sideeffects
         this._xsdNode = (Element) xsdNode.cloneNode(true);
         //get name
         this._elementName = this._xsdNode.getAttribute(NAME);
         if (this._elementName == null)
-            throw new IllegalArgumentException(
-                    "provided element node does not have an attribute name ");
+            throw new IllegalArgumentException("provided element node does not have an attribute name ");
         if (subModels == null)
             throw new NullPointerException("provided submodels are null");
         if (comparator == null)
@@ -131,8 +129,7 @@ public abstract class XSDModel
         //create string property
         this._value = new SimpleStringProperty("");
         //set required
-        this._required = ! this._xsdNode.hasAttribute(USE) ||
-                         this._xsdNode.getAttribute(USE).equals("required");
+        this._required = ! this._xsdNode.hasAttribute(USE) || this._xsdNode.getAttribute(USE).equals("required");
         //create last added
         this._lastAdded = new LinkedList<>();
         this._comparator = comparator;
@@ -140,8 +137,7 @@ public abstract class XSDModel
         this._violationText = new SimpleStringProperty("");
         this._value.addListener((observable, oldValue, newValue) -> checkConstraints());
         this._violated = new SimpleBooleanProperty(false);
-        this._fixed = this._xsdNode.hasAttribute(FIXED) &&
-                      ! this._xsdNode.getAttribute(FIXED).trim().isEmpty();
+        this._fixed = this._xsdNode.hasAttribute(FIXED) && ! this._xsdNode.getAttribute(FIXED).trim().isEmpty();
         this._parentModel = null;
     }
 
@@ -159,8 +155,8 @@ public abstract class XSDModel
             if (constraint.isViolatedBy(value))
             {
                 violated = true;
-                builder.append(constraint.getViolationMessage(value)).append(" for field ")
-                       .append(this.getName()).append(LINE_SEP);
+                builder.append(constraint.getViolationMessage(value)).append(" for field ").append(this.getName())
+                       .append(LINE_SEP);
             }
         }
         if (violated)
@@ -220,13 +216,13 @@ public abstract class XSDModel
     public synchronized String toString()
     {
         return "XSDModel{" +
-               "_xsdNode=" + _xsdNode +
-               ", _subModels=" + _subModels +
-               ", _required=" + _required +
-               ", _elementName='" + _elementName + '\'' +
-               ", _value=" + _value +
-               ", _lastAdded=" + _lastAdded +
-               '}';
+                "_xsdNode=" + _xsdNode +
+                ", _subModels=" + _subModels +
+                ", _required=" + _required +
+                ", _elementName='" + _elementName + '\'' +
+                ", _value=" + _value +
+                ", _lastAdded=" + _lastAdded +
+                '}';
     }
 
     public synchronized void addSubModel(XSDModel xsdm)

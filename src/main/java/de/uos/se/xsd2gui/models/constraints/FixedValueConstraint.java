@@ -30,8 +30,7 @@ public class FixedValueConstraint
     {
         _fixedValue = fixedValue.trim();
         if (_fixedValue.isEmpty())
-            throw new IllegalArgumentException(
-                    "no pure whitespace/empty string permitted for fixed value constraint");
+            throw new IllegalArgumentException("no pure whitespace/empty string permitted for fixed value constraint");
     }
 
     @Override

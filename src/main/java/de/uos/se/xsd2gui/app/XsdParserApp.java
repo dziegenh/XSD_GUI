@@ -57,8 +57,7 @@ public class XsdParserApp
         try
         {
             _documentBuilder = factory.newDocumentBuilder();
-        }
-        catch (ParserConfigurationException e)
+        } catch (ParserConfigurationException e)
         {
             throw new RuntimeException(e);
         }
@@ -75,21 +74,16 @@ public class XsdParserApp
         // TODO check if argument already exists :)
         String[] args2 = Arrays.copyOf(args, args.length + 1);
         args2[args.length] = "--xsdFiles=" + XSD_BASE_DIR + "config\\components";
-
         launch(args2);
     }
 
     @Override
     public void start(Stage primaryStage)
     {
-
         // get the XSD filename argument
         String xsdFilesname = this.getParameters().getNamed().get("xsdFiles");
-
         // JavaFX SceneGraph root element.
         VBox root = new VBox();
-
-
         ComboBox<File> fc = new ComboBox<>();
         root.getChildren().add(fc);
         File dir = new File(xsdFilesname);
@@ -113,26 +107,19 @@ public class XsdParserApp
                 defaultWidgetFactory.addWidgetGenerator(new SimpleTypeParser());
                 defaultWidgetFactory.addWidgetGenerator(new ContainerParser());
                 defaultWidgetFactory.addWidgetGenerator(new BasicSequenceParser());
-                defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("ct:", XSD_BASE_DIR +
-                                                                                     "config\\predefined\\CommonTypes.xsd"));
-                defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR +
-                                                                                     "config\\predefined\\StructuredTypes.xsd"));
-                defaultWidgetFactory
-                        .addWidgetGenerator(new CustomTypesParser("", newValue.getPath()));
+                defaultWidgetFactory.addWidgetGenerator(
+                        new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\predefined\\CommonTypes.xsd"));
+                defaultWidgetFactory.addWidgetGenerator(
+                        new CustomTypesParser("st:", XSD_BASE_DIR + "config\\predefined\\StructuredTypes.xsd"));
+                defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("", newValue.getPath()));
                 // Generated widgets are added to the root node
                 _currentModel = defaultWidgetFactory
-                        .parseXsd(doc, currentContent, newValue.getPath()
-                                                               .replaceAll(
-                                                                                            "\\" +
-                                                                                            File.separator,
-                                                                                            "/"));
-            }
-            catch (Exception ex)
+                        .parseXsd(doc, currentContent, newValue.getPath().replaceAll("\\" + File.separator, "/"));
+            } catch (Exception ex)
             {
                 Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-
 
         // Read the XSD and start parsing
         try
@@ -141,25 +128,23 @@ public class XsdParserApp
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 if (! _currentModel.checkViolationDeep())
                     _currentModel.parseToXML(newDoc, null);
-                    try (FileOutputStream out = new FileOutputStream("out.xml"))
-                    {
-                        TransformerFactory tFactory = TransformerFactory.newInstance();
-                        Transformer transformer = tFactory.newTransformer();
+                try (FileOutputStream out = new FileOutputStream("out.xml"))
+                {
+                    TransformerFactory tFactory = TransformerFactory.newInstance();
+                    Transformer transformer = tFactory.newTransformer();
 
-                        DOMSource source = new DOMSource(newDoc);
-                        StreamResult result = new StreamResult(out);
-                        transformer.transform(source, result);
-                    }
-                    catch (IOException | TransformerException e)
-                    {
-                        Logger.getLogger(this.getClass().getName())
-                              .log(Level.SEVERE, "fatal error while writing output", e);
-                    }
+                    DOMSource source = new DOMSource(newDoc);
+                    StreamResult result = new StreamResult(out);
+                    transformer.transform(source, result);
+                } catch (IOException | TransformerException e)
+                {
+                    Logger.getLogger(this.getClass().getName())
+                          .log(Level.SEVERE, "fatal error while writing output", e);
+                }
             }));
 
 
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
         }

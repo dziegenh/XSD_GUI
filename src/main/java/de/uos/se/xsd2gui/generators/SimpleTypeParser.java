@@ -31,12 +31,10 @@ public class SimpleTypeParser
     public static final String SIMPLE_TYPE = "simpleType";
 
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory controller, Pane parentWidget, Node
-            xsdNode, XSDModel parentModel)
+    public javafx.scene.Node createWidget(AbstractWidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel)
     {
 
-        if (xsdNode.getNodeType() != Node.ELEMENT_NODE ||
-            ! xsdNode.getLocalName().equals(SIMPLE_TYPE))
+        if (xsdNode.getNodeType() != Node.ELEMENT_NODE || ! xsdNode.getLocalName().equals(SIMPLE_TYPE))
         {
             return null;
         }
@@ -66,8 +64,7 @@ public class SimpleTypeParser
             comboBox.setDisable(parentModel.isFixed());
             return comboBox;
 
-        }
-        catch (XPathExpressionException ex)
+        } catch (XPathExpressionException ex)
         {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -60,19 +60,16 @@ public class SequenceReparser
         {
             //check nodetype and name attribute
             if (elements.item(i).getNodeType() != org.w3c.dom.Node.ELEMENT_NODE)
-                throw new IllegalArgumentException(
-                        "a nom-element node was found: " + elements.item(i));
+                throw new IllegalArgumentException("a nom-element node was found: " + elements.item(i));
             Element elem = (Element) elements.item(i).cloneNode(true);
             if (! elem.hasAttribute(NAME))
                 throw new IllegalArgumentException("node does not have a name attribute: " + elem);
             if (! elem.hasAttribute(MIN_OCCURS) || ! elem.hasAttribute(MAX_OCCURS))
-                Logger.getLogger(SequenceReparser.class.getName()).log(Level.WARNING,
-                                                                       "element {0} does not have" +
-                                                                       " both maxOccurs and " +
-                                                                       "minOccurs attribute set " +
-                                                                       "while being inside a " +
-                                                                       "sequence, possible bug",
-                                                                       elem);
+                Logger.getLogger(SequenceReparser.class.getName()).log(Level.WARNING, "element {0} does not have" +
+                        " both maxOccurs and " +
+                        "minOccurs attribute set " +
+                        "while being inside a " +
+                        "sequence, possible bug", elem);
             String name = elem.getAttribute(NAME);
             this._elements.put(name, elem);
             this._currentOccurences.put(name, 0);
@@ -96,8 +93,8 @@ public class SequenceReparser
         for (Element elem : this._elements.values())
         {
             String name = elem.getAttribute(NAME);
-            int minOccurs = Math.max(getMinOcc(elem, MIN_OCCURS, 0),
-                                     factory.getMinimumAmountOfElements(this._model, elem));
+            int minOccurs = Math
+                    .max(getMinOcc(elem, MIN_OCCURS, 0), factory.getMinimumAmountOfElements(this._model, elem));
             int currentOccs = this._currentOccurences.get(name);
             for (int i = 0; i < minOccurs - currentOccs; i++)
             {

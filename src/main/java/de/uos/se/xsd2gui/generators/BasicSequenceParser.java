@@ -38,9 +38,7 @@ public class BasicSequenceParser
     private static final String NAME = "name";
 
     @Override
-    public Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, org.w3c.dom.Node
-            xsdNode,
-                             XSDModel parentModel)
+    public Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, org.w3c.dom.Node xsdNode, XSDModel parentModel)
     {
         //abortif wrong type
         if (! (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE))
@@ -56,9 +54,8 @@ public class BasicSequenceParser
         }
 
         //only see elements with min and maxoccurs
-        NodeList matchingTypeNodes = XPathUtil.evaluateXPath(factory.getNamespaceContext(), xsdNode,
-                                                             "./xs:element[@minOccurs and " +
-                                                             "@maxOccurs]");
+        NodeList matchingTypeNodes = XPathUtil
+                .evaluateXPath(factory.getNamespaceContext(), xsdNode, "./xs:element[@minOccurs and " + "@maxOccurs]");
         //the map the internal comparator shall use since sequence is ordered!
         final Map<String, Integer> indexMap = new HashMap<>();
         for (int i = 0; i < matchingTypeNodes.getLength(); i++)
@@ -77,8 +74,8 @@ public class BasicSequenceParser
         List<Button> addButtons = new LinkedList<>();
         //add buttons for adding new elements
         reparser.elementNames().forEach(name -> addButtons.add(new Button("+" + name)));
-        addButtons.forEach(button -> button.setOnAction(
-                ev -> reparser.add(nestedContent, button.getText().substring(1), factory)));
+        addButtons.forEach(button -> button
+                .setOnAction(ev -> reparser.add(nestedContent, button.getText().substring(1), factory)));
         addContent.getChildren().addAll(addButtons);
 
         //add to parent widget

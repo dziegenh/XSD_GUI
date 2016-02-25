@@ -33,8 +33,7 @@ public class BasicAttributeParser
     public static final String TYPE = "type";
 
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node
-            xsdNode, XSDModel parentModel)
+    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node xsdNode, XSDModel parentModel)
     {
 
         //check for correct types and attributes
@@ -82,13 +81,13 @@ public class BasicAttributeParser
                     initialValue = Integer.parseInt(fixed);
                 }
 
-                IntegerSpinnerValueFactory spinnerFactory = new IntegerSpinnerValueFactory(
-                        Integer.MIN_VALUE, Integer.MAX_VALUE, initialValue);
+                IntegerSpinnerValueFactory spinnerFactory = new IntegerSpinnerValueFactory(Integer.MIN_VALUE,
+                                                                                           Integer.MAX_VALUE,
+                                                                                           initialValue);
                 Spinner<Integer> spinner = new Spinner<>(spinnerFactory);
                 spinner.setEditable(false);
                 model.valueProperty().setValue(spinnerFactory.getValue().toString());
-                spinner.editorProperty().getValue().textProperty()
-                       .bindBidirectional(model.valueProperty());
+                spinner.editorProperty().getValue().textProperty().bindBidirectional(model.valueProperty());
                 inputWidget = spinner;
                 break;
 

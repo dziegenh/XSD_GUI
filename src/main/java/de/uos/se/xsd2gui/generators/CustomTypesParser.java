@@ -51,8 +51,7 @@ public class CustomTypesParser
     }
 
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node
-            xsdNode, XSDModel parentModel)
+    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node xsdNode, XSDModel parentModel)
     {
         if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
         {
@@ -99,8 +98,7 @@ public class CustomTypesParser
             // Find the node which defines the current element type
             NodeList matchingTypeNodes;
             matchingTypeNodes = (NodeList) newXPath
-                    .evaluate("/xs:schema/node()[@name='" + localType + "']", doc,
-                              XPathConstants.NODESET);
+                    .evaluate("/xs:schema/node()[@name='" + localType + "']", doc, XPathConstants.NODESET);
             if (1 == matchingTypeNodes.getLength())
             {
 
@@ -108,8 +106,7 @@ public class CustomTypesParser
                 HBox hBox = new HBox(10, textFieldLabel);
                 parentModel.addSubModel(model);
                 factory.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
-                model.valueProperty()
-                     .setValue(factory.getValueFor(model, model.valueProperty().getValue()));
+                model.valueProperty().setValue(factory.getValueFor(model, model.valueProperty().getValue()));
                 return hBox;
 
             } else
@@ -122,8 +119,7 @@ public class CustomTypesParser
 
             }
 
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             Logger.getLogger(CustomTypesParser.class.getName()).log(Level.SEVERE, "{0}", ex);
         }

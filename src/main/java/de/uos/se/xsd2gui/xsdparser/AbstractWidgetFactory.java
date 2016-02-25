@@ -77,11 +77,9 @@ public abstract class AbstractWidgetFactory
         this._generators.add(generator);
     }
 
-    public abstract RootModel parseXsd(Document doc, Pane rootWidget, String
-            nameSpaceSchemaLocation);
+    public abstract RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation);
 
-    public abstract void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel
-            rootModel);
+    public abstract void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel rootModel);
 
     /**
      * If set, Generators can access a shared default namespace.

@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author dziegenhagen
  */
 public class DefaultWidgetFactory
@@ -34,7 +33,9 @@ public class DefaultWidgetFactory
 
     /**
      * The constructor, making this object use the provided {@linkplain NamespaceContext}
-     * @param namespaceContext the context to use
+     *
+     * @param namespaceContext
+     *         the context to use
      */
     public DefaultWidgetFactory(NamespaceContext namespaceContext)
     {
@@ -49,11 +50,14 @@ public class DefaultWidgetFactory
     /**
      * Starts the XSD parsing using the document node.
      *
-     * @param doc the document from where the xml/xsd data shall be parsed
-     * @param rootWidget the root widget where every generated {@linkplain Node} shall appear
+     * @param doc
+     *         the document from where the xml/xsd data shall be parsed
+     * @param rootWidget
+     *         the root widget where every generated {@linkplain Node} shall appear
      */
     @Override
-    public RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation) {
+    public RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation)
+    {
         Element documentRoot = doc.getDocumentElement();
         NodeList list = XPathUtil.evaluateXPath(documentRoot, "current()/xs:element/node()[not(self::text())]");
         org.w3c.dom.Element firstElement = (Element) XPathUtil.evaluateXPath(documentRoot, "current()/xs:element")
@@ -70,12 +74,15 @@ public class DefaultWidgetFactory
      * Tries to parse the given xsdNode using the available widget generators.
      * If nothing was generated, the step is repeated for each child node.
      *
-     * @param rootWidget rootWidget the root widget where every generated {@linkplain Node} shall
-     *                   appear
-     * @param xsdNode the {@link org.w3c.dom.Node} from where parsing shall start
+     * @param rootWidget
+     *         rootWidget the root widget where every generated {@linkplain Node} shall
+     *         appear
+     * @param xsdNode
+     *         the {@link org.w3c.dom.Node} from where parsing shall start
      */
     @Override
-    public void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel rootModel) {
+    public void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel rootModel)
+    {
 
         //abort for text nodes
         if (xsdNode.getNodeType() == org.w3c.dom.Node.TEXT_NODE)
@@ -84,10 +91,12 @@ public class DefaultWidgetFactory
         for (IWidgetGenerator generator : getGenerators())
         {
             Node nodeWidget = generator.createWidget(this, rootWidget, xsdNode, rootModel);
-            if (null != nodeWidget) {
+            if (null != nodeWidget)
+            {
                 rootWidget.getChildren().add(nodeWidget);
-                
-                if (guiNodeCreated) {
+
+                if (guiNodeCreated)
+                {
                     Logger.getLogger(DefaultWidgetFactory.class.getName())
                           .log(Level.INFO, "More then one GUI node created for {0}", xsdNode);
                 }
@@ -96,16 +105,19 @@ public class DefaultWidgetFactory
             }
         }
 
-        if (!guiNodeCreated) {
+        if (! guiNodeCreated)
+        {
 
             Logger.getLogger(DefaultWidgetFactory.class.getName())
                   .log(Level.INFO, "No GUI node created for {0}", xsdNode);
 
-            if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+            if (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
+            {
                 Element nodeEl = (Element) xsdNode;
                 NodeList nodeElChildren = nodeEl.getChildNodes();
 
-                for (int i = 0; i < nodeElChildren.getLength(); i++) {
+                for (int i = 0; i < nodeElChildren.getLength(); i++)
+                {
                     parseXsdNode(rootWidget, nodeElChildren.item(i), rootModel);
                 }
             }

@@ -22,6 +22,7 @@ import java.util.Map;
 /**
  * created: 24.02.2016
  * A {@linkplain IValueFactory} to load values from a file. It heavily depends on {@linkplain XSDPathUtil} for matching XSD and XML.
+ *
  * @author Falk Wilke
  */
 public class LoadValueFactory
@@ -60,8 +61,7 @@ public class LoadValueFactory
             //init element count
             initElemCount(parse.getDocumentElement());
 
-        }
-        catch (ParserConfigurationException | SAXException | IOException e)
+        } catch (ParserConfigurationException | SAXException | IOException e)
         {
             throw new IllegalArgumentException(e);
         }
@@ -72,19 +72,19 @@ public class LoadValueFactory
      * This method initializes the values which can possibly be retrieved from this {@linkplain IValueFactory}.
      * Is only using attribute values (could possibly be changed but since attributes can always replace inner text this is omitted)
      * The values are mapped to the result of{@linkplain XSDPathUtil#parseFromXMLNode(Node)} for every attribute
-     * @param root the element where parsing shall start
+     *
+     * @param root
+     *         the element where parsing shall start
      */
     private void initAtt(Element root)
     {
         //get all elements which are not text nodes (descendant axis, node() test)
-        NodeList nodeList = XPathUtil
-                .evaluateXPath(root, "current()/descendant::node()[not(self::text())]");
+        NodeList nodeList = XPathUtil.evaluateXPath(root, "current()/descendant::node()[not(self::text())]");
         for (int i = 0; i < nodeList.getLength(); i++)
         {
             Element currentElement = (Element) nodeList.item(i);
             //get all attributes for the current element
-            NodeList nodeListAttributes = XPathUtil
-                    .evaluateXPath(currentElement, "current()/attribute::node()");
+            NodeList nodeListAttributes = XPathUtil.evaluateXPath(currentElement, "current()/attribute::node()");
             for (int j = 0; j < nodeListAttributes.getLength(); j++)
             {
                 Node currentAttribute = nodeListAttributes.item(j);
@@ -100,13 +100,14 @@ public class LoadValueFactory
 
     /**
      * This method counts every element (or to be precise the path representation) by using {@linkplain XSDPathUtil#parseFromXMLNode(Node)}
-     * @param root the element where to start
+     *
+     * @param root
+     *         the element where to start
      */
     private void initElemCount(Element root)
     {
         //get all elements which are not text nodes (descendant axis, node() test)
-        NodeList nodeList = XPathUtil
-                .evaluateXPath(root, "current()/descendant::node()[not(self::text())]");
+        NodeList nodeList = XPathUtil.evaluateXPath(root, "current()/descendant::node()[not(self::text())]");
         for (int i = 0; i < nodeList.getLength(); i++)
         {
             Node currentNode = nodeList.item(i);

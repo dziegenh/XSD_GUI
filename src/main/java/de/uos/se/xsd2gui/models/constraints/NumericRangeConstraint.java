@@ -3,6 +3,7 @@ package de.uos.se.xsd2gui.models.constraints;
 /**
  * created: 18.02.2016
  * A class representing a numeric range constraint
+ *
  * @author Falk Wilke
  */
 public class NumericRangeConstraint
@@ -36,10 +37,8 @@ public class NumericRangeConstraint
         {
             //check range
             double parsed = Double.parseDouble(value);
-            return down <= parsed &&
-                   up >= parsed;
-        }
-        catch (NumberFormatException ex)
+            return down <= parsed && up >= parsed;
+        } catch (NumberFormatException ex)
         {
             //exceeds max double!
             return true;
@@ -55,8 +54,7 @@ public class NumericRangeConstraint
         {
             //noinspection ResultOfMethodCallIgnored
             Double.parseDouble(value);
-        }
-        catch (NumberFormatException ex)
+        } catch (NumberFormatException ex)
         {
             return "value '" + value + "' exceeds max double";
         }
