@@ -7,7 +7,7 @@ package de.uos.se.xsd2gui.models.constraints;
  * @author Falk Wilke
  */
 public class NoNullValueConstraint
-        implements IXSDConstraint
+        implements IXSDValueConstraint
 {
     @Override
     public boolean isViolatedBy(String value)

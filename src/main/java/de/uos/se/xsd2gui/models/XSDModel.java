@@ -1,6 +1,6 @@
 package de.uos.se.xsd2gui.models;
 
-import de.uos.se.xsd2gui.models.constraints.IXSDConstraint;
+import de.uos.se.xsd2gui.models.constraints.IXSDValueConstraint;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * submodels of various kinds
  * It provides base functionality, subclasses will want to use. The last added submodels can be
  * polled which supplements deleting of models without knowing which where created exactly.
- * In addition {@linkplain IXSDConstraint} objects can be added which will be used for checking
+ * In addition {@linkplain IXSDValueConstraint} objects can be added which will be used for checking
  * the value attribute.
  * Such a check will be triggered whenever the value of
  * {@linkplain #_value} is set. Also the method {@linkplain #checkViolationDeep()}
@@ -71,7 +71,7 @@ public abstract class XSDModel
     //the last added  xsdmodels
     private final List<XSDModel> _lastAdded;
     //the constraints placed on this model
-    private final List<IXSDConstraint> _constraints;
+    private final List<IXSDValueConstraint> _constraints;
     //the text of a violation of constraints
     private final StringProperty _violationText;
     //the boolean property holding if constraints have been violated
@@ -153,7 +153,7 @@ public abstract class XSDModel
     {
         StringBuilder builder = new StringBuilder();
         boolean violated = false;
-        for (IXSDConstraint constraint : _constraints)
+        for (IXSDValueConstraint constraint : _constraints)
         {
             String value = this._value.getValue();
             if (constraint.isViolatedBy(value))
@@ -264,12 +264,12 @@ public abstract class XSDModel
         return tmp;
     }
 
-    public synchronized boolean addConstraint(IXSDConstraint constr)
+    public synchronized boolean addConstraint(IXSDValueConstraint constr)
     {
         return this._constraints.add(constr);
     }
 
-    public synchronized boolean removeConstraint(IXSDConstraint constr)
+    public synchronized boolean removeConstraint(IXSDValueConstraint constr)
     {
         return this._constraints.remove(constr);
     }

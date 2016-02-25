@@ -71,7 +71,6 @@ public class XsdParserApp
      */
     public static void main(String[] args)
     {
-
         // add XSD Filename to arguments
         // TODO check if argument already exists :)
         String[] args2 = Arrays.copyOf(args, args.length + 1);

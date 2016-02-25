@@ -6,11 +6,11 @@ package de.uos.se.xsd2gui.models.constraints;
  *
  * @author Falk Wilke
  */
-public interface IXSDConstraint
+public interface IXSDValueConstraint
 {
     /**
-     * Decides whether the given value violates the contraint modelled by this
-     * {@linkplain IXSDConstraint}
+     * Decides whether the given value violates the constraint modelled by this
+     * {@linkplain IXSDValueConstraint}
      *
      * @param value
      *         the value to evaluate

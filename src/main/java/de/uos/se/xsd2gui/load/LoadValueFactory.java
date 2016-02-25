@@ -67,7 +67,6 @@ public class LoadValueFactory
             {
                 Node currentAttribute = nodeListAttributes.item(j);
                 String path = XSDPathUtil.parseFromXMLNode(currentAttribute);
-                System.out.println(path);
                 if (! this._values.containsKey(path))
                     this._values.put(path, new LinkedList<>());
                 this._values.get(path).add(currentAttribute.getNodeValue());

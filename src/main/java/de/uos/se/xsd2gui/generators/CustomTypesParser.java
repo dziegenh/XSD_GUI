@@ -114,10 +114,11 @@ public class CustomTypesParser
 
             } else
             {
-                Logger.getLogger(CustomTypesParser.class.getName())
-                      .log(Level.WARNING, "The XSD Node for the " +
+                /*Logger.getLogger(CustomTypesParser.class.getName())
+                      .log(Level.INFO, "The XSD Node for the " +
                                           "custom type {0} could " +
-                                          "not be found!", localType);
+                                          "not be found!", localType);*/
+                return null;
 
             }
 

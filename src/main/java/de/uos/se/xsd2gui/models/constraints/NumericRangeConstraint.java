@@ -34,6 +34,7 @@ public class NumericRangeConstraint
             return true;
         try
         {
+            //check range
             double parsed = Double.parseDouble(value);
             return down <= parsed &&
                    up >= parsed;

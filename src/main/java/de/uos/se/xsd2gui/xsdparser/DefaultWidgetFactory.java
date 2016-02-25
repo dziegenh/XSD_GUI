@@ -77,6 +77,9 @@ public class DefaultWidgetFactory
     @Override
     public void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel rootModel) {
 
+        //abort for text nodes
+        if (xsdNode.getNodeType() == org.w3c.dom.Node.TEXT_NODE)
+            return;
         boolean guiNodeCreated = false;
         for (IWidgetGenerator generator : getGenerators())
         {

@@ -26,6 +26,6 @@ public class IntegerConstraint
             return "";
         if (super.isViolatedBy(value))
             return super.getViolationMessage(value);
-        return "value " + value + " is not an integer";
+        return "value '" + value + "' is not an integer";
     }
 }
