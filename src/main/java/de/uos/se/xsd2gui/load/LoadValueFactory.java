@@ -93,13 +93,13 @@ public class LoadValueFactory
                     .evaluateXPath(currentElement, "current()/attribute::node()");
             String elementPath = XSDPathUtil.parseFromXMLNode(currentElement);
             possibleAttributes.putIfAbsent(elementPath, new HashSet<>());
-            Set<String> strings = possibleAttributes.get(elementPath);
+            Set<String> attributes = possibleAttributes.get(elementPath);
             for (int j = 0; j < nodeListAttributes.getLength(); j++)
             {
                 Node currentAttribute = nodeListAttributes.item(j);
                 //turn attribute into path and store value
                 String path = XSDPathUtil.parseFromXMLNode(currentAttribute);
-                strings.add(path);
+                attributes.add(path);
             }
         }
         this._possibleAttributes = possibleAttributes;
@@ -128,7 +128,7 @@ public class LoadValueFactory
             NodeList nodeListAttributes = XPathUtil
                     .evaluateXPath(currentElement, "current()/attribute::node()");
             String elementPath = XSDPathUtil.parseFromXMLNode(currentElement);
-            Set<String> strings = new HashSet<>();
+            Set<String> attributes = new HashSet<>();
             for (int j = 0; j < nodeListAttributes.getLength(); j++)
             {
                 Node currentAttribute = nodeListAttributes.item(j);
@@ -138,10 +138,10 @@ public class LoadValueFactory
                     this._values.put(path, new LinkedList<>());
                 //the order of appearance is important!
                 this._values.get(path).add(currentAttribute.getNodeValue());
-                strings.add(path);
+                attributes.add(path);
             }
             //repair values if necessary
-            this._possibleAttributes.get(elementPath).stream().filter(s -> ! strings.contains(s))
+            this._possibleAttributes.get(elementPath).stream().filter(s -> ! attributes.contains(s))
                                     .forEach(s -> this._values.get(s).add(null));
         }
     }
