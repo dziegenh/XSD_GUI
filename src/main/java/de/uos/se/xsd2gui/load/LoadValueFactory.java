@@ -31,6 +31,7 @@ public class LoadValueFactory
     private final Map<String, List<String>> _values;
     //the amount of elements (or their paths precisely)
     private final Map<String, Integer> _amountOfElements;
+    //the possible attributes of every element
     private Map<String, Set<String>> _possibleAttributes;
 
     /**
@@ -71,6 +72,14 @@ public class LoadValueFactory
         }
     }
 
+    /**
+     * This Method initializes the possible attributes which can be found for every element. It
+     * is mostly the same as {@linkplain #initAtt(Element)}, but the latter needs the information
+     * generated here beforehand, since they cannot be generated locally.
+     *
+     * @param root
+     *         he element where parsing shall start
+     */
     private void initPossibleAttributes(Element root)
     {
         NodeList nodeList = XPathUtil
@@ -132,11 +141,8 @@ public class LoadValueFactory
                 strings.add(path);
             }
             //repair values if necessary
-            for (String s : this._possibleAttributes.get(elementPath))
-            {
-                if (! strings.contains(s))
-                    this._values.get(s).add(null);
-            }
+            this._possibleAttributes.get(elementPath).stream().filter(s -> ! strings.contains(s))
+                                    .forEach(s -> this._values.get(s).add(null));
         }
     }
 
