@@ -23,7 +23,7 @@
 										type="st:FieldType" />
 							<xs:element name="dutyCycle" minOccurs="1"
 										maxOccurs="5"
-										type="st:FieldType" />
+										type="st:FieldType"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

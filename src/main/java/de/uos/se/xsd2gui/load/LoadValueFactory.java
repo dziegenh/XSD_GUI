@@ -14,24 +14,24 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * created: 24.02.2016
- * A {@linkplain IValueFactory} to load values from a file. It heavily depends on {@linkplain XSDPathUtil} for matching XSD and XML.
+ * A
+ * {@linkplain IValueFactory} to load values from a file. It heavily depends on {@linkplain XSDPathUtil} for matching XSD and XML.
  *
  * @author Falk Wilke
  */
 public class LoadValueFactory
         extends DefaultValueFactory
 {
+    public static final String EMPTY = "";
     //the values to give
     private final Map<String, List<String>> _values;
     //the amount of elements (or their paths precisely)
     private final Map<String, Integer> _amountOfElements;
+    private Map<String, Set<String>> _possibleAttributes;
 
     /**
      * The constructor
@@ -55,23 +55,54 @@ public class LoadValueFactory
         try
         {
             DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-            Document parse = documentBuilder.parse(xmlFile);
-            //init attribute values
-            initAtt(parse.getDocumentElement());
-            //init element count
-            initElemCount(parse.getDocumentElement());
+            Document parsedXML = documentBuilder.parse(xmlFile);
 
-        } catch (ParserConfigurationException | SAXException | IOException e)
+            initPossibleAttributes(parsedXML.getDocumentElement());
+            //init attribute values
+            initAtt(parsedXML.getDocumentElement());
+            //init element count
+            initElemCount(parsedXML.getDocumentElement());
+
+
+        }
+        catch (ParserConfigurationException | SAXException | IOException e)
         {
             throw new IllegalArgumentException(e);
         }
+    }
 
+    private void initPossibleAttributes(Element root)
+    {
+        NodeList nodeList = XPathUtil
+                .evaluateXPath(root, "current()/descendant::node()[not(self::text())]");
+        Map<String, Set<String>> possibleAttributes = new HashMap<>();
+        for (int i = 0; i < nodeList.getLength(); i++)
+        {
+            Element currentElement = (Element) nodeList.item(i);
+            //get all attributes for the current element
+            NodeList nodeListAttributes = XPathUtil
+                    .evaluateXPath(currentElement, "current()/attribute::node()");
+            String elementPath = XSDPathUtil.parseFromXMLNode(currentElement);
+            possibleAttributes.putIfAbsent(elementPath, new HashSet<>());
+            Set<String> strings = possibleAttributes.get(elementPath);
+            for (int j = 0; j < nodeListAttributes.getLength(); j++)
+            {
+                Node currentAttribute = nodeListAttributes.item(j);
+                //turn attribute into path and store value
+                String path = XSDPathUtil.parseFromXMLNode(currentAttribute);
+                strings.add(path);
+            }
+        }
+        this._possibleAttributes = possibleAttributes;
     }
 
     /**
-     * This method initializes the values which can possibly be retrieved from this {@linkplain IValueFactory}.
-     * Is only using attribute values (could possibly be changed but since attributes can always replace inner text this is omitted)
-     * The values are mapped to the result of{@linkplain XSDPathUtil#parseFromXMLNode(Node)} for every attribute
+     * This method initializes the values which can possibly be retrieved from this
+     * {@linkplain IValueFactory}.
+     * Is only using attribute values (could possibly be changed but since attributes can always
+     * replace inner text this is omitted)
+     * The values are mapped to the result of{@linkplain XSDPathUtil#parseFromXMLNode(Node)} for
+     * every attribute
      *
      * @param root
      *         the element where parsing shall start
@@ -79,12 +110,16 @@ public class LoadValueFactory
     private void initAtt(Element root)
     {
         //get all elements which are not text nodes (descendant axis, node() test)
-        NodeList nodeList = XPathUtil.evaluateXPath(root, "current()/descendant::node()[not(self::text())]");
+        NodeList nodeList = XPathUtil
+                .evaluateXPath(root, "current()/descendant::node()[not(self::text())]");
         for (int i = 0; i < nodeList.getLength(); i++)
         {
             Element currentElement = (Element) nodeList.item(i);
             //get all attributes for the current element
-            NodeList nodeListAttributes = XPathUtil.evaluateXPath(currentElement, "current()/attribute::node()");
+            NodeList nodeListAttributes = XPathUtil
+                    .evaluateXPath(currentElement, "current()/attribute::node()");
+            String elementPath = XSDPathUtil.parseFromXMLNode(currentElement);
+            Set<String> strings = new HashSet<>();
             for (int j = 0; j < nodeListAttributes.getLength(); j++)
             {
                 Node currentAttribute = nodeListAttributes.item(j);
@@ -94,12 +129,20 @@ public class LoadValueFactory
                     this._values.put(path, new LinkedList<>());
                 //the order of appearance is important!
                 this._values.get(path).add(currentAttribute.getNodeValue());
+                strings.add(path);
+            }
+            //repair values if necessary
+            for (String s : this._possibleAttributes.get(elementPath))
+            {
+                if (! strings.contains(s))
+                    this._values.get(s).add(null);
             }
         }
     }
 
     /**
-     * This method counts every element (or to be precise the path representation) by using {@linkplain XSDPathUtil#parseFromXMLNode(Node)}
+     * This method counts every element (or to be precise the path representation) by using
+     * {@linkplain XSDPathUtil#parseFromXMLNode(Node)}
      *
      * @param root
      *         the element where to start
@@ -107,7 +150,8 @@ public class LoadValueFactory
     private void initElemCount(Element root)
     {
         //get all elements which are not text nodes (descendant axis, node() test)
-        NodeList nodeList = XPathUtil.evaluateXPath(root, "current()/descendant::node()[not(self::text())]");
+        NodeList nodeList = XPathUtil
+                .evaluateXPath(root, "current()/descendant::node()[not(self::text())]");
         for (int i = 0; i < nodeList.getLength(); i++)
         {
             Node currentNode = nodeList.item(i);
@@ -120,14 +164,19 @@ public class LoadValueFactory
     @Override
     public String getValueFor(XSDModel model, String defaultValue)
     {
-        //get path and check if it is known: if not or no values can be retrieved anymore return default
+        //get path and check if it is known: if not or no values can be retrieved anymore return
+        // default
         String path = XSDPathUtil.parseFromXSDModel(model);
         if (! this._values.containsKey(path))
             return super.getValueFor(model, defaultValue);
         List<String> valuesForElement = this._values.get(path);
         if (valuesForElement.isEmpty())
             return super.getValueFor(model, defaultValue);
-        return valuesForElement.remove(0);
+
+        String result = valuesForElement.remove(0);
+        if (result == null)
+            return super.getValueFor(model, defaultValue);
+        return result;
     }
 
     @Override
