@@ -29,6 +29,7 @@ public class DefaultBaseElementFactory
     public static final String FIXED = "fixed";
     //the tape attribute name
     public static final String TYPE = "type";
+    public static final String ELEMENT = "element";
     private static final int DEFAULT_SPACING = 10;
 
     @Override
@@ -99,9 +100,11 @@ public class DefaultBaseElementFactory
     {
         if (xsdModel.hasName())
         {
-            return new VBox(spacing);
-        }
-        else
+            if (xsdModel.getXSDNode().getLocalName().equals(ELEMENT))
+                return new HBox(spacing);
+            else
+                return new HBox(spacing, new Label(xsdModel.getName()));
+        } else
             return new HBox(spacing);
     }
 

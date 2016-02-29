@@ -8,8 +8,6 @@ import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
 import de.uos.se.xsd2gui.util.XPathUtil;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -82,11 +80,11 @@ public class CustomTypesParser
         try
         {
             // load and setup the XSD document
-            DocumentBuilderFactory documentBuilderFctory = DocumentBuilderFactory.newInstance();
-            documentBuilderFctory.setIgnoringComments(true);
-            documentBuilderFctory.setIgnoringElementContentWhitespace(true);
-            documentBuilderFctory.setNamespaceAware(true);
-            DocumentBuilder documentBuilder = documentBuilderFctory.newDocumentBuilder();
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setIgnoringComments(true);
+            dbf.setIgnoringElementContentWhitespace(true);
+            dbf.setNamespaceAware(true);
+            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
             Document doc = documentBuilder.parse(new FileInputStream(xsdFilename));
 
             // Find the node which defines the current element type
@@ -95,14 +93,13 @@ public class CustomTypesParser
             if (1 == matchingTypeNodes.getLength())
             {
 
-                Label textFieldLabel = new Label(elementNode.getAttribute("name"));
-                HBox hBox = new HBox(10, textFieldLabel);
                 parentModel.addSubModel(model);
-                factory.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
+                Pane container = factory.getBaseElementFactory().getSimpleContainerFor(model);
+                factory.parseXsdNode(container, matchingTypeNodes.item(0), model);
                 IValueFactory valueFactory = factory.getValueFactory();
                 model.valueProperty()
                      .setValue(valueFactory.getValueFor(model, model.valueProperty().getValue()));
-                return hBox;
+                return container;
 
             } else
             {
