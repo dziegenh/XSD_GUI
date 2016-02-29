@@ -1,6 +1,6 @@
-package de.uos.se.xsd2gui.base;
+package de.uos.se.xsd2gui.factories;
 
-import de.uos.se.xsd2gui.load.IValueFactory;
+import de.uos.se.xsd2gui.load.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
 import de.uos.se.xsd2gui.models.constraints.IntegerConstraint;
@@ -19,11 +19,11 @@ import java.util.List;
 
 /**
  * created: 29.02.2016
- *
+ * A class providing  a default implementation of {@linkplain INodeGenerator}
  * @author Falk Wilke
  */
-public class DefaultBaseElementFactory
-        implements IBaseElementFactory
+public class DefaultNodeGenerator
+        implements INodeGenerator
 {
     //the fixed attribute name
     public static final String FIXED = "fixed";
@@ -33,7 +33,7 @@ public class DefaultBaseElementFactory
     private static final int DEFAULT_SPACING = 10;
 
     @Override
-    public Node getAndBindControl(IValueFactory factory, XSDModel model)
+    public Node getAndBindControl(IValueGenerator factory, XSDModel model)
     {
         if (! model.hasParent())
             throw new IllegalArgumentException("given model does not have a parent set");
@@ -129,7 +129,7 @@ public class DefaultBaseElementFactory
     }
 
     @Override
-    public ComboBoxBase<String> getAndBindRestrictedControl(IValueFactory factory, XSDModel
+    public ComboBoxBase<String> getAndBindRestrictedControl(IValueGenerator factory, XSDModel
             parentModel, List<String> enumValues)
     {
         ComboBox<String> comboBox = new ComboBox<>();

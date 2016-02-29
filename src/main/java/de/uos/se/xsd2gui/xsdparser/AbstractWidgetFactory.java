@@ -1,9 +1,9 @@
 package de.uos.se.xsd2gui.xsdparser;
 
-import de.uos.se.xsd2gui.base.DefaultBaseElementFactory;
-import de.uos.se.xsd2gui.base.IBaseElementFactory;
-import de.uos.se.xsd2gui.load.DefaultValueFactory;
-import de.uos.se.xsd2gui.load.IValueFactory;
+import de.uos.se.xsd2gui.factories.DefaultNodeGenerator;
+import de.uos.se.xsd2gui.factories.INodeGenerator;
+import de.uos.se.xsd2gui.load.DefaultValueGenerator;
+import de.uos.se.xsd2gui.load.IValueGenerator;
 import de.uos.se.xsd2gui.models.RootModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.DefaultNamespaceContext;
@@ -30,18 +30,18 @@ public abstract class AbstractWidgetFactory
      * The widget generators which parse specific XSD elements.
      */
     private final List<IWidgetGenerator> _generators;
-    //the value factory to use
-    private IValueFactory _valueFactory;
-    //the factory for base element like panes or controls
-    private IBaseElementFactory _baseFactory;
+    //the value generator to use
+    private IValueGenerator _valueGenerator;
+    //the generator for basic nodes like panes or controls
+    private INodeGenerator _nodeGenerator;
 
     /**
      * Same as calling <i>new DefaultWidgetFactory(new DefaultNamespaceContext(), new
-     * DefaultValueFactory())</i>
+     * DefaultValueGenerator())</i>
      */
     protected AbstractWidgetFactory()
     {
-        this(new DefaultNamespaceContext(), new DefaultValueFactory());
+        this(new DefaultNamespaceContext(), new DefaultValueGenerator());
     }
 
     /**
@@ -50,9 +50,9 @@ public abstract class AbstractWidgetFactory
      * @param namespaceContext
      *         the context to use
      */
-    protected AbstractWidgetFactory(NamespaceContext namespaceContext, IValueFactory valueFactory)
+    protected AbstractWidgetFactory(NamespaceContext namespaceContext, IValueGenerator valueFactory)
     {
-        this(namespaceContext, valueFactory, new DefaultBaseElementFactory());
+        this(namespaceContext, valueFactory, new DefaultNodeGenerator());
     }
 
     /**
@@ -61,31 +61,31 @@ public abstract class AbstractWidgetFactory
      * @param namespaceContext
      *         the context to use
      */
-    protected AbstractWidgetFactory(NamespaceContext namespaceContext, IValueFactory
-            valueFactory, IBaseElementFactory elementFactory)
+    protected AbstractWidgetFactory(NamespaceContext namespaceContext, IValueGenerator
+            valueFactory, INodeGenerator nodeGenerator)
     {
         this._namespaceContext = namespaceContext;
         this._generators = new LinkedList<>();
-        this._valueFactory = valueFactory;
-        this._baseFactory = elementFactory;
+        this._valueGenerator = valueFactory;
+        this._nodeGenerator = nodeGenerator;
     }
 
     /**
-     * Same as calling <i>new DefaultWidgetFactory(namespaceContext,new DefaultValueFactory())</i>
+     * Same as calling <i>new DefaultWidgetFactory(namespaceContext,new DefaultValueGenerator())</i>
      */
     protected AbstractWidgetFactory(NamespaceContext namespaceContext)
     {
-        this(namespaceContext, new DefaultValueFactory());
+        this(namespaceContext, new DefaultValueGenerator());
     }
 
-    public IBaseElementFactory getBaseElementFactory()
+    public INodeGenerator getNodeGenerator()
     {
-        return _baseFactory;
+        return _nodeGenerator;
     }
 
-    public void setBaseFactory(IBaseElementFactory _baseFactory)
+    public void setNodeGenerator(INodeGenerator _baseFactory)
     {
-        this._baseFactory = _baseFactory;
+        this._nodeGenerator = _baseFactory;
     }
 
     /**
@@ -121,14 +121,14 @@ public abstract class AbstractWidgetFactory
         return Collections.unmodifiableList(_generators);
     }
 
-    public IValueFactory getValueFactory()
+    public IValueGenerator getValueGenerator()
     {
-        return _valueFactory;
+        return _valueGenerator;
     }
 
-    public void setValueFactory(IValueFactory valueFactory)
+    public void setValueGenerator(IValueGenerator valueFactory)
     {
-        this._valueFactory = valueFactory;
+        this._valueGenerator = valueFactory;
     }
 
     /**

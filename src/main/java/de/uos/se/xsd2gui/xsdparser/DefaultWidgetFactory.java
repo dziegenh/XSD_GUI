@@ -1,8 +1,8 @@
 package de.uos.se.xsd2gui.xsdparser;
 
-import de.uos.se.xsd2gui.base.IBaseElementFactory;
-import de.uos.se.xsd2gui.load.DefaultValueFactory;
-import de.uos.se.xsd2gui.load.IValueFactory;
+import de.uos.se.xsd2gui.factories.INodeGenerator;
+import de.uos.se.xsd2gui.load.DefaultValueGenerator;
+import de.uos.se.xsd2gui.load.IValueGenerator;
 import de.uos.se.xsd2gui.models.RootModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.DefaultNamespaceContext;
@@ -40,22 +40,22 @@ public class DefaultWidgetFactory
      */
     public DefaultWidgetFactory(NamespaceContext namespaceContext)
     {
-        super(namespaceContext, new DefaultValueFactory());
+        super(namespaceContext, new DefaultValueGenerator());
     }
 
-    public DefaultWidgetFactory(IValueFactory valueFactory, IBaseElementFactory elementFactory)
+    public DefaultWidgetFactory(IValueGenerator valueFactory, INodeGenerator elementFactory)
     {
         super(new DefaultNamespaceContext(), valueFactory, elementFactory);
     }
 
-    public DefaultWidgetFactory(IValueFactory valueFactory)
+    public DefaultWidgetFactory(IValueGenerator valueFactory)
     {
         super(new DefaultNamespaceContext(), valueFactory);
     }
 
-    public DefaultWidgetFactory(IBaseElementFactory elementFactory)
+    public DefaultWidgetFactory(INodeGenerator elementFactory)
     {
-        super(new DefaultNamespaceContext(), new DefaultValueFactory(), elementFactory);
+        super(new DefaultNamespaceContext(), new DefaultValueGenerator(), elementFactory);
     }
 
     /**

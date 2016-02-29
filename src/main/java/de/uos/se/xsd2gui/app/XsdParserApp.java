@@ -1,7 +1,7 @@
 package de.uos.se.xsd2gui.app;
 
 import de.uos.se.xsd2gui.generators.*;
-import de.uos.se.xsd2gui.load.LoadValueFactory;
+import de.uos.se.xsd2gui.load.LoadValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.DefaultWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
@@ -99,7 +99,7 @@ public class XsdParserApp
                 Document doc = _documentBuilder.parse(newValue.getPath());
                 // Create the main widget generator controller with the shared namespace.
                 DefaultWidgetFactory defaultWidgetFactory = new DefaultWidgetFactory(
-                        new LoadValueFactory(new File("out.xml")));
+                        new LoadValueGenerator(new File("out.xml")));
 
                 // Add the Generators
                 // TODO create missing parsers (e.g. for sequence tags)

@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
  *
  * @author Falk Wilke
  */
-public interface IValueFactory
+public interface IValueGenerator
 {
 
     String STANDARD_DEFAULT_VALUE = "";
@@ -24,7 +24,10 @@ public interface IValueFactory
     }
 
     /**
-     * This method vreates a value for the specified {@linkplain XSDModel}
+     * This method creates a value for the specified {@linkplain XSDModel}. The parameter is used
+     * when this generator is not able to create a decent value since sometimes that depends on
+     * the context of the calling method.
+     * This makes it more flexible to handle.
      *
      * @param xsdNode
      *         the model to generate a value for

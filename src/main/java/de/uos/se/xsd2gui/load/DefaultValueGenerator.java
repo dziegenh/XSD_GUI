@@ -5,11 +5,12 @@ import org.w3c.dom.Element;
 
 /**
  * created: 24.02.2016
- *
+ * A default implementaion of a value generator simply returning the provided default value or
+ * the values present within the given {@linkplain XSDModel}
  * @author Falk Wilke
  */
-public class DefaultValueFactory
-        implements IValueFactory
+public class DefaultValueGenerator
+        implements IValueGenerator
 {
     //the name of the default value attribute
     public static final String DEFAULT = "default";

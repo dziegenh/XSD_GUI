@@ -1,6 +1,5 @@
 package de.uos.se.xsd2gui.generators;
 
-import de.uos.se.xsd2gui.load.IValueFactory;
 import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
@@ -94,11 +93,9 @@ public class CustomTypesParser
             {
 
                 parentModel.addSubModel(model);
-                Pane container = factory.getBaseElementFactory().getSimpleContainerFor(model);
+                Pane container = factory.getNodeGenerator().getSimpleContainerFor(model);
                 factory.parseXsdNode(container, matchingTypeNodes.item(0), model);
-                IValueFactory valueFactory = factory.getValueFactory();
-                model.valueProperty()
-                     .setValue(valueFactory.getValueFor(model, model.valueProperty().getValue()));
+
                 return container;
 
             } else

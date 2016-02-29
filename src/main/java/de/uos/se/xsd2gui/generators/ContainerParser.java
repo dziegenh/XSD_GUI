@@ -1,6 +1,6 @@
 package de.uos.se.xsd2gui.generators;
 
-import de.uos.se.xsd2gui.base.IBaseElementFactory;
+import de.uos.se.xsd2gui.factories.INodeGenerator;
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
@@ -47,7 +47,7 @@ public class ContainerParser
         //create the model
         XSDModel model = new ElementModel(elementNode);
         // Create the content pane for the child nodes
-        IBaseElementFactory baseElementFactory = factory.getBaseElementFactory();
+        INodeGenerator baseElementFactory = factory.getNodeGenerator();
         Pane contentNodesPane = baseElementFactory.getSimpleContainerFor(model);
         parentModel.addSubModel(model);
         // create and add child GUI components to the container

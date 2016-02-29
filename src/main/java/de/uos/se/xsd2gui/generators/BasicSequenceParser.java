@@ -1,6 +1,6 @@
 package de.uos.se.xsd2gui.generators;
 
-import de.uos.se.xsd2gui.base.IBaseElementFactory;
+import de.uos.se.xsd2gui.factories.INodeGenerator;
 import de.uos.se.xsd2gui.models.SequenceModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.SequenceReparser;
@@ -66,7 +66,7 @@ public class BasicSequenceParser
         XSDModel model = new SequenceModel(elementNode, new XSDModelIndexMapComparator(indexMap));
         parentModel.addSubModel(model);
 
-        IBaseElementFactory baseElementFactory = factory.getBaseElementFactory();
+        INodeGenerator baseElementFactory = factory.getNodeGenerator();
         Pane contentNodesPane = baseElementFactory.getSimpleContainerFor(model);
         Pane nestedContent = baseElementFactory.getMultiPurposeContainer(xsdNode);
         //prepare reparsing

@@ -1,6 +1,6 @@
-package de.uos.se.xsd2gui.base;
+package de.uos.se.xsd2gui.factories;
 
-import de.uos.se.xsd2gui.load.IValueFactory;
+import de.uos.se.xsd2gui.load.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,13 +14,13 @@ import java.util.List;
 
 /**
  * created: 29.02.2016
- * An Interface representing a basic element creating factory which creates
- * {@linkplain Control} {@linkplain javafx.scene.layout.Pane}
+ * An Interface representing a basic {@linkplain Node} creating generatorwhich creates
+ * {@linkplain Node}s for binding with {@linkplain XSDModel}s and {@linkplain javafx.scene.layout.Pane}s to contain them.
  * for given {@linkplain XSDModel}s.
  *
  * @author Falk Wilke
  */
-public interface IBaseElementFactory
+public interface INodeGenerator
 {
     /**
      * Returns a Node element bound to {@linkplain XSDModel#valueProperty()}. This can be any
@@ -43,14 +43,14 @@ public interface IBaseElementFactory
      *         if
      *         {@linkplain XSDModel#hasParent()} returns <i>false</i> for the given {@linkplain XSDModel}
      */
-    Node getAndBindControl(IValueFactory factory, XSDModel model) throws IllegalArgumentException;
+    Node getAndBindControl(IValueGenerator factory, XSDModel model) throws IllegalArgumentException;
 
     /**
      * This method constructs a {@linkplain Pane} which is suited for housing a gui element
      * representing the given model.
      * It is important to note that a container *for* the {@linkplain Node} representing the
      * given model is created. For the creatin of that representation take a look at
-     * {@linkplain #getAndBindControl(IValueFactory, XSDModel)}
+     * {@linkplain #getAndBindControl(IValueGenerator, XSDModel)}
      *
      * @param xsdModel
      *         the model to create a housing for
@@ -73,8 +73,8 @@ public interface IBaseElementFactory
      * The reason this method exists is that sometimes general purpose containers are needed.
      * They should only be used to add controls (like buttons triggering certain actions) and
      * nothing directly involved with the xsd itself. It is strongly advised to use
-     * {@linkplain #getAndBindControl(IValueFactory, XSDModel)} and {@linkplain #getSimpleContainerFor(XSDModel, int)}
-     * to generate directly involved containers. Bypassing this does circumvent flexibility.
+     * {@linkplain #getAndBindControl(IValueGenerator, XSDModel)} and {@linkplain #getSimpleContainerFor(XSDModel, int)}
+     * to generate directly involved {@linkplain Node}s. Bypassing this does circumvent flexibility.
      *
      * @param xsdNode
      *         the {@linkplain Node} to use for multi-purpose container generation
@@ -98,10 +98,10 @@ public interface IBaseElementFactory
     ButtonBase getControlForHandler(EventHandler<ActionEvent> handler, String label);
 
     /**
-     * Does essentially the same as {@linkplain #getAndBindControl(IValueFactory, XSDModel)}
+     * Does essentially the same as {@linkplain #getAndBindControl(IValueGenerator, XSDModel)}
      * except that input is restricted to the given values.
      * This is kind of a convenience method so that
-     * {@linkplain #getAndBindControl(IValueFactory, XSDModel)} does not need to have excessive
+     * {@linkplain #getAndBindControl(IValueGenerator, XSDModel)} does not need to have excessive
      * knowledge about parsing xsds.
      *
      * @param factory
@@ -111,10 +111,10 @@ public interface IBaseElementFactory
      * @param enumValues
      *         the values input shall be restricted to
      *
-     * @return see {@linkplain #getAndBindControl(IValueFactory, XSDModel)}, only input is
+     * @return see {@linkplain #getAndBindControl(IValueGenerator, XSDModel)}, only input is
      * limited to the given values
      */
-    Node getAndBindRestrictedControl(IValueFactory factory, XSDModel model, List<String>
+    Node getAndBindRestrictedControl(IValueGenerator factory, XSDModel model, List<String>
             enumValues);
 
     /**

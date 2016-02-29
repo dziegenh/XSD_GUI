@@ -1,6 +1,6 @@
 package de.uos.se.xsd2gui.generators;
 
-import de.uos.se.xsd2gui.base.IBaseElementFactory;
+import de.uos.se.xsd2gui.factories.INodeGenerator;
 import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
@@ -49,9 +49,9 @@ public class BasicAttributeParser
         //important that the submodel is added before asking the factoryx for values since the
         // location of the model is used for generating "paths"
         parentModel.addSubModel(model);
-        IBaseElementFactory baseElementFactory = factory.getBaseElementFactory();
+        INodeGenerator baseElementFactory = factory.getNodeGenerator();
         javafx.scene.Node binded = baseElementFactory
-                .getAndBindControl(factory.getValueFactory(), model);
+                .getAndBindControl(factory.getValueGenerator(), model);
 
         if (binded == null)
         {

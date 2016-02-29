@@ -15,16 +15,17 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * created: 24.02.2016
  * A
- * {@linkplain IValueFactory} to load values from a file. It heavily depends on {@linkplain XSDPathUtil} for matching XSD and XML.
+ * {@linkplain IValueGenerator} to load values from a file. It heavily depends on {@linkplain XSDPathUtil} for matching XSD and XML.
  *
  * @author Falk Wilke
  */
-public class LoadValueFactory
-        extends DefaultValueFactory
+public class LoadValueGenerator
+        extends DefaultValueGenerator
 {
     public static final String EMPTY = "";
     //the values to give
@@ -43,7 +44,7 @@ public class LoadValueFactory
      * @throws IllegalArgumentException
      *         if the given document could not be parsed
      */
-    public LoadValueFactory(File xmlFile) throws IllegalArgumentException
+    public LoadValueGenerator(File xmlFile) throws IllegalArgumentException
     {
         this._values = new HashMap<>();
         this._amountOfElements = new HashMap<>();
@@ -107,7 +108,7 @@ public class LoadValueFactory
 
     /**
      * This method initializes the values which can possibly be retrieved from this
-     * {@linkplain IValueFactory}.
+     * {@linkplain IValueGenerator}.
      * Is only using attribute values (could possibly be changed but since attributes can always
      * replace inner text this is omitted)
      * The values are mapped to the result of{@linkplain XSDPathUtil#parseFromXMLNode(Node)} for
@@ -141,8 +142,15 @@ public class LoadValueFactory
                 attributes.add(path);
             }
             //repair values if necessary
-            this._possibleAttributes.get(elementPath).stream().filter(s -> ! attributes.contains(s))
-                                    .forEach(s -> this._values.get(s).add(null));
+            List<String> notPresentAtts = this._possibleAttributes.get(elementPath).stream()
+                                                                  .filter(s -> ! attributes
+                                                                          .contains(s))
+                                                                  .collect(Collectors.toList());
+            for (String notPresentAtt : notPresentAtts)
+            {
+                this._values.putIfAbsent(notPresentAtt, new LinkedList<>());
+                this._values.get(notPresentAtt).add(null);
+            }
         }
     }
 

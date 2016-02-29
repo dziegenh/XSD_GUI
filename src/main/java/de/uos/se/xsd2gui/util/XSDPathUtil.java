@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.util;
 
+import de.uos.se.xsd2gui.load.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -31,7 +32,8 @@ public class XSDPathUtil
     /**
      * This method parses a path from the given {@linkplain XSDModel} and prepends the given {@linkplain Element}s name attribute. Essentially the same as calling
      * {@linkplain #parseFromXSDModel(XSDModel)} and prepending it with the name attribute of the given element, {@linkplain #getCorrespondingType(Node)} and {@linkplain #PATH_SEPARATOR}.
-     * All joined in that exact order. This Method is used by {@linkplain de.uos.se.xsd2gui.load.IValueFactory#getMinimumNumberOfElements(XSDModel, Element)} essentially since there the {@linkplain XSDModel} alone is not sufficient for generating a valid path.
+     * All joined in that exact order. This Method is used by
+     * {@linkplain IValueGenerator#getMinimumNumberOfElements(XSDModel, Element)} essentially since there the {@linkplain XSDModel} alone is not sufficient for generating a valid path.
      * This happend because a {@linkplain SequenceReparser} needs to know that information before adding models.
      *
      * @param model

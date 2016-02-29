@@ -1,7 +1,7 @@
 package de.uos.se.xsd2gui.util;
 
-import de.uos.se.xsd2gui.base.IBaseElementFactory;
-import de.uos.se.xsd2gui.load.IValueFactory;
+import de.uos.se.xsd2gui.factories.INodeGenerator;
+import de.uos.se.xsd2gui.load.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import javafx.scene.Node;
@@ -91,7 +91,7 @@ public class SequenceReparser
     public synchronized void reparseToMinimumOcc(Pane widget, AbstractWidgetFactory factory)
     {
         //iterate since all elements have to be reparsed
-        IValueFactory valueFactory = factory.getValueFactory();
+        IValueGenerator valueFactory = factory.getValueGenerator();
         for (Element elem : this._elements.values())
         {
             String name = elem.getAttribute(NAME);
@@ -149,7 +149,7 @@ public class SequenceReparser
         //check occurrences do not exceed limit
         if (currentOcc < maxOccurs)
         {
-            IBaseElementFactory baseElementFactory = factory.getBaseElementFactory();
+            INodeGenerator baseElementFactory = factory.getNodeGenerator();
             /**
              * Does essentially the same
              * {@linkplain de.uos.se.xsd2gui.generators.BasicSequenceParser#createWidget(AbstractWidgetFactory, Pane, org.w3c.dom.Node, XSDModel)}

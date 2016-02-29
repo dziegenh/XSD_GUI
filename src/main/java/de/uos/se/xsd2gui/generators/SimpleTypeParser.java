@@ -1,7 +1,7 @@
 package de.uos.se.xsd2gui.generators;
 
 import de.uos.se.xsd2gui.app.XsdParserApp;
-import de.uos.se.xsd2gui.base.IBaseElementFactory;
+import de.uos.se.xsd2gui.factories.INodeGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
@@ -59,8 +59,8 @@ public class SimpleTypeParser
             {
                 enumValuesAsStrings.add(enumValues.item(i).getNodeValue());
             }
-            IBaseElementFactory bef = factory.getBaseElementFactory();
-            return bef.getAndBindRestrictedControl(factory.getValueFactory(), parentModel,
+            INodeGenerator bef = factory.getNodeGenerator();
+            return bef.getAndBindRestrictedControl(factory.getValueGenerator(), parentModel,
                                                    enumValuesAsStrings);
 
         } catch (XPathExpressionException ex)
