@@ -67,7 +67,7 @@ public class BasicSequenceParser
         parentModel.addSubModel(model);
 
         IBaseElementFactory baseElementFactory = factory.getBaseElementFactory();
-        Pane contentNodesPane = baseElementFactory.getContainerFor(model);
+        Pane contentNodesPane = baseElementFactory.getSimpleContainerFor(model);
         Pane nestedContent = baseElementFactory.getMultiPurposeContainer(xsdNode);
         //prepare reparsing
         SequenceReparser reparser = new SequenceReparser(matchingTypeNodes, model);

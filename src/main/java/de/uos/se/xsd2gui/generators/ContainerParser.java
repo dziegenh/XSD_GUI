@@ -1,12 +1,11 @@
 package de.uos.se.xsd2gui.generators;
 
+import de.uos.se.xsd2gui.base.IBaseElementFactory;
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -22,7 +21,8 @@ public class ContainerParser
 {
 
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory controller, Pane parentWidget, Node xsdNode, XSDModel parentModel)
+    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node
+            xsdNode, XSDModel parentModel)
     {
 
         if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
@@ -43,19 +43,22 @@ public class ContainerParser
         {
             return null;
         }
-        // Create the content pane for the child nodes
-        Pane contentNodesPane = new VBox(10);
+
+        //create the model
         XSDModel model = new ElementModel(elementNode);
+        // Create the content pane for the child nodes
+        IBaseElementFactory baseElementFactory = factory.getBaseElementFactory();
+        Pane contentNodesPane = baseElementFactory.getSimpleContainerFor(model);
         parentModel.addSubModel(model);
         // create and add child GUI components to the container
         NodeList childNodes = elementNode.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++)
         {
-            controller.parseXsdNode(contentNodesPane, childNodes.item(i), model);
+            factory.parseXsdNode(contentNodesPane, childNodes.item(i), model);
         }
 
         // Use the value of the "name" attribute as the container title.
-        return new TitledPane(name, contentNodesPane);
+        return baseElementFactory.getTitledContainerFor(model, contentNodesPane);
     }
 
 }

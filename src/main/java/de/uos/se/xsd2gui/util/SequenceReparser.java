@@ -1,11 +1,11 @@
 package de.uos.se.xsd2gui.util;
 
+import de.uos.se.xsd2gui.base.IBaseElementFactory;
 import de.uos.se.xsd2gui.load.IValueFactory;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -149,12 +149,13 @@ public class SequenceReparser
         //check occurrences do not exceed limit
         if (currentOcc < maxOccurs)
         {
+            IBaseElementFactory baseElementFactory = factory.getBaseElementFactory();
             /**
              * Does essentially the same
              * {@linkplain de.uos.se.xsd2gui.generators.BasicSequenceParser#createWidget(AbstractWidgetFactory, Pane, org.w3c.dom.Node, XSDModel)}
              * should do.
              */
-            Pane elementPane = new HBox(20);
+            Pane elementPane = baseElementFactory.getSimpleContainerFor(this._model);
             //clear last added models
             this._model.pollLastAddedModels();
             //parse elements
@@ -162,8 +163,8 @@ public class SequenceReparser
             //poll lkast added models from stored model
             List<XSDModel> models = this._model.pollLastAddedModels();
             //create delete button and add listener
-            Button delete = new Button("-");
-            delete.setOnAction(ev -> delete(widget, elementPane, name, models));
+            ButtonBase delete = baseElementFactory
+                    .getControlForHandler(ev -> delete(widget, elementPane, name, models), "-");
             elementPane.getChildren().add(delete);
             widget.getChildren().add(elementPane);
             this._currentOccurences.put(name, this._currentOccurences.get(name) + 1);

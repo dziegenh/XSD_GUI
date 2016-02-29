@@ -66,6 +66,7 @@ public class DefaultBaseElementFactory
                 model.valueProperty().setValue(spinnerFactory.getValue().toString());
                 spinner.editorProperty().getValue().textProperty()
                        .bindBidirectional(model.valueProperty());
+                inputWidget = spinner;
                 break;
 
             case "xs:string":
@@ -94,18 +95,20 @@ public class DefaultBaseElementFactory
     }
 
     @Override
-    public Pane getContainerFor(XSDModel xsdModel, int spacing)
+    public Pane getSimpleContainerFor(XSDModel xsdModel, int spacing)
     {
         if (xsdModel.hasName())
+        {
             return new VBox(spacing);
+        }
         else
             return new HBox(spacing);
     }
 
     @Override
-    public Pane getContainerFor(XSDModel xsdModel)
+    public Pane getSimpleContainerFor(XSDModel xsdModel)
     {
-        return getContainerFor(xsdModel, DEFAULT_SPACING);
+        return getSimpleContainerFor(xsdModel, DEFAULT_SPACING);
     }
 
     @Override
@@ -138,5 +141,11 @@ public class DefaultBaseElementFactory
         comboBox.setDisable(parentModel.isFixed());
         parentModel.valueProperty().setValue(factory.getValueFor(parentModel, firstItem));
         return comboBox;
+    }
+
+    @Override
+    public Labeled getTitledContainerFor(XSDModel xsdModel, Node content)
+    {
+        return new TitledPane(xsdModel.getName(), content);
     }
 }

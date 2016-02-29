@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Control;
+import javafx.scene.control.Labeled;
 import javafx.scene.layout.Pane;
 
 import java.util.List;
@@ -58,13 +59,13 @@ public interface IBaseElementFactory
      *
      * @return a {@linkplain Pane} where the given {@linkplain XSDModel} can be housed within
      */
-    Pane getContainerFor(XSDModel xsdModel, int spacing);
+    Pane getSimpleContainerFor(XSDModel xsdModel, int spacing);
 
     /**
-     * @see {@linkplain #getContainerFor(XSDModel, int)}
+     * @see {@linkplain #getSimpleContainerFor(XSDModel, int)}
      * Does the same, but does not take a spacing param.
      */
-    Pane getContainerFor(XSDModel xsdModel);
+    Pane getSimpleContainerFor(XSDModel xsdModel);
 
     /**
      * This method creates a new
@@ -72,7 +73,7 @@ public interface IBaseElementFactory
      * The reason this method exists is that sometimes general purpose containers are needed.
      * They should only be used to add controls (like buttons triggering certain actions) and
      * nothing directly involved with the xsd itself. It is strongly advised to use
-     * {@linkplain #getAndBindControl(IValueFactory, XSDModel)} and {@linkplain #getContainerFor(XSDModel, int)}
+     * {@linkplain #getAndBindControl(IValueFactory, XSDModel)} and {@linkplain #getSimpleContainerFor(XSDModel, int)}
      * to generate directly involved containers. Bypassing this does circumvent flexibility.
      *
      * @param xsdNode
@@ -115,4 +116,25 @@ public interface IBaseElementFactory
      */
     Node getAndBindRestrictedControl(IValueFactory factory, XSDModel model, List<String>
             enumValues);
+
+    /**
+     * Wraps the given
+     * {@linkplain Node} into a {@linkplain Labeled} using the information stored within the given {@linkplain XSDModel}.
+     * This is necessary since sometimes it is not clear on a global level where for example
+     * "elements" end. So this is decided by a
+     * {@linkplain de.uos.se.xsd2gui.xsdparser.IWidgetGenerator} and this method is called.
+     * The prupose of this class is to make {@linkplain Node} generation more flexible and
+     * independent from the control flow of the calling
+     * {@linkplain de.uos.se.xsd2gui.xsdparser.IWidgetGenerator}. But sometimes layout and logic
+     * are connected too tightly, this is why this method was created to provide a limited amount
+     * of independence. IN this case  generation can still be influenced by the caller.
+     *
+     * @param xsdModel
+     *         the mode to use for information
+     * @param content
+     *         the {@linkplain Node} to wrap up
+     *
+     * @return A labeled component corresponding to the given model wrapping the given node
+     */
+    Labeled getTitledContainerFor(XSDModel xsdModel, Node content);
 }
