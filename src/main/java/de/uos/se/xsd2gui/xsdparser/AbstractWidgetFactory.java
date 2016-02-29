@@ -1,5 +1,7 @@
 package de.uos.se.xsd2gui.xsdparser;
 
+import de.uos.se.xsd2gui.base.DefaultBaseElementFactory;
+import de.uos.se.xsd2gui.base.IBaseElementFactory;
 import de.uos.se.xsd2gui.load.DefaultValueFactory;
 import de.uos.se.xsd2gui.load.IValueFactory;
 import de.uos.se.xsd2gui.models.RootModel;
@@ -7,7 +9,6 @@ import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.util.DefaultNamespaceContext;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.xml.namespace.NamespaceContext;
 import java.util.Collections;
@@ -29,7 +30,10 @@ public abstract class AbstractWidgetFactory
      * The widget generators which parse specific XSD elements.
      */
     private final List<IWidgetGenerator> _generators;
+    //the value factory to use
     private IValueFactory _valueFactory;
+    //the factory for base element like panes or controls
+    private IBaseElementFactory _baseFactory;
 
     /**
      * Same as calling <i>new DefaultWidgetFactory(new DefaultNamespaceContext(), new
@@ -48,9 +52,22 @@ public abstract class AbstractWidgetFactory
      */
     protected AbstractWidgetFactory(NamespaceContext namespaceContext, IValueFactory valueFactory)
     {
+        this(namespaceContext, valueFactory, new DefaultBaseElementFactory());
+    }
+
+    /**
+     * The constructor, making this object use the provided {@linkplain NamespaceContext}
+     *
+     * @param namespaceContext
+     *         the context to use
+     */
+    protected AbstractWidgetFactory(NamespaceContext namespaceContext, IValueFactory
+            valueFactory, IBaseElementFactory elementFactory)
+    {
         this._namespaceContext = namespaceContext;
         this._generators = new LinkedList<>();
         this._valueFactory = valueFactory;
+        this._baseFactory = elementFactory;
     }
 
     /**
@@ -61,9 +78,14 @@ public abstract class AbstractWidgetFactory
         this(namespaceContext, new DefaultValueFactory());
     }
 
-    public void setValueFactory(IValueFactory valueFactory)
+    public IBaseElementFactory getBaseElementFactory()
     {
-        this._valueFactory = valueFactory;
+        return _baseFactory;
+    }
+
+    public void setBaseFactory(IBaseElementFactory _baseFactory)
+    {
+        this._baseFactory = _baseFactory;
     }
 
     /**
@@ -77,9 +99,11 @@ public abstract class AbstractWidgetFactory
         this._generators.add(generator);
     }
 
-    public abstract RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation);
+    public abstract RootModel parseXsd(Document doc, Pane rootWidget, String
+            nameSpaceSchemaLocation);
 
-    public abstract void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel rootModel);
+    public abstract void parseXsdNode(Pane rootWidget, org.w3c.dom.Node xsdNode, XSDModel
+            rootModel);
 
     /**
      * If set, Generators can access a shared default namespace.
@@ -97,14 +121,14 @@ public abstract class AbstractWidgetFactory
         return Collections.unmodifiableList(_generators);
     }
 
-    public String getValueFor(XSDModel model, String defaultValue)
+    public IValueFactory getValueFactory()
     {
-        return this._valueFactory.getValueFor(model, defaultValue);
+        return _valueFactory;
     }
 
-    public int getMinimumAmountOfElements(XSDModel model, Element element)
+    public void setValueFactory(IValueFactory valueFactory)
     {
-        return this._valueFactory.getMinimumNumberOfElements(model, element);
+        this._valueFactory = valueFactory;
     }
 
     /**

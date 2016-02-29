@@ -1,10 +1,10 @@
 package de.uos.se.xsd2gui.generators;
 
 import de.uos.se.xsd2gui.app.XsdParserApp;
+import de.uos.se.xsd2gui.base.IBaseElementFactory;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -13,6 +13,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,19 +53,15 @@ public class SimpleTypeParser
             {
                 return null;
             }
-            ComboBox<String> comboBox = new ComboBox<>();
-            if (! parentModel.isRequired())
-                comboBox.getItems().add("");
+            //nodelists are highly unflexivle so "casting" is required
+            List<String> enumValuesAsStrings = new LinkedList<>();
             for (int i = 0; i < enumValues.getLength(); i++)
             {
-                Node item = enumValues.item(i);
-                comboBox.getItems().add(item.getNodeValue());
+                enumValuesAsStrings.add(enumValues.item(i).getNodeValue());
             }
-            comboBox.valueProperty().bindBidirectional(parentModel.valueProperty());
-            String firstItem = comboBox.getItems().get(0);
-            comboBox.setDisable(parentModel.isFixed());
-            parentModel.valueProperty().setValue(factory.getValueFor(parentModel, firstItem));
-            return comboBox;
+            IBaseElementFactory bef = factory.getBaseElementFactory();
+            return bef.getAndBindRestrictedControl(factory.getValueFactory(), parentModel,
+                                                   enumValuesAsStrings);
 
         } catch (XPathExpressionException ex)
         {
@@ -72,5 +70,6 @@ public class SimpleTypeParser
 
         return null;
     }
+
 
 }

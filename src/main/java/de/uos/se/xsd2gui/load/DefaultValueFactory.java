@@ -13,13 +13,14 @@ public class DefaultValueFactory
 {
     //the name of the default value attribute
     public static final String DEFAULT = "default";
+    public static final String FIXED = "fixed";
 
     @Override
     public String getValueFor(XSDModel model, String defaultValue)
     {
         Element xsdNode = model.getXSDNode();
-        if (xsdNode.hasAttribute("fixed"))
-            return xsdNode.getAttribute("fixed");
+        if (xsdNode.hasAttribute(FIXED))
+            return xsdNode.getAttribute(FIXED);
         String defaultAttributeValue = xsdNode.getAttribute(DEFAULT);
         return defaultAttributeValue.trim().isEmpty() ? defaultValue : defaultAttributeValue;
     }

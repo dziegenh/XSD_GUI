@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.generators;
 
+import de.uos.se.xsd2gui.load.IValueFactory;
 import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
@@ -98,7 +99,9 @@ public class CustomTypesParser
                 HBox hBox = new HBox(10, textFieldLabel);
                 parentModel.addSubModel(model);
                 factory.parseXsdNode(hBox, matchingTypeNodes.item(0), model);
-                model.valueProperty().setValue(factory.getValueFor(model, model.valueProperty().getValue()));
+                IValueFactory valueFactory = factory.getValueFactory();
+                model.valueProperty()
+                     .setValue(valueFactory.getValueFor(model, model.valueProperty().getValue()));
                 return hBox;
 
             } else

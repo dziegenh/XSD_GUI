@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.util;
 
+import de.uos.se.xsd2gui.load.IValueFactory;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import javafx.scene.Node;
@@ -90,11 +91,12 @@ public class SequenceReparser
     public synchronized void reparseToMinimumOcc(Pane widget, AbstractWidgetFactory factory)
     {
         //iterate since all elements have to be reparsed
+        IValueFactory valueFactory = factory.getValueFactory();
         for (Element elem : this._elements.values())
         {
             String name = elem.getAttribute(NAME);
-            int minOccurs = Math
-                    .max(getMinOcc(elem, MIN_OCCURS, 0), factory.getMinimumAmountOfElements(this._model, elem));
+            int minOccurs = Math.max(getMinOcc(elem, MIN_OCCURS, 0),
+                                     valueFactory.getMinimumNumberOfElements(this._model, elem));
             int currentOccs = this._currentOccurences.get(name);
             for (int i = 0; i < minOccurs - currentOccs; i++)
             {
@@ -177,7 +179,7 @@ public class SequenceReparser
      * functionality is desired.
      *
      * @param widget
-     *         the widet to delete from
+     *         the widget to delete from
      * @param element
      *         the element to delete from the {@linkplain Pane}
      * @param name
@@ -198,7 +200,7 @@ public class SequenceReparser
         {
             widget.getChildren().remove(element);
             this._currentOccurences.put(name, this._currentOccurences.get(name) - 1);
-            this._model.removeSubModels(models);
+            this._model.removeSubmodels(models);
         }
     }
 

@@ -1,5 +1,6 @@
 package de.uos.se.xsd2gui.xsdparser;
 
+import de.uos.se.xsd2gui.base.IBaseElementFactory;
 import de.uos.se.xsd2gui.load.DefaultValueFactory;
 import de.uos.se.xsd2gui.load.IValueFactory;
 import de.uos.se.xsd2gui.models.RootModel;
@@ -42,9 +43,19 @@ public class DefaultWidgetFactory
         super(namespaceContext, new DefaultValueFactory());
     }
 
+    public DefaultWidgetFactory(IValueFactory valueFactory, IBaseElementFactory elementFactory)
+    {
+        super(new DefaultNamespaceContext(), valueFactory, elementFactory);
+    }
+
     public DefaultWidgetFactory(IValueFactory valueFactory)
     {
         super(new DefaultNamespaceContext(), valueFactory);
+    }
+
+    public DefaultWidgetFactory(IBaseElementFactory elementFactory)
+    {
+        super(new DefaultNamespaceContext(), new DefaultValueFactory(), elementFactory);
     }
 
     /**
@@ -59,15 +70,16 @@ public class DefaultWidgetFactory
     public RootModel parseXsd(Document doc, Pane rootWidget, String nameSpaceSchemaLocation)
     {
         Element documentRoot = doc.getDocumentElement();
-        NodeList list = XPathUtil.evaluateXPath(documentRoot, "current()/xs:element/node()[not(self::text())]");
+        NodeList list = XPathUtil
+                .evaluateXPath(documentRoot, "current()/xs:element/node()[not(self::text())]");
         if (list.getLength() == 0)
         {
             Logger.getLogger(this.getClass().getName())
                   .log(Level.SEVERE, "no elements present besides root element, aborting.....");
             return null;
         }
-        org.w3c.dom.Element firstElement = (Element) XPathUtil.evaluateXPath(documentRoot, "current()/xs:element")
-                                                              .item(0);
+        org.w3c.dom.Element firstElement = (Element) XPathUtil
+                .evaluateXPath(documentRoot, "current()/xs:element").item(0);
         RootModel rootModel = new RootModel(firstElement, nameSpaceSchemaLocation);
         for (int i = 0; i < list.getLength(); i++)
         {

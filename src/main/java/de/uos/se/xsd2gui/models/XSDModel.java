@@ -112,14 +112,16 @@ public abstract class XSDModel
      * @param comparator
      *         the comparator to use for sorting
      */
-    public XSDModel(Element xsdNode, List<? extends XSDModel> subModels, Comparator<XSDModel> comparator)
+    public XSDModel(Element xsdNode, List<? extends XSDModel> subModels, Comparator<XSDModel>
+            comparator)
     {
         //clone node to avoid sideeffects
         this._xsdNode = (Element) xsdNode.cloneNode(true);
         //get name
         this._elementName = this._xsdNode.getAttribute(NAME);
         if (this._elementName == null)
-            throw new IllegalArgumentException("provided element node does not have an attribute name ");
+            throw new IllegalArgumentException(
+                    "provided element node does not have an attribute name ");
         if (subModels == null)
             throw new NullPointerException("provided submodels are null");
         if (comparator == null)
@@ -129,7 +131,8 @@ public abstract class XSDModel
         //create string property
         this._value = new SimpleStringProperty("");
         //set required
-        this._required = ! this._xsdNode.hasAttribute(USE) || this._xsdNode.getAttribute(USE).equals("required");
+        this._required = ! this._xsdNode.hasAttribute(USE) ||
+                         this._xsdNode.getAttribute(USE).equals("required");
         //create last added
         this._lastAdded = new LinkedList<>();
         this._comparator = comparator;
@@ -137,7 +140,8 @@ public abstract class XSDModel
         this._violationText = new SimpleStringProperty("");
         this._value.addListener((observable, oldValue, newValue) -> checkConstraints());
         this._violated = new SimpleBooleanProperty(false);
-        this._fixed = this._xsdNode.hasAttribute(FIXED) && ! this._xsdNode.getAttribute(FIXED).trim().isEmpty();
+        this._fixed = this._xsdNode.hasAttribute(FIXED) &&
+                      ! this._xsdNode.getAttribute(FIXED).trim().isEmpty();
         this._parentModel = null;
     }
 
@@ -155,8 +159,8 @@ public abstract class XSDModel
             if (constraint.isViolatedBy(value))
             {
                 violated = true;
-                builder.append(constraint.getViolationMessage(value)).append(" for field ").append(this.getName())
-                       .append(LINE_SEP);
+                builder.append(constraint.getViolationMessage(value)).append(" for field ")
+                       .append(this.getName()).append(LINE_SEP);
             }
         }
         if (violated)
@@ -216,21 +220,41 @@ public abstract class XSDModel
     public synchronized String toString()
     {
         return "XSDModel{" +
-                "_xsdNode=" + _xsdNode +
-                ", _subModels=" + _subModels +
-                ", _required=" + _required +
-                ", _elementName='" + _elementName + '\'' +
-                ", _value=" + _value +
-                ", _lastAdded=" + _lastAdded +
-                '}';
+               "_xsdNode=" + _xsdNode +
+               ", _subModels=" + _subModels +
+               ", _required=" + _required +
+               ", _elementName='" + _elementName + '\'' +
+               ", _value=" + _value +
+               ", _lastAdded=" + _lastAdded +
+               '}';
     }
 
-    public synchronized void addSubModel(XSDModel xsdm)
+    /**
+     * Adds ther given{@linkplain XSDModel} to this models children. Does nothing if this model
+     * is already the parent of the given model.
+     *
+     * @param xsdm
+     *         the model to add to this model*s children
+     *
+     * @throws IllegalArgumentException
+     *         if the given model already has a parent
+     */
+    public synchronized void addSubModel(XSDModel xsdm) throws IllegalArgumentException
     {
+        if (xsdm._parentModel == this)
+            //already parent
+            return;
+        if (xsdm.hasParent())
+            throw new IllegalArgumentException("the given model already has a parent");
         this._subModels.add(xsdm);
         this._subModels.sort(this._comparator);
         xsdm._parentModel = this;
         this._lastAdded.add(xsdm);
+    }
+
+    public boolean hasParent()
+    {
+        return this._parentModel != null;
     }
 
     public XSDModel getParentModel()
@@ -238,14 +262,19 @@ public abstract class XSDModel
         return _parentModel;
     }
 
-    public synchronized void removeSubModel(XSDModel xsdm)
+    public synchronized void removeSubmodel(XSDModel xsdm)
     {
-        this.removeSubModels(Collections.singleton(xsdm));
+        this.removeSubmodels(Collections.singleton(xsdm));
     }
 
-    public synchronized void removeSubModels(Collection<XSDModel> xsdm)
+    public synchronized void removeSubmodels(Collection<XSDModel> xsdm)
     {
-        this._subModels.removeAll(xsdm);
+        for (XSDModel xsdModel : xsdm)
+        {
+            this._subModels.remove(xsdModel);
+            if (xsdModel._parentModel == this)
+                xsdModel._parentModel = null;
+        }
     }
 
     /**
@@ -302,9 +331,8 @@ public abstract class XSDModel
         return _violationText;
     }
 
-    private boolean hasName()
+    public boolean hasName()
     {
         return ! this.getName().isEmpty();
     }
-
 }
