@@ -49,8 +49,10 @@ public interface INodeGenerator
      * This method constructs a {@linkplain Pane} which is suited for housing a gui element
      * representing the given model.
      * It is important to note that a container *for* the {@linkplain Node} representing the
-     * given model is created. For the creatin of that representation take a look at
-     * {@linkplain #getAndBindControl(IValueGenerator, XSDModel)}
+     * given model is created. For the creation of that representation take a look at
+     * {@linkplain #getAndBindControl(IValueGenerator, XSDModel)}. The given {@linkplain XSDModel} must! have a parent, otherwise an exception is thrown.
+     * This is necessary since the whole 'hierarchy' needs to be evaluated to generate a proper
+     * container.
      *
      * @param xsdModel
      *         the model to create a housing for
@@ -58,14 +60,26 @@ public interface INodeGenerator
      *         the spacing to use
      *
      * @return a {@linkplain Pane} where the given {@linkplain XSDModel} can be housed within
+     *
+     * @throws IllegalArgumentException
+     *         if
+     *         {@linkplain XSDModel#hasParent()} returns <i>false</i> for the given {@linkplain XSDModel}
      */
-    Pane getSimpleContainerFor(XSDModel xsdModel, int spacing);
+    Pane getSimpleContainerFor(XSDModel xsdModel, int spacing) throws IllegalArgumentException;
+
+    ;
 
     /**
+     * Overloaded method, does not take a spacing param.
+     *
+     * @throws IllegalArgumentException
+     *         if
+     *         {@linkplain XSDModel#hasParent()} returns <i>false</i> for the given {@linkplain XSDModel}
      * @see {@linkplain #getSimpleContainerFor(XSDModel, int)}
-     * Does the same, but does not take a spacing param.
      */
-    Pane getSimpleContainerFor(XSDModel xsdModel);
+    Pane getSimpleContainerFor(XSDModel xsdModel) throws IllegalArgumentException;
+
+    ;
 
     /**
      * This method creates a new

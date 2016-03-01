@@ -48,8 +48,8 @@ public class ContainerParser
         XSDModel model = new ElementModel(elementNode);
         // Create the content pane for the child nodes
         INodeGenerator baseElementFactory = factory.getNodeGenerator();
-        Pane contentNodesPane = baseElementFactory.getSimpleContainerFor(model);
         parentModel.addSubModel(model);
+        Pane contentNodesPane = baseElementFactory.getSimpleContainerFor(model);
         // create and add child GUI components to the container
         NodeList childNodes = elementNode.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++)
