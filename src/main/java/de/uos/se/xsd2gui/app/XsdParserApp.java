@@ -1,8 +1,8 @@
 package de.uos.se.xsd2gui.app;
 
-import de.uos.se.xsd2gui.load_generators.LoadValueGenerator;
 import de.uos.se.xsd2gui.model_generators.*;
 import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.value_generators.LoadValueGenerator;
 import de.uos.se.xsd2gui.xsdparser.DefaultWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.application.Application;

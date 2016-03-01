@@ -1,11 +1,11 @@
 package de.uos.se.xsd2gui.node_generators;
 
-import de.uos.se.xsd2gui.load_generators.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
 import de.uos.se.xsd2gui.models.constraints.IntegerConstraint;
 import de.uos.se.xsd2gui.models.constraints.NoPureWhitespaceStringConstraint;
 import de.uos.se.xsd2gui.models.constraints.UIntConstraint;
+import de.uos.se.xsd2gui.value_generators.IValueGenerator;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

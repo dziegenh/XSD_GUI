@@ -1,7 +1,7 @@
 package de.uos.se.xsd2gui.node_generators;
 
-import de.uos.se.xsd2gui.load_generators.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.value_generators.IValueGenerator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;

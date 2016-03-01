@@ -1,8 +1,8 @@
 package de.uos.se.xsd2gui.util;
 
-import de.uos.se.xsd2gui.load_generators.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.node_generators.INodeGenerator;
+import de.uos.se.xsd2gui.value_generators.IValueGenerator;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;

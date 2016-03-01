@@ -1,4 +1,4 @@
-package de.uos.se.xsd2gui.load_generators;
+package de.uos.se.xsd2gui.value_generators;
 
 import de.uos.se.xsd2gui.models.XSDModel;
 import org.w3c.dom.Element;
