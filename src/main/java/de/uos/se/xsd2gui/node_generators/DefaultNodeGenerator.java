@@ -29,9 +29,9 @@ public class DefaultNodeGenerator
 {
     //the fixed attribute name
     public static final String FIXED = "fixed";
-    //the tape attribute name
+    //the type attribute name
     public static final String TYPE = "type";
-    public static final String ELEMENT = "element";
+    //the default spacing
     private static final int DEFAULT_SPACING = 10;
 
     @Override
@@ -42,7 +42,7 @@ public class DefaultNodeGenerator
         Element elementNode = model.getXSDNode();
         String fixed = elementNode.getAttribute(FIXED);
         Control inputWidget = null;
-        //System.out.println(XSDPathUtil.parseFromXMLNode(elementNode));
+        //differ by type
         switch (elementNode.getAttribute(TYPE))
         {
             case "xs:unsignedInt":
@@ -50,6 +50,7 @@ public class DefaultNodeGenerator
 
 
             case "xs:int":
+                //int can be processed by using a Spinner
                 int initialValue = Integer.parseInt(factory.getValueFor(model, "0"));
                 model.addConstraint(new IntegerConstraint());
                 if (model.isRequired())
@@ -87,12 +88,17 @@ public class DefaultNodeGenerator
                 inputWidget = textField;
                 break;
         }
+        //only if an element could be created:
         if (null != inputWidget)
         {
+            //disable for fixed values
             inputWidget.setDisable(model.isFixed());
+            //bind input validation tooltips
             bindTooltips(inputWidget, model);
+            //create label for name and type
             Label textFieldLabel = new Label(elementNode.getAttribute("name"));
             Label typeLabel = new Label(" (" + elementNode.getAttribute("type") + ")");
+            //collect within hbox
             return new HBox(10, textFieldLabel, inputWidget, typeLabel);
         }
         return null;

@@ -19,13 +19,18 @@ import java.util.*;
  * In addition {@linkplain IXSDValueConstraint} objects can be added which will be used for checking
  * the value attribute.
  * Such a check will be triggered whenever the value of
- * {@linkplain #_value} is set. Also the method {@linkplain #checkViolationDeep()}
+ * {@linkplain #_value} is set or a {@linkplain IXSDValueConstraint} is added/removed. Also the method {@linkplain #checkViolationDeep()}
  * can be used to check recursively if in this model or any submodel a attribute
  * {@linkplain #_violated} with <i>true</i> as its
  * value exists. This could possibly be used before calling
  * {@linkplain #parseToXML(Document, Element)} since that method will not check any constraints.
  * This was decided since a "manual" override of those violations could possibly be desirable but
- * that is not up to the model to decide.
+ * that is not up to the model to decide. Some basic attribute testing (like for 'use' or
+ * 'fixed') is included within this generic model.
+ * This is simply to the fact that most
+ * {@linkplain de.uos.se.xsd2gui.xsdparser.IWidgetGenerator}s do rely on those attributes for
+ * triggering certain actions.
+ * Manual testing in many places would increase the chances for bugs.
  *
  * @author Falk Wilke
  */
@@ -176,6 +181,13 @@ public abstract class XSDModel
         return _elementName;
     }
 
+    /**
+     * Returns whether the {@linkplain Element} returned by {@linkplain #getXSDNode()} does have
+     * an attribute 'fixed' set
+     *
+     * @return whether the {@linkplain Element} returned by {@linkplain #getXSDNode()} does have
+     * an attribute 'fixed' set
+     */
     public boolean isFixed()
     {
         return _fixed;
