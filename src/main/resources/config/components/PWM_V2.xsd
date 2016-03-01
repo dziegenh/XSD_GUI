@@ -26,7 +26,7 @@
         <xs:attribute name="rawMax" type="xs:unsignedInt"/>
         <xs:attribute name="name" type="xs:string"/>
         <xs:attribute name="bufferIndex" type="xs:string"/>
-        <!--<xs:element name="direction" type="ct:DirectionType" fixed="output"/>-->
+        <xs:attribute name="direction" type="ct:DirectionType" fixed="output"/>
     </xs:complexType>
     <xs:element name="PWM">
         <xs:complexType>
