@@ -1,11 +1,11 @@
 package de.uos.se.xsd2gui.xsdparser;
 
-import de.uos.se.xsd2gui.factories.DefaultNodeGenerator;
-import de.uos.se.xsd2gui.factories.INodeGenerator;
-import de.uos.se.xsd2gui.load.DefaultValueGenerator;
-import de.uos.se.xsd2gui.load.IValueGenerator;
+import de.uos.se.xsd2gui.load_generators.DefaultValueGenerator;
+import de.uos.se.xsd2gui.load_generators.IValueGenerator;
 import de.uos.se.xsd2gui.models.RootModel;
 import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.node_generators.DefaultNodeGenerator;
+import de.uos.se.xsd2gui.node_generators.INodeGenerator;
 import de.uos.se.xsd2gui.util.DefaultNamespaceContext;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Document;

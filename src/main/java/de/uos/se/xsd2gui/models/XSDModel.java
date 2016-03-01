@@ -71,7 +71,7 @@ public abstract class XSDModel
     //the last added  xsdmodels
     private final List<XSDModel> _lastAdded;
     //the constraints placed on this model
-    private final List<IXSDValueConstraint> _constraints;
+    private final Set<IXSDValueConstraint> _constraints;
     //the text of a violation of constraints
     private final StringProperty _violationText;
     //the boolean property holding if constraints have been violated
@@ -136,7 +136,7 @@ public abstract class XSDModel
         //create last added
         this._lastAdded = new LinkedList<>();
         this._comparator = comparator;
-        this._constraints = new LinkedList<>();
+        this._constraints = new HashSet<>();
         this._violationText = new SimpleStringProperty("");
         this._value.addListener((observable, oldValue, newValue) -> checkConstraints());
         this._violated = new SimpleBooleanProperty(false);
@@ -289,14 +289,16 @@ public abstract class XSDModel
         return tmp;
     }
 
-    public synchronized boolean addConstraint(IXSDValueConstraint constr)
+    public synchronized void addConstraint(IXSDValueConstraint constr)
     {
-        return this._constraints.add(constr);
+        this._constraints.add(constr);
+        checkConstraints();
     }
 
-    public synchronized boolean removeConstraint(IXSDValueConstraint constr)
+    public synchronized void removeConstraint(IXSDValueConstraint constr)
     {
-        return this._constraints.remove(constr);
+        this._constraints.remove(constr);
+        checkConstraints();
     }
 
     public Element getXSDNode()

@@ -1,6 +1,6 @@
 package de.uos.se.xsd2gui.util;
 
-import de.uos.se.xsd2gui.load.IValueGenerator;
+import de.uos.se.xsd2gui.load_generators.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;

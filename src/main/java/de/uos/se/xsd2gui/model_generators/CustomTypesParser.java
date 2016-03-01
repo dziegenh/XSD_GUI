@@ -1,4 +1,4 @@
-package de.uos.se.xsd2gui.generators;
+package de.uos.se.xsd2gui.model_generators;
 
 import de.uos.se.xsd2gui.models.AttributeModel;
 import de.uos.se.xsd2gui.models.ElementModel;

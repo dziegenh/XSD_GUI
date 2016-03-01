@@ -1,8 +1,8 @@
 package de.uos.se.xsd2gui.util;
 
-import de.uos.se.xsd2gui.factories.INodeGenerator;
-import de.uos.se.xsd2gui.load.IValueGenerator;
+import de.uos.se.xsd2gui.load_generators.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.node_generators.INodeGenerator;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
@@ -152,7 +152,7 @@ public class SequenceReparser
             INodeGenerator baseElementFactory = factory.getNodeGenerator();
             /**
              * Does essentially the same
-             * {@linkplain de.uos.se.xsd2gui.generators.BasicSequenceParser#createWidget(AbstractWidgetFactory, Pane, org.w3c.dom.Node, XSDModel)}
+             * {@linkplain de.uos.se.xsd2gui.model_generators.BasicSequenceParser#createWidget(AbstractWidgetFactory, Pane, org.w3c.dom.Node, XSDModel)}
              * should do.
              */
             Pane elementPane = baseElementFactory.getSimpleContainerFor(this._model);

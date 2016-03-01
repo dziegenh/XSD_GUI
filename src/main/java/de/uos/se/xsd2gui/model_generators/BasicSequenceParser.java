@@ -1,8 +1,8 @@
-package de.uos.se.xsd2gui.generators;
+package de.uos.se.xsd2gui.model_generators;
 
-import de.uos.se.xsd2gui.factories.INodeGenerator;
 import de.uos.se.xsd2gui.models.SequenceModel;
 import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.node_generators.INodeGenerator;
 import de.uos.se.xsd2gui.util.SequenceReparser;
 import de.uos.se.xsd2gui.util.XPathUtil;
 import de.uos.se.xsd2gui.util.XSDModelIndexMapComparator;

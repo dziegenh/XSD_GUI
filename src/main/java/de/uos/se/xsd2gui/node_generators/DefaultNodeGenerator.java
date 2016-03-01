@@ -1,6 +1,6 @@
-package de.uos.se.xsd2gui.factories;
+package de.uos.se.xsd2gui.node_generators;
 
-import de.uos.se.xsd2gui.load.IValueGenerator;
+import de.uos.se.xsd2gui.load_generators.IValueGenerator;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
 import de.uos.se.xsd2gui.models.constraints.IntegerConstraint;
