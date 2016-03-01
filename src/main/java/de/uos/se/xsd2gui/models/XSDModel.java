@@ -317,7 +317,7 @@ public abstract class XSDModel
             return true;
         for (XSDModel subModel : this._subModels)
         {
-            if (subModel._violated.get())
+            if (subModel.checkViolationDeep())
                 return true;
         }
         return false;
