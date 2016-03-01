@@ -168,7 +168,7 @@ public class DefaultNodeGenerator
             throw new IllegalArgumentException("given model does not have a parent set");
         if (xsdModel.hasName())
         {
-            if (xsdModel.getXSDNode().getLocalName().equals(ELEMENT))
+            if (! xsdModel.getXSDNode().hasAttribute(TYPE))
                 return new HBox(spacing);
             else
                 return new HBox(spacing, new Label(xsdModel.getName()));

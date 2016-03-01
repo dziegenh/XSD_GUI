@@ -9,8 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * created: 09.02.2016
@@ -166,10 +164,8 @@ public abstract class XSDModel
         if (violated)
         {
             this._violationText.setValue(builder.toString());
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, builder.toString());
         } else
         {
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "OK");
             this._violationText.setValue("");
         }
         this._violated.setValue(violated);
