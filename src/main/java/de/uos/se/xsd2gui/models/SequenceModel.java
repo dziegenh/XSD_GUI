@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 /**
  * created: 09.02.2016
- * A model representing a <xsd:sequence></xsd:sequence>. As such all submodels are handled in row
+ * A model representing a <xsd:sequence></xsd:sequence>. As such all submodels are handled in a row.
  *
  * @author Falk Wilke
  */

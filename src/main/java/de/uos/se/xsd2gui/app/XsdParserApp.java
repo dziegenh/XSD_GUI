@@ -2,6 +2,7 @@ package de.uos.se.xsd2gui.app;
 
 import de.uos.se.xsd2gui.model_generators.*;
 import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.value_generators.DefaultValueGenerator;
 import de.uos.se.xsd2gui.value_generators.LoadValueGenerator;
 import de.uos.se.xsd2gui.xsdparser.DefaultWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
@@ -57,7 +58,8 @@ public class XsdParserApp
         try
         {
             _documentBuilder = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e)
+        }
+        catch (ParserConfigurationException e)
         {
             throw new RuntimeException(e);
         }
@@ -89,6 +91,19 @@ public class XsdParserApp
         File dir = new File(xsdFilesname);
         fc.getItems().addAll(dir.listFiles(f -> f.isFile() && f.toString().endsWith(".xsd")));
         fc.valueProperty().addListener((observable, oldValue, newValue) -> {
+            DefaultWidgetFactory defaultWidgetFactory;
+            try
+            {
+                // Create the main widget generator controller with the shared namespace.
+                defaultWidgetFactory = new DefaultWidgetFactory(
+                        new LoadValueGenerator(new File("out.xml")));
+            }
+            catch (IllegalArgumentException ex)
+            {
+                defaultWidgetFactory = new DefaultWidgetFactory(new DefaultValueGenerator());
+            }
+
+
             try
             {
                 ObservableList<Node> rootChildren = root.getChildren();
@@ -97,25 +112,24 @@ public class XsdParserApp
                 VBox currentContent = new VBox();
                 rootChildren.add(currentContent);
                 Document doc = _documentBuilder.parse(newValue.getPath());
-                // Create the main widget generator controller with the shared namespace.
-                DefaultWidgetFactory defaultWidgetFactory = new DefaultWidgetFactory(
-                        new LoadValueGenerator(new File("out.xml")));
-
                 // Add the Generators
                 // TODO create missing parsers (e.g. for sequence tags)
                 defaultWidgetFactory.addWidgetGenerator(new BasicAttributeParser());
                 defaultWidgetFactory.addWidgetGenerator(new SimpleTypeParser());
                 defaultWidgetFactory.addWidgetGenerator(new ContainerParser());
                 defaultWidgetFactory.addWidgetGenerator(new BasicSequenceParser());
-                defaultWidgetFactory.addWidgetGenerator(
-                        new CustomTypesParser("ct:", XSD_BASE_DIR + "config\\predefined\\CommonTypes.xsd"));
-                defaultWidgetFactory.addWidgetGenerator(
-                        new CustomTypesParser("st:", XSD_BASE_DIR + "config\\predefined\\StructuredTypes.xsd"));
-                defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("", newValue.getPath()));
+                defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("ct:", XSD_BASE_DIR +
+                                                                                     "config\\predefined\\CommonTypes.xsd"));
+                defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("st:", XSD_BASE_DIR +
+                                                                                     "config\\predefined\\StructuredTypes.xsd"));
+                defaultWidgetFactory
+                        .addWidgetGenerator(new CustomTypesParser("", newValue.getPath()));
                 // Generated widgets are added to the root node
-                _currentModel = defaultWidgetFactory
-                        .parseXsd(doc, currentContent, newValue.getPath().replaceAll("\\" + File.separator, "/"));
-            } catch (Exception ex)
+                _currentModel = defaultWidgetFactory.parseXsd(doc, currentContent,
+                                                              newValue.getPath().replaceAll(
+                                                                      "\\" + File.separator, "/"));
+            }
+            catch (Exception ex)
             {
                 Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -136,7 +150,8 @@ public class XsdParserApp
                     DOMSource source = new DOMSource(newDoc);
                     StreamResult result = new StreamResult(out);
                     transformer.transform(source, result);
-                } catch (IOException | TransformerException e)
+                }
+                catch (IOException | TransformerException e)
                 {
                     Logger.getLogger(this.getClass().getName())
                           .log(Level.SEVERE, "fatal error while writing output", e);
@@ -144,7 +159,8 @@ public class XsdParserApp
             }));
 
 
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
         }

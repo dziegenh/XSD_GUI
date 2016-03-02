@@ -5,12 +5,15 @@ import org.w3c.dom.Element;
 
 /**
  * created: 24.02.2016
+ * An interface representing a value generator used by implementations of
+ * {@linkplain de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory} and {@linkplain de.uos.se.xsd2gui.xsdparser.IWidgetGenerator} to generate 'default' values for generated input field.
  *
  * @author Falk Wilke
  */
 public interface IValueGenerator
 {
 
+    //the standard default value used for filling in a missing parameter
     String STANDARD_DEFAULT_VALUE = "";
 
     /**
@@ -47,7 +50,7 @@ public interface IValueGenerator
      * used directly for retrieving a count. It was decided to retrieve that information
      * <b>before</b> adding a model to is parent. Obviously it is not possible to evaluate the
      * exact count from a {@linkplain XSDModel} which is not properly in place within a hierarchy
-     * of models.
+     * of models. This method aims at <xs:sequence></xs:sequence> but other uses are possible.
      *
      * @param model
      *         the {@linkplain XSDModel} to evaluate the minimum amount of contained elements
@@ -57,7 +60,7 @@ public interface IValueGenerator
      *         {@linkplain Element} which whose minimum amount inside the given {@linkplain XSDModel} shall be retrieved.
      *
      * @return the minimum amount of the given
-     * {@linkplain Element} which should be present inside the given {@linkplain XSDModel}
+     * {@linkplain Element} whose representation should be present inside the given {@linkplain XSDModel}
      */
     int getMinimumNumberOfElements(XSDModel model, Element element);
 }

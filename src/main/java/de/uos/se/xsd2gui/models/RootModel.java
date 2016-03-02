@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 /**
  * created: 09.02.2016
  * A model representing the root of an xml document. As such, the generated xml from its
- * submodels is directly appened to the document
+ * submodels is directly appended to the document
  *
  * @author Falk Wilke
  */
