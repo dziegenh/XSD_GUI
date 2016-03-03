@@ -30,7 +30,8 @@ public interface INodeGenerator
      * {@linkplain javafx.scene.layout.Pane} like {@linkplain javafx.scene.layout.HBox}.
      * The given {@linkplain XSDModel} must! have a parent, otherwise an exception is thrown.
      * This is necessary since the whole 'hierarchy' needs to be evaluated to generate proper
-     * components and values for them.
+     * components and values for them. <i>null</i> may be returned if the given {@linkplain XSDModel} does not represent a value type
+     * ({@linkplain XSDModel#getXSDNode()} has a recognized type attribute set).
      *
      * @param factory
      *         the factory to rely on for value generation
@@ -128,8 +129,7 @@ public interface INodeGenerator
      * @return see {@linkplain #getAndBindControl(IValueGenerator, XSDModel)}, only input is
      * limited to the given values
      */
-    Node getAndBindRestrictedControl(IValueGenerator factory, XSDModel model, List<String>
-            enumValues);
+    Node getAndBindRestrictedControl(IValueGenerator factory, XSDModel model, List<String> enumValues);
 
     /**
      * Wraps the given
