@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * created: 29.02.2016
- * An Interface representing a basic {@linkplain Node} creating generatorwhich creates
+ * An Interface representing a basic {@linkplain Node} creating generator which creates
  * {@linkplain Node}s for binding with {@linkplain XSDModel}s and {@linkplain javafx.scene.layout.Pane}s to contain them.
  * for given {@linkplain XSDModel}s.
  *
