@@ -1,6 +1,6 @@
 package de.uos.se.xsd2gui.models;
 
-import de.uos.se.xsd2gui.models.constraints.IXSDConstraint;
+import de.uos.se.xsd2gui.models.constraints.IXSDValueConstraint;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,15 +9,28 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * created: 09.02.2016
  * A Class representing an XML-Model generated from an xsd. Every model can have (like in xml)
  * submodels of various kinds
  * It provides base functionality, subclasses will want to use. The last added submodels can be
- * polled which supplements deleting of models without knowing which where created exactly
+ * polled which supplements deleting of models without knowing which where created exactly.
+ * In addition {@linkplain IXSDValueConstraint} objects can be added which will be used for checking
+ * the value attribute.
+ * Such a check will be triggered whenever the value of
+ * {@linkplain #_value} is set or a {@linkplain IXSDValueConstraint} is added/removed. Also the method {@linkplain #checkViolationDeep()}
+ * can be used to check recursively if in this model or any submodel a attribute
+ * {@linkplain #_violated} with <i>true</i> as its
+ * value exists. This could possibly be used before calling
+ * {@linkplain #parseToXML(Document, Element)} since that method will not check any constraints.
+ * This was decided since a "manual" override of those violations could possibly be desirable but
+ * that is not up to the model to decide. Some basic attribute testing (like for 'use' or
+ * 'fixed') is included within this generic model.
+ * This is simply to the fact that most
+ * {@linkplain de.uos.se.xsd2gui.xsdparser.IWidgetGenerator}s do rely on those attributes for
+ * triggering certain actions.
+ * Manual testing in many places would increase the chances for bugs.
  *
  * @author Falk Wilke
  */
@@ -25,14 +38,34 @@ public abstract class XSDModel
 {
     //the name constant
     public static final String NAME = "name";
+    //the line separator
     public static final String LINE_SEP = System.getProperty("line.separator");
+    //the name of the use attribute
+    public static final String USE = "use";
+    //the name of the fixed attribute
+    public static final String FIXED = "fixed";
     //the node it corresponds to
     private final Element _xsdNode;
     //the submodels
     private final LinkedList<XSDModel> _subModels;
-    //if this is required or not
+    /**
+     * if the value of this model is required or not (the use attribute is not present or it
+     * equals "required")
+     * should be supplemented with a
+     * {@linkplain de.uos.se.xsd2gui.models.constraints.NoPureWhitespaceStringConstraint} since
+     * this field is
+     * only intended for informational purposes
+     */
     private final boolean _required;
-    //the comparator
+    /**
+     * if the value of this model is fixed or not (the fixed attribute is present and not pure
+     * whitespace)
+     * should be supplemented with a
+     * {@linkplain de.uos.se.xsd2gui.models.constraints.FixedValueConstraint} since this field is
+     * only intended for informational purposes
+     */
+    private final boolean _fixed;
+    //the comparator used for sorting the internal models (if some order is required)
     private final Comparator<XSDModel> _comparator;
     //the name of the element
     private final String _elementName;
@@ -41,11 +74,12 @@ public abstract class XSDModel
     //the last added  xsdmodels
     private final List<XSDModel> _lastAdded;
     //the constraints placed on this model
-    private final List<IXSDConstraint> _constraints;
+    private final Set<IXSDValueConstraint> _constraints;
     //the text of a violation of constraints
     private final StringProperty _violationText;
     //the boolean property holding if constraints have been violated
     private final BooleanProperty _violated;
+    private XSDModel _parentModel;
 
     /**
      * Same as {@linkplain #XSDModel(Element, Comparator)}, uses (x1, x2) -> 0 as comparator
@@ -100,25 +134,29 @@ public abstract class XSDModel
         //create string property
         this._value = new SimpleStringProperty("");
         //set required
-        this._required = this._xsdNode.getAttribute("use").equals("required");
+        this._required = ! this._xsdNode.hasAttribute(USE) ||
+                         this._xsdNode.getAttribute(USE).equals("required");
         //create last added
         this._lastAdded = new LinkedList<>();
         this._comparator = comparator;
-        this._constraints = new LinkedList<>();
+        this._constraints = new HashSet<>();
         this._violationText = new SimpleStringProperty("");
         this._value.addListener((observable, oldValue, newValue) -> checkConstraints());
         this._violated = new SimpleBooleanProperty(false);
+        this._fixed = this._xsdNode.hasAttribute(FIXED) &&
+                      ! this._xsdNode.getAttribute(FIXED).trim().isEmpty();
+        this._parentModel = null;
     }
 
     /**
      * checks all constraints for this model and all of its submodels.
      * the {@linkplain}
      */
-    private void checkConstraints()
+    private synchronized void checkConstraints()
     {
         StringBuilder builder = new StringBuilder();
         boolean violated = false;
-        for (IXSDConstraint constraint : _constraints)
+        for (IXSDValueConstraint constraint : _constraints)
         {
             String value = this._value.getValue();
             if (constraint.isViolatedBy(value))
@@ -131,10 +169,8 @@ public abstract class XSDModel
         if (violated)
         {
             this._violationText.setValue(builder.toString());
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, builder.toString());
         } else
         {
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "OK");
             this._violationText.setValue("");
         }
         this._violated.setValue(violated);
@@ -143,6 +179,18 @@ public abstract class XSDModel
     public String getName()
     {
         return _elementName;
+    }
+
+    /**
+     * Returns whether the {@linkplain Element} returned by {@linkplain #getXSDNode()} does have
+     * an attribute 'fixed' set
+     *
+     * @return whether the {@linkplain Element} returned by {@linkplain #getXSDNode()} does have
+     * an attribute 'fixed' set
+     */
+    public boolean isFixed()
+    {
+        return _fixed;
     }
 
     /**
@@ -189,21 +237,52 @@ public abstract class XSDModel
                '}';
     }
 
-    public synchronized void addSubModel(XSDModel xsdm)
+    /**
+     * Adds ther given{@linkplain XSDModel} to this models children. Does nothing if this model
+     * is already the parent of the given model.
+     *
+     * @param xsdm
+     *         the model to add to this model*s children
+     *
+     * @throws IllegalArgumentException
+     *         if the given model already has a parent
+     */
+    public synchronized void addSubModel(XSDModel xsdm) throws IllegalArgumentException
     {
+        if (xsdm._parentModel == this)
+            //already parent
+            return;
+        if (xsdm.hasParent())
+            throw new IllegalArgumentException("the given model already has a parent");
         this._subModels.add(xsdm);
         this._subModels.sort(this._comparator);
+        xsdm._parentModel = this;
         this._lastAdded.add(xsdm);
     }
 
-    public synchronized void removeSubModel(XSDModel xsdm)
+    public boolean hasParent()
     {
-        this.removeSubModels(Collections.singleton(xsdm));
+        return this._parentModel != null;
     }
 
-    public synchronized void removeSubModels(Collection<XSDModel> xsdm)
+    public XSDModel getParentModel()
     {
-        this._subModels.removeAll(xsdm);
+        return _parentModel;
+    }
+
+    public synchronized void removeSubmodel(XSDModel xsdm)
+    {
+        this.removeSubmodels(Collections.singleton(xsdm));
+    }
+
+    public synchronized void removeSubmodels(Collection<XSDModel> xsdm)
+    {
+        for (XSDModel xsdModel : xsdm)
+        {
+            this._subModels.remove(xsdModel);
+            if (xsdModel._parentModel == this)
+                xsdModel._parentModel = null;
+        }
     }
 
     /**
@@ -218,14 +297,16 @@ public abstract class XSDModel
         return tmp;
     }
 
-    public boolean addConstraint(IXSDConstraint constr)
+    public synchronized void addConstraint(IXSDValueConstraint constr)
     {
-        return this._constraints.add(constr);
+        this._constraints.add(constr);
+        checkConstraints();
     }
 
-    public boolean removeConstraint(IXSDConstraint constr)
+    public synchronized void removeConstraint(IXSDValueConstraint constr)
     {
-        return this._constraints.remove(constr);
+        this._constraints.remove(constr);
+        checkConstraints();
     }
 
     public Element getXSDNode()
@@ -238,13 +319,13 @@ public abstract class XSDModel
         return this._subModels.size();
     }
 
-    public final boolean checkViolationDeep()
+    public synchronized final boolean checkViolationDeep()
     {
         if (this._violated.get())
             return true;
         for (XSDModel subModel : this._subModels)
         {
-            if (subModel._violated.get())
+            if (subModel.checkViolationDeep())
                 return true;
         }
         return false;
@@ -260,9 +341,8 @@ public abstract class XSDModel
         return _violationText;
     }
 
-    private boolean hasName()
+    public boolean hasName()
     {
         return ! this.getName().isEmpty();
     }
-
 }

@@ -8,7 +8,12 @@
             <xs:enumeration value="LittleEndian"/>
         </xs:restriction>
     </xs:simpleType>
-
+    <xs:simpleType name="DirectionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="input"/>
+            <xs:enumeration value="output"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:simpleType name="RefinedType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="uint8"/>

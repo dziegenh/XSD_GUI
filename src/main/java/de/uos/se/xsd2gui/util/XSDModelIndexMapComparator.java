@@ -8,7 +8,9 @@ import java.util.Map;
 
 /**
  * Created by sem on 18.02.2016.
- * This map compares xsdmodels using their names and a map containing the indices
+ * This map compares xsdmodels using their names and a map containing the indices. This is
+ * intended as a workaround for <xs:sequence></xs:sequence> since there the order of the
+ * contained elements is important and fixed.
  */
 public class XSDModelIndexMapComparator
         implements Comparator<XSDModel>

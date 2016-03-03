@@ -1,12 +1,11 @@
-package de.uos.se.xsd2gui.generators;
+package de.uos.se.xsd2gui.model_generators;
 
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
-import javafx.scene.control.TitledPane;
+import de.uos.se.xsd2gui.node_generators.INodeGenerator;
+import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -18,11 +17,11 @@ import org.w3c.dom.NodeList;
  * @author dziegenhagen
  */
 public class ContainerParser
-        implements WidgetGenerator
+        implements IWidgetGenerator
 {
 
     @Override
-    public javafx.scene.Node createWidget(WidgetFactory controller, Pane parentWidget, Node
+    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node
             xsdNode, XSDModel parentModel)
     {
 
@@ -44,19 +43,22 @@ public class ContainerParser
         {
             return null;
         }
-        // Create the content pane for the child nodes
-        Pane contentNodesPane = new VBox(10);
+
+        //create the model
         XSDModel model = new ElementModel(elementNode);
+        // Create the content pane for the child nodes
+        INodeGenerator baseElementFactory = factory.getNodeGenerator();
         parentModel.addSubModel(model);
+        Pane contentNodesPane = baseElementFactory.getSimpleContainerFor(model);
         // create and add child GUI components to the container
         NodeList childNodes = elementNode.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++)
         {
-            controller.parseXsdNode(contentNodesPane, childNodes.item(i), model);
+            factory.parseXsdNode(contentNodesPane, childNodes.item(i), model);
         }
 
         // Use the value of the "name" attribute as the container title.
-        return new TitledPane(name, contentNodesPane);
+        return baseElementFactory.getTitledContainerFor(model, contentNodesPane);
     }
 
 }

@@ -15,6 +15,10 @@ import javax.xml.xpath.XPathFactory;
  */
 public class XPathUtil
 {
+    private XPathUtil()
+    {
+    }
+
     /**
      * Essentially the same as
      * {@linkplain #evaluateXPath(NamespaceContext, Node, String)}, but is using {@linkplain DefaultNamespaceContext}
@@ -45,8 +49,7 @@ public class XPathUtil
      *
      * @return a nodelist containing all matches or null if the expression was malformed
      */
-    public static NodeList evaluateXPath(NamespaceContext namespaceContext, org.w3c.dom.Node
-            rootNode, String expression)
+    public static NodeList evaluateXPath(NamespaceContext namespaceContext, org.w3c.dom.Node rootNode, String expression)
     {
         // setup the XPath object
         XPathFactory xp = XPathFactory.newInstance();
@@ -57,10 +60,9 @@ public class XPathUtil
         try
         {
             return (NodeList) newXPath.evaluate(expression, rootNode, XPathConstants.NODESET);
-        }
-        catch (XPathExpressionException e)
+        } catch (XPathExpressionException e)
         {
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }

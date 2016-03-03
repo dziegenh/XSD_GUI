@@ -1,25 +1,23 @@
-package de.uos.se.xsd2gui.generators;
+package de.uos.se.xsd2gui.model_generators;
 
 import de.uos.se.xsd2gui.models.SequenceModel;
 import de.uos.se.xsd2gui.models.XSDModel;
+import de.uos.se.xsd2gui.node_generators.INodeGenerator;
 import de.uos.se.xsd2gui.util.SequenceReparser;
 import de.uos.se.xsd2gui.util.XPathUtil;
 import de.uos.se.xsd2gui.util.XSDModelIndexMapComparator;
-import de.uos.se.xsd2gui.xsdparser.WidgetFactory;
-import de.uos.se.xsd2gui.xsdparser.WidgetGenerator;
+import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
+import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Created by sem on 04.02.2016.
@@ -27,7 +25,7 @@ import java.util.logging.Logger;
  * "<sequence></sequence>".
  */
 public class BasicSequenceParser
-        implements WidgetGenerator
+        implements IWidgetGenerator
 {
 
     //the name of the element
@@ -38,8 +36,8 @@ public class BasicSequenceParser
     private static final String NAME = "name";
 
     @Override
-    public Node createWidget(WidgetFactory factory, Pane parentWidget, org.w3c.dom.Node xsdNode,
-                             XSDModel parentModel)
+    public Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, org.w3c.dom.Node
+            xsdNode, XSDModel parentModel)
     {
         //abortif wrong type
         if (! (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE))
@@ -68,17 +66,18 @@ public class BasicSequenceParser
         XSDModel model = new SequenceModel(elementNode, new XSDModelIndexMapComparator(indexMap));
         parentModel.addSubModel(model);
 
-        Pane contentNodesPane = new HBox(20);
-        Pane nestedContent = new VBox();
+        INodeGenerator baseElementFactory = factory.getNodeGenerator();
+        Pane contentNodesPane = baseElementFactory.getSimpleContainerFor(model);
+        Pane nestedContent = baseElementFactory.getMultiPurposeContainer(xsdNode);
         //prepare reparsing
         SequenceReparser reparser = new SequenceReparser(matchingTypeNodes, model);
-        Pane addContent = new VBox();
-        List<Button> addButtons = new LinkedList<>();
+        Pane addContent = baseElementFactory.getMultiPurposeContainer(xsdNode);
+
         //add buttons for adding new elements
-        reparser.elementNames().forEach(name -> addButtons.add(new Button("+" + name)));
-        addButtons.forEach(button -> button.setOnAction(
-                ev -> reparser.add(nestedContent, button.getText().substring(1), factory)));
-        addContent.getChildren().addAll(addButtons);
+        List<? extends Node> collect = reparser.elementNames().stream().map(s -> baseElementFactory
+                .getControlForHandler(ev -> reparser.add(nestedContent, s, factory), s + "+"))
+                                               .collect(Collectors.toList());
+        addContent.getChildren().addAll(collect);
 
         //add to parent widget
         contentNodesPane.getChildren().add(nestedContent);

@@ -1,17 +1,18 @@
 package de.uos.se.xsd2gui.models.constraints;
 
 /**
- * created: 18.02.2016
+ * created: 24.02.2016
+ * A constraint modelling a constraint that a value must not be null
  *
  * @author Falk Wilke
  */
-public class NoEmptyStringConstraint
-        implements IXSDConstraint
+public class NoNullValueConstraint
+        implements IXSDValueConstraint
 {
     @Override
     public boolean isViolatedBy(String value)
     {
-        return value.trim().isEmpty();
+        return value == null;
     }
 
     @Override
@@ -19,6 +20,6 @@ public class NoEmptyStringConstraint
     {
         if (! isViolatedBy(value))
             return "";
-        return "value '" + value + "' is only whitespace or empty";
+        return "value is null";
     }
 }
