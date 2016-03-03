@@ -16,6 +16,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.FileInputStream;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,24 +48,25 @@ public class CustomTypesParser
     }
 
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node xsdNode, XSDModel parentModel)
+    public Optional<javafx.scene.Node> createWidget(AbstractWidgetFactory factory, Pane
+            parentWidget, Node xsdNode, XSDModel parentModel)
     {
         if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
         {
-            return null;
+            return Optional.empty();
         }
 
         final Element elementNode = (Element) xsdNode;
         final String localName = elementNode.getLocalName();
         if (! localName.equals("element") && ! localName.equals("attribute"))
         {
-            return null;
+            return Optional.empty();
         }
 
         final String type = elementNode.getAttribute("type");
         if (null == type || ! type.startsWith(typeNamespacePrefix))
         {
-            return null;
+            return Optional.empty();
         }
         XSDModel model;
         String fixed = elementNode.getAttribute(FIXED);
@@ -96,7 +98,7 @@ public class CustomTypesParser
                 Pane container = factory.getNodeGenerator().getSimpleContainerFor(model);
                 factory.parseXsdNode(container, matchingTypeNodes.item(0), model);
 
-                return container;
+                return Optional.of(container);
 
             } else
             {
@@ -104,7 +106,7 @@ public class CustomTypesParser
                       .log(Level.INFO, "The XSD Node for the " +
                                           "custom type {0} could " +
                                           "not be found!", localType);*/
-                return null;
+                return Optional.empty();
 
             }
 
@@ -113,7 +115,7 @@ public class CustomTypesParser
             Logger.getLogger(CustomTypesParser.class.getName()).log(Level.SEVERE, "{0}", ex);
         }
 
-        return null;
+        return Optional.empty();
     }
 
 }

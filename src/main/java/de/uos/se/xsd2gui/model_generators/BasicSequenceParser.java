@@ -16,6 +16,7 @@ import org.w3c.dom.NodeList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -36,20 +37,21 @@ public class BasicSequenceParser
     private static final String NAME = "name";
 
     @Override
-    public Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, org.w3c.dom.Node
+    public Optional<Node> createWidget(AbstractWidgetFactory factory, Pane parentWidget, org.w3c
+            .dom.Node
             xsdNode, XSDModel parentModel)
     {
         //abortif wrong type
         if (! (xsdNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE))
         {
-            return null;
+            return Optional.empty();
         }
 
         final Element elementNode = (Element) xsdNode;
         //abort if wrong name
         if (! elementNode.getLocalName().equals(ELEMENT_NAME))
         {
-            return null;
+            return Optional.empty();
         }
 
         //only see elements with min and maxoccurs
@@ -84,7 +86,7 @@ public class BasicSequenceParser
         contentNodesPane.getChildren().add(addContent);
         //use reparser to parse to minimum occurrences
         reparser.reparseToMinimumOcc(nestedContent, factory);
-        return contentNodesPane;
+        return Optional.of(contentNodesPane);
     }
 
 }

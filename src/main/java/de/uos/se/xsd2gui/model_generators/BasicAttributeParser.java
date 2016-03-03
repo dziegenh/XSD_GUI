@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,28 +23,29 @@ public class BasicAttributeParser
         implements IWidgetGenerator
 {
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node
+    public Optional<javafx.scene.Node> createWidget(AbstractWidgetFactory factory, Pane
+            parentWidget, Node
             xsdNode, XSDModel parentModel)
     {
 
         //check for correct types and attributes
         if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
         {
-            return null;
+            return Optional.empty();
         }
 
         final Element elementNode = (Element) xsdNode;
         String localName = elementNode.getLocalName();
         if (! localName.equals("attribute"))
         {
-            return null;
+            return Optional.empty();
         }
 
         final String type = elementNode.getAttribute("type");
 
         if (null == type)
         {
-            return null;
+            return Optional.empty();
         }
         XSDModel model = new AttributeModel(elementNode);
         //important that the submodel is added before asking the factoryx for values since the
@@ -58,10 +60,10 @@ public class BasicAttributeParser
             Logger.getLogger(this.getClass().getName())
                   .log(Level.WARNING, "no input widget created for {0}", model);
             parentModel.removeSubmodel(model);
-            return null;
+            return Optional.empty();
         }
 
-        return binded;
+        return Optional.of(binded);
 
     }
 }

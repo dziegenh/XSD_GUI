@@ -10,6 +10,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.Optional;
+
 /**
  * Creates titled GUI component for named container tags without any type (e.g.
  * "<element name='ContainerTitle'>...</complexType>").
@@ -21,13 +23,14 @@ public class ContainerParser
 {
 
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node
+    public Optional<javafx.scene.Node> createWidget(AbstractWidgetFactory factory, Pane
+            parentWidget, Node
             xsdNode, XSDModel parentModel)
     {
 
         if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
         {
-            return null;
+            return Optional.empty();
         }
 
         final Element elementNode = (Element) xsdNode;
@@ -35,13 +38,13 @@ public class ContainerParser
 
         if (! localName.equals("element"))
         {
-            return null;
+            return Optional.empty();
         }
         String name = elementNode.getAttribute("name");
         String type = elementNode.getAttribute("type");
         if (name.isEmpty() || ! type.isEmpty())
         {
-            return null;
+            return Optional.empty();
         }
 
         //create the model
@@ -58,7 +61,7 @@ public class ContainerParser
         }
 
         // Use the value of the "name" attribute as the container title.
-        return baseElementFactory.getTitledContainerFor(model, contentNodesPane);
+        return Optional.of(baseElementFactory.getTitledContainerFor(model, contentNodesPane));
     }
 
 }

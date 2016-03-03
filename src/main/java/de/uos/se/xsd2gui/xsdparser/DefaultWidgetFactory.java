@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,10 +109,11 @@ public class DefaultWidgetFactory
         boolean guiNodeCreated = false;
         for (IWidgetGenerator generator : getGenerators())
         {
-            Node nodeWidget = generator.createWidget(this, rootWidget, xsdNode, rootModel);
-            if (null != nodeWidget)
+            Optional<Node> nodeWidget = generator
+                    .createWidget(this, rootWidget, xsdNode, rootModel);
+            if (nodeWidget.isPresent())
             {
-                rootWidget.getChildren().add(nodeWidget);
+                rootWidget.getChildren().add(nodeWidget.get());
 
                 if (guiNodeCreated)
                 {

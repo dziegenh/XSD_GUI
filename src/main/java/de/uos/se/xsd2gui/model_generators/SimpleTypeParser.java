@@ -15,6 +15,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,12 +34,13 @@ public class SimpleTypeParser
     public static final String SIMPLE_TYPE = "simpleType";
 
     @Override
-    public javafx.scene.Node createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node xsdNode, XSDModel parentModel)
+    public Optional<javafx.scene.Node> createWidget(AbstractWidgetFactory factory, Pane
+            parentWidget, Node xsdNode, XSDModel parentModel)
     {
 
         if (xsdNode.getNodeType() != Node.ELEMENT_NODE || ! xsdNode.getLocalName().equals(SIMPLE_TYPE))
         {
-            return null;
+            return Optional.empty();
         }
         XPathFactory xp = XPathFactory.newInstance();
         XPath newXPath = xp.newXPath();
@@ -51,7 +53,7 @@ public class SimpleTypeParser
                               XPathConstants.NODESET);
             if (enumValues.getLength() < 1)
             {
-                return null;
+                return Optional.empty();
             }
             //nodelists are highly unflexivle so "casting" is required
             List<String> enumValuesAsStrings = new LinkedList<>();
@@ -60,15 +62,16 @@ public class SimpleTypeParser
                 enumValuesAsStrings.add(enumValues.item(i).getNodeValue());
             }
             INodeGenerator bef = factory.getNodeGenerator();
-            return bef.getAndBindRestrictedControl(factory.getValueGenerator(), parentModel,
-                                                   enumValuesAsStrings);
+            return Optional
+                    .of(bef.getAndBindRestrictedControl(factory.getValueGenerator(), parentModel,
+                                                        enumValuesAsStrings));
 
         } catch (XPathExpressionException ex)
         {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return null;
+        return Optional.empty();
     }
 
 
