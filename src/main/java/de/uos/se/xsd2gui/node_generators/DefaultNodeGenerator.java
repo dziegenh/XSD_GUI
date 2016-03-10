@@ -1,10 +1,7 @@
 package de.uos.se.xsd2gui.node_generators;
 
 import de.uos.se.xsd2gui.models.XSDModel;
-import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
-import de.uos.se.xsd2gui.models.constraints.IntegerConstraint;
-import de.uos.se.xsd2gui.models.constraints.NoPureWhitespaceStringConstraint;
-import de.uos.se.xsd2gui.models.constraints.UIntConstraint;
+import de.uos.se.xsd2gui.util.XSDConstants;
 import de.uos.se.xsd2gui.value_generators.IValueGenerator;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -17,6 +14,7 @@ import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * created: 29.02.2016
@@ -27,39 +25,29 @@ import java.util.List;
 public class DefaultNodeGenerator
         implements INodeGenerator
 {
-    //the fixed attribute name
-    public static final String FIXED = "fixed";
-    //the type attribute name
-    public static final String TYPE = "type";
     //the default spacing
     private static final int DEFAULT_SPACING = 10;
 
     @Override
-    public Node getAndBindControl(IValueGenerator factory, XSDModel model)
+    public Node getAndBindControl(IValueGenerator factory, XSDModel model, String type)
     {
         if (! model.hasParent())
             throw new IllegalArgumentException("given model does not have a parent set");
+        if (! XSDConstants.PRIMITIVE_TYPES.contains(type))
+            return null;
         Element elementNode = model.getXSDNode();
-        String fixed = elementNode.getAttribute(FIXED);
+        String fixed = elementNode.getAttribute(XSDConstants.FIXED);
         Control inputWidget = null;
         //differ by type
-        switch (elementNode.getAttribute(TYPE))
+        switch (type)
         {
             case "xs:unsignedInt":
-                model.addConstraint(new UIntConstraint());
-
-
             case "xs:int":
                 //int can be processed by using a Spinner
                 int initialValue = Integer.parseInt(factory.getValueFor(model, "0"));
-                model.addConstraint(new IntegerConstraint());
-                if (model.isRequired())
-                    model.addConstraint(new NoPureWhitespaceStringConstraint());
                 if (model.isFixed())
-                {
-                    model.addConstraint(new FixedValueConstraint(fixed));
                     initialValue = Integer.parseInt(fixed);
-                }
+
 
                 SpinnerValueFactory.IntegerSpinnerValueFactory spinnerFactory
                         = new SpinnerValueFactory.IntegerSpinnerValueFactory(Integer.MIN_VALUE,
@@ -67,37 +55,31 @@ public class DefaultNodeGenerator
                                                                              initialValue);
                 Spinner<Integer> spinner = new Spinner<>(spinnerFactory);
                 spinner.setEditable(false);
-                model.valueProperty().setValue(spinnerFactory.getValue().toString());
-                spinner.editorProperty().getValue().textProperty()
-                       .bindBidirectional(model.valueProperty());
+                model.valueProperty()
+                     .bindBidirectional(spinner.editorProperty().getValue().textProperty());
                 inputWidget = spinner;
                 break;
 
             case "xs:string":
                 String defaultStringValue = factory.getValueFor(model, "");
-                if (model.isRequired())
-                    model.addConstraint(new NoPureWhitespaceStringConstraint());
-                if (! fixed.trim().isEmpty())
-                {
-                    model.addConstraint(new FixedValueConstraint(fixed));
+                if (model.isFixed())
                     defaultStringValue = fixed;
-                }
                 TextField textField = new TextField();
                 textField.textProperty().bindBidirectional(model.valueProperty());
-                model.valueProperty().setValue(defaultStringValue);
+                textField.textProperty().setValue(defaultStringValue);
                 inputWidget = textField;
                 break;
+
         }
-        //only if an element could be created:
-        if (null != inputWidget)
+        if (Objects.nonNull(inputWidget))
         {
             //disable for fixed values
             inputWidget.setDisable(model.isFixed());
             //bind input validation tooltips
             bindTooltips(inputWidget, model);
             //create label for name and type
-            Label textFieldLabel = new Label(elementNode.getAttribute("name"));
-            Label typeLabel = new Label(" (" + elementNode.getAttribute("type") + ")");
+            Label textFieldLabel = new Label(elementNode.getAttribute(XSDConstants.NAME));
+            Label typeLabel = new Label(" (" + elementNode.getAttribute(XSDConstants.TYPE) + ")");
             //collect within hbox
             return new HBox(10, textFieldLabel, inputWidget, typeLabel);
         }
@@ -174,7 +156,9 @@ public class DefaultNodeGenerator
             throw new IllegalArgumentException("given model does not have a parent set");
         if (xsdModel.hasName())
         {
-            if (! xsdModel.getXSDNode().hasAttribute(TYPE))
+            //only add label for primits
+            if (! XSDConstants.PRIMITIVE_TYPES
+                    .contains(xsdModel.getXSDNode().getAttribute(XSDConstants.TYPE)))
                 return new HBox(spacing);
             else
                 return new HBox(spacing, new Label(xsdModel.getName()));

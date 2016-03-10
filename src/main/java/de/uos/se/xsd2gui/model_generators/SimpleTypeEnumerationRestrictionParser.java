@@ -3,6 +3,7 @@ package de.uos.se.xsd2gui.model_generators;
 import de.uos.se.xsd2gui.app.XsdParserApp;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.node_generators.INodeGenerator;
+import de.uos.se.xsd2gui.util.XSDConstants;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.layout.Pane;
@@ -20,25 +21,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Creates GUI components for simpleType tags.
+ * Creates GUI components for simpleType tags. It only applies to those <xs:simpleType/> who are
+ * restricted by <xs:string base='xs:string'/> using <xs:enumeration/>
  *
  * @author dziegenhagen
  */
-public class SimpleTypeParser
+public class SimpleTypeEnumerationRestrictionParser
         implements IWidgetGenerator
 {
-
-    //a constant for the fixed attribute
-    public static final String FIXED = "fixed";
-    //a constant for the name of the elements this attribute should apply to
-    public static final String SIMPLE_TYPE = "simpleType";
-
     @Override
     public Optional<javafx.scene.Node> createWidget(AbstractWidgetFactory factory, Pane
             parentWidget, Node xsdNode, XSDModel parentModel)
     {
 
-        if (xsdNode.getNodeType() != Node.ELEMENT_NODE || ! xsdNode.getLocalName().equals(SIMPLE_TYPE))
+        if (xsdNode.getNodeType() != Node.ELEMENT_NODE ||
+            ! xsdNode.getLocalName().equals(XSDConstants.SIMPLE_TYPE))
         {
             return Optional.empty();
         }
@@ -55,7 +52,7 @@ public class SimpleTypeParser
             {
                 return Optional.empty();
             }
-            //nodelists are highly unflexivle so "casting" is required
+            //iterate and add possible enum values
             List<String> enumValuesAsStrings = new LinkedList<>();
             for (int i = 0; i < enumValues.getLength(); i++)
             {

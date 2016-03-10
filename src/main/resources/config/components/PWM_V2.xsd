@@ -21,6 +21,7 @@
             </xs:element>
         </xs:all>
         <xs:attribute name="numBytes" type="xs:int" fixed="4"/>
+        <xs:attribute name="rangeTest" type="ct:rangeType"/>
         <xs:attribute name="byteOrder" type="ct:EndianType"/>
         <xs:attribute name="rawMin" type="xs:unsignedInt"/>
         <xs:attribute name="rawMax" type="xs:unsignedInt"/>

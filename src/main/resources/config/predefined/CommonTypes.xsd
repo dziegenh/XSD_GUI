@@ -31,5 +31,10 @@
             <xs:enumeration value="bitvector16"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="rangeType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>

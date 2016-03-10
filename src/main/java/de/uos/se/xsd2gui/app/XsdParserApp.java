@@ -115,7 +115,8 @@ public class XsdParserApp
                 // Add the Generators
                 // TODO create missing parsers (e.g. for sequence tags)
                 defaultWidgetFactory.addWidgetGenerator(new BasicAttributeParser());
-                defaultWidgetFactory.addWidgetGenerator(new SimpleTypeParser());
+                defaultWidgetFactory
+                        .addWidgetGenerator(new SimpleTypeEnumerationRestrictionParser());
                 defaultWidgetFactory.addWidgetGenerator(new ContainerParser());
                 defaultWidgetFactory.addWidgetGenerator(new BasicSequenceParser());
                 defaultWidgetFactory.addWidgetGenerator(new CustomTypesParser("ct:", XSD_BASE_DIR +
@@ -124,6 +125,7 @@ public class XsdParserApp
                                                                                      "config\\predefined\\StructuredTypes.xsd"));
                 defaultWidgetFactory
                         .addWidgetGenerator(new CustomTypesParser("", newValue.getPath()));
+                defaultWidgetFactory.addWidgetGenerator(new SimpleTypeIntegerRestrictionParser());
                 // Generated widgets are added to the root node
                 _currentModel = defaultWidgetFactory.parseXsd(doc, currentContent,
                                                               newValue.getPath().replaceAll(

@@ -3,6 +3,7 @@ package de.uos.se.xsd2gui.model_generators;
 import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.node_generators.INodeGenerator;
+import de.uos.se.xsd2gui.util.XSDConstants;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.layout.Pane;
@@ -36,12 +37,12 @@ public class ContainerParser
         final Element elementNode = (Element) xsdNode;
         final String localName = elementNode.getLocalName();
 
-        if (! localName.equals("element"))
+        if (! localName.equals(XSDConstants.ELEMENT))
         {
             return Optional.empty();
         }
-        String name = elementNode.getAttribute("name");
-        String type = elementNode.getAttribute("type");
+        String name = elementNode.getAttribute(XSDConstants.NAME);
+        String type = elementNode.getAttribute(XSDConstants.TYPE);
         if (name.isEmpty() || ! type.isEmpty())
         {
             return Optional.empty();
