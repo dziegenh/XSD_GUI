@@ -41,8 +41,9 @@ public class DefaultNodeGenerator
         //differ by type
         switch (type)
         {
-            case "xs:unsignedInt":
-            case "xs:int":
+            case XSDConstants.XS_UNSIGNED_INT:
+            case XSDConstants.XS_INT:
+            case XSDConstants.XS_INTEGER:
                 //int can be processed by using a Spinner
                 int initialValue = Integer.parseInt(factory.getValueFor(model, "0"));
                 if (model.isFixed())
@@ -60,7 +61,7 @@ public class DefaultNodeGenerator
                 inputWidget = spinner;
                 break;
 
-            case "xs:string":
+            case XSDConstants.XS_STRING:
                 String defaultStringValue = factory.getValueFor(model, "");
                 if (model.isFixed())
                     defaultStringValue = fixed;

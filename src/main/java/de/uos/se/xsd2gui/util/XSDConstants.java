@@ -30,15 +30,32 @@ public class XSDConstants
     public static final String ELEMENT = "element";
     //a constant holding the value attributes name
     public static final String VALUE = "value";
-    //the xs:int type name
+    //the <xs:int/> type name
     public static final String XS_INT = "xs:int";
+    //the <xs:string/> type name
+    public static final String XS_STRING = "xs:string";
+    //the <xs:unsignedInt/> type name
+    public static final String XS_UNSIGNED_INT = "xs:unsignedInt";
+    //the <xs:integer/> type name
+    public static final String XS_INTEGER = "xs:integer";
+    //the name of the <xs:minInclusive/> element
+    public static final String XS_MIN_INCLUSIVE = "xs:minInclusive";
+    //the name of the <xs:maxInclusive/> element
+    public static final String XS_MAX_INCLUSIVE = "xs:maxInclusive";
+    //the name of the <xs:minExclusive/> element
+    public static final String XS_MIN_EXCLUSIVE = "xs:minExclusive";
+    //the name of the <xs:maxExclusive/> element
+    public static final String XS_MAX_EXCLUSIVE = "xs:maxExclusive";
+
 
     static
     {
+        //setup primits
         Set<String> primits = new HashSet<>();
-        primits.add("xs:int");
-        primits.add("xs:string");
-        primits.add("xs:unsignedInt");
+        primits.add(XS_INT);
+        primits.add(XS_STRING);
+        primits.add(XS_UNSIGNED_INT);
+        primits.add(XS_INTEGER);
         PRIMITIVE_TYPES = Collections.unmodifiableSet(primits);
     }
 

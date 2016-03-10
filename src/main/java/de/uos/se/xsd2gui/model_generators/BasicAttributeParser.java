@@ -63,16 +63,16 @@ public class BasicAttributeParser
          */
         switch (type)
         {
-            case "xs:unsignedInt":
+            case XSDConstants.XS_UNSIGNED_INT:
                 //add uintconstraint
                 model.addConstraint(new UIntConstraint());
-
-            case "xs:int":
+            case XSDConstants.XS_INT:
+            case XSDConstants.XS_INTEGER:
                 //add integerconstraint
                 model.addConstraint(new IntegerConstraint());
                 break;
 
-            case "xs:string":
+            case XSDConstants.XS_STRING:
                 break;
         }
         //bind controls

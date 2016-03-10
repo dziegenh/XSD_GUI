@@ -67,22 +67,22 @@ public class SimpleTypeIntegerRestrictionParser
             for (int i = 0; i < values.getLength(); i++)
             {
                 Element item = (Element) values.item(i);
+                //all range restrictions are checked
                 switch (item.getNodeName())
                 {
-                    case "xs:minInclusive":
+                    case XSDConstants.XS_MIN_INCLUSIVE:
                         minInclusive = true;
                         min = Integer.parseInt(item.getAttribute(XSDConstants.VALUE));
                         break;
-                    case "xs:maxInclusive":
+                    case XSDConstants.XS_MAX_INCLUSIVE:
                         maxInclusive = true;
                         max = Integer.parseInt(item.getAttribute(XSDConstants.VALUE));
                         break;
-                    case "xs:minExclusive":
-
+                    case XSDConstants.XS_MIN_EXCLUSIVE:
                         minInclusive = false;
                         min = Integer.parseInt(item.getAttribute(XSDConstants.VALUE));
                         break;
-                    case "xs:maxExclusive":
+                    case XSDConstants.XS_MAX_EXCLUSIVE:
                         maxInclusive = false;
                         max = Integer.parseInt(item.getAttribute(XSDConstants.VALUE));
                         break;

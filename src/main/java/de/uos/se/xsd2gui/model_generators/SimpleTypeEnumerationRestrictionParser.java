@@ -34,11 +34,13 @@ public class SimpleTypeEnumerationRestrictionParser
             parentWidget, Node xsdNode, XSDModel parentModel)
     {
 
+        //check for correct type
         if (xsdNode.getNodeType() != Node.ELEMENT_NODE ||
             ! xsdNode.getLocalName().equals(XSDConstants.SIMPLE_TYPE))
         {
             return Optional.empty();
         }
+        //evaluate xpath to determine correct type event further
         XPathFactory xp = XPathFactory.newInstance();
         XPath newXPath = xp.newXPath();
         newXPath.setNamespaceContext(factory.getNamespaceContext());
@@ -48,6 +50,7 @@ public class SimpleTypeEnumerationRestrictionParser
             enumValues = (NodeList) newXPath
                     .evaluate("xs:restriction[@base='xs:string']/xs:enumeration/@value", xsdNode,
                               XPathConstants.NODESET);
+            //empty enumerations are bad!
             if (enumValues.getLength() < 1)
             {
                 return Optional.empty();
@@ -59,6 +62,7 @@ public class SimpleTypeEnumerationRestrictionParser
                 enumValuesAsStrings.add(enumValues.item(i).getNodeValue());
             }
             INodeGenerator bef = factory.getNodeGenerator();
+            //bin and return control
             return Optional
                     .of(bef.getAndBindRestrictedControl(factory.getValueGenerator(), parentModel,
                                                         enumValuesAsStrings));
@@ -67,7 +71,7 @@ public class SimpleTypeEnumerationRestrictionParser
         {
             Logger.getLogger(XsdParserApp.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        //if any exception was risen return an empty Optional
         return Optional.empty();
     }
 
