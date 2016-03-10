@@ -10,8 +10,19 @@
 
     <groupId>de.uos.se</groupId>
     <artifactId>xsd_gui</artifactId>
-    <version>0.1a</version>
+    <version>0.3a</version>
+
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/*.xsd</exclude>
+                    <exclude>**/*.xml</exclude>
+                </excludes>
+
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ct="CommonTypes" elementFormDefault="qualified">
+    <xs:import schemaLocation="../predefined/CommonTypes.xsd" namespace="CommonTypes"/>
+    <xs:simpleType name="UnitType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="physical"/>
+            <xs:enumeration value="string"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="OutFieldType2">
+        <xs:all>
+            <xs:element name="rawUnit">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="base" type="UnitType" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+        <xs:attribute name="numBytes" type="xs:int" fixed="4"/>
+        <xs:attribute name="byteOrder" type="ct:EndianType"/>
+        <xs:attribute name="rawMin" type="xs:unsignedInt"/>
+        <xs:attribute name="rawMax" type="xs:unsignedInt"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="bufferIndex" type="xs:string"/>
+        <xs:attribute name="direction" type="ct:DirectionType" fixed="output"/>
+    </xs:complexType>
+    <xs:element name="PWM">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="dutyCycle" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="field" type="OutFieldType2"/>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="frequency" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="field" type="OutFieldType2"/>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:ct="CommonTypes" xmlns:st="StructuredTypes" elementFormDefault="qualified"
-	targetNamespace="Components">
-	<xs:import schemaLocation="CommonTypes.xsd" namespace="CommonTypes" />
-	<xs:import schemaLocation="StructuredTypes.xsd" namespace="StructuredTypes" />
+		   xmlns:st="StructuredTypes" elementFormDefault="qualified">
+	<xs:import schemaLocation="../predefined/CommonTypes.xsd"/>
+	<xs:import schemaLocation="../predefined/StructuredTypes.xsd"/>
 	<xs:element name="Debug">
 		<xs:complexType>
 			<xs:all>
@@ -11,15 +10,19 @@
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="field" minOccurs="1" maxOccurs="unbounded"
-								type="st:FieldType" />
+										type="st:FieldType" />
+							<xs:element name="field2" minOccurs="1"
+										maxOccurs="unbounded"
+										type="st:FieldType"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="output">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="field" minOccurs="1" maxOccurs="unbounded"
-								type="st:FieldType" />
+							<xs:element name="field" minOccurs="1"
+										maxOccurs="unbounded"
+										type="st:FieldType" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

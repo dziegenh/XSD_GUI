@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema
+        elementFormDefault="qualified" targetNamespace="CommonTypes">
+
+    <simpleType name="EndianType">
+        <restriction base="string">
+            <enumeration value="BigEndian"/>
+            <enumeration value="LittleEndian"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="RefinedType">
+        <restriction base="string">
+            <enumeration value="uint8"/>
+            <enumeration value="uint16"/>
+            <enumeration value="uint32"/>
+            <enumeration value="uint64"/>
+            <enumeration value="int8"/>
+            <enumeration value="int16"/>
+            <enumeration value="int32"/>
+            <enumeration value="int64"/>
+            <enumeration value="char"/>
+            <enumeration value="float32"/>
+            <enumeration value="float64"/>
+            <enumeration value="bitvector8"/>
+            <enumeration value="bitvector16"/>
+        </restriction>
+    </simpleType>
+
+
+    <simpleType name="RefinedType">
+        <restriction base="int16">
+        </restriction>
+    </simpleType>
+
+</schema>
