@@ -33,9 +33,16 @@ public interface INodeGenerator
      * components and values for them. The {@linkplain String} parameter is present for
      * determining the type of widget to create. Normally the value of a <i>type</i> attribute
      * should be
-     * directly inserted here, but occasionally it makes sense to insert certain 'types' manually.
+     * directly inserted here. Occasionally it makes sense to insert certain 'types' manually,
+     * but it has to be one of the values stored within
+     * {@linkplain de.uos.se.xsd2gui.util.XSDConstants#PRIMITIVE_TYPES}.
      * <i>Null</i> is returned if the { @linkplain String} is not found within
-     * {@linkplain de.uos.se.xsd2gui.util.XSDConstants#PRIMITIVE_TYPES}
+     * {@linkplain de.uos.se.xsd2gui.util.XSDConstants#PRIMITIVE_TYPES}. This was chosen over
+     * using an enum, since that variant would require most users to parse a string value into an
+     * enum all the time while now the attribute value 'type' can be passed on directly. For some
+     * cases this is not possible because an element has a primitive type (e.g. xs:int) but this
+     * is stated within a child tag like <xs:restriction base="xs:integer"/>. To be able to use
+     * this method in those cases the type parameter was introduced.
      *
      * @param factory
      *         the factory to rely on for value generation
@@ -124,7 +131,8 @@ public interface INodeGenerator
     ButtonBase getControlForHandler(EventHandler<ActionEvent> handler, String label);
 
     /**
-     * Does essentially the same as {@linkplain #getAndBindControl(IValueGenerator, XSDModel, String)}
+     * Does essentially the same as
+     * {@linkplain #getAndBindControl(IValueGenerator, XSDModel, String)}
      * except that input is restricted to the given values.
      * This is kind of a convenience method so that
      * {@linkplain #getAndBindControl(IValueGenerator, XSDModel, String)} does not need to have
