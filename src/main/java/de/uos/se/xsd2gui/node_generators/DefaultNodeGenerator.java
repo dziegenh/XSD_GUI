@@ -62,6 +62,7 @@ public class DefaultNodeGenerator
                 break;
 
             case XSDConstants.XS_STRING:
+                //string can be processed by using a simple plain old TextField
                 String defaultStringValue = factory.getValueFor(model, "");
                 if (model.isFixed())
                     defaultStringValue = fixed;
