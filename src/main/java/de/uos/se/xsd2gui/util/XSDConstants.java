@@ -12,7 +12,11 @@ import java.util.Set;
  */
 public class XSDConstants
 {
-    //the primitive types associated with an xsd type attribute like for example xs:int
+    /**
+     * The primitive types associated with an xsd type attribute like for example xs:int
+     * Contains:
+     * {@linkplain #XS_INTEGER},{@linkplain #XS_INT},{@linkplain #XS_UNSIGNED_INT},{@linkplain #XS_STRING}
+     */
     public static final Set<String> PRIMITIVE_TYPES;
     //the fixed attribute name
     public static final String FIXED = "fixed";

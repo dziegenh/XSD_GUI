@@ -22,8 +22,9 @@ import java.util.logging.Logger;
 
 /**
  * Creates GUI components for simpleType tags. It only applies to those <xs:simpleType/> who are
- * restricted by <xs:restriction base='xs:integer'/> using up to 2 of (which do make sense of
- * course)
+ * restricted by <xs:restriction base='xs:integer'/> or <xs:restriction base='xs:int'/> using up
+ * to 2 of (which have to make sense of
+ * course):
  * <xs:minInclusive/>,<xs:maxInclusive/>,<xs:minExclusive/>,<xs:maxExclusive/>
  *
  * @author dziegenhagen
@@ -48,11 +49,19 @@ public class SimpleTypeIntegerRestrictionParser
         NodeList values;
         try
         {
-            //check for integer restrictions only, there should be more than 1 and less than 3
-            values = (NodeList) newXPath
-                    .evaluate("xs:restriction[@base='xs:integer']/child::node()[not(self::text())]",
-                              xsdNode, XPathConstants.NODESET);
-
+            //check for integer restrictions only, less than 3 should be found
+            values = (NodeList) newXPath.evaluate(
+                    "xs:restriction[@base='" + XSDConstants.XS_INTEGER +
+                    "']/child::node()[not(self::text())]",
+                    xsdNode, XPathConstants.NODESET);
+            //if nothing was found xs:int could have been used instead of xs:integer, so check that
+            if (values.getLength() == 0)
+            {
+                //now there should be more than 0 and less than 3
+                values = (NodeList) newXPath.evaluate(
+                        "xs:restriction[@base='" + XSDConstants.XS_INT +
+                        "']/child::node()[not(self::text())]", xsdNode, XPathConstants.NODESET);
+            }
             //abort if wrong amount
             if (values.getLength() < 1 || values.getLength() > 2)
             {

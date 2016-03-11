@@ -24,11 +24,9 @@ public class ContainerParser
 {
 
     @Override
-    public Optional<javafx.scene.Node> createWidget(AbstractWidgetFactory factory, Pane
-            parentWidget, Node
-            xsdNode, XSDModel parentModel)
+    public Optional<javafx.scene.Node> createWidget(AbstractWidgetFactory factory, Pane parentWidget, Node xsdNode, XSDModel parentModel)
     {
-
+        //abort if wrong type
         if (! (xsdNode.getNodeType() == Node.ELEMENT_NODE))
         {
             return Optional.empty();
