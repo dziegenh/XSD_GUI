@@ -18,7 +18,8 @@ public class XSDConstants
     /**
      * The primitive types associated with an xsd type attribute like for example xs:int.
      * Basically all implementations of {@linkplain de.uos.se.xsd2gui.xsdparser.IWidgetGenerator}
-     * should at least be capable of dealing with the types contained in here.
+     * should at least be capable of dealing with the types contained in here if they are aware
+     * of primitive types at all.
      * Contains:
      * {@linkplain #XS_INTEGER},{@linkplain #XS_INT},{@linkplain #XS_UNSIGNED_INT},{@linkplain #XS_STRING}
      */
