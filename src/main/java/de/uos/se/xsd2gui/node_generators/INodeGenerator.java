@@ -16,7 +16,11 @@ import java.util.List;
  * created: 29.02.2016
  * An Interface representing a basic {@linkplain Node} creating generator which creates
  * {@linkplain Node}s for binding with {@linkplain XSDModel}s and {@linkplain javafx.scene.layout.Pane}s to contain them.
- * for given {@linkplain XSDModel}s.
+ * for given
+ * {@linkplain XSDModel}s. All methods which take a {@linkplain XSDModel} as an argument must
+ * not! modify it
+ * except for the exposed
+ * {@linkplain XSDModel#valueProperty()},{@linkplain XSDModel#violationTextProperty()} ()} or {@linkplain XSDModel#violatedProperty()} ()}
  *
  * @author Falk Wilke
  */
@@ -86,8 +90,6 @@ public interface INodeGenerator
      */
     Pane getSimpleContainerFor(XSDModel xsdModel, int spacing) throws IllegalArgumentException;
 
-    ;
-
     /**
      * Overloaded method, does not take a spacing param.
      *
@@ -97,8 +99,6 @@ public interface INodeGenerator
      * @see {@linkplain #getSimpleContainerFor(XSDModel, int)}
      */
     Pane getSimpleContainerFor(XSDModel xsdModel) throws IllegalArgumentException;
-
-    ;
 
     /**
      * This method creates a new
