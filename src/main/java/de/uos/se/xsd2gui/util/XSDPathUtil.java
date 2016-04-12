@@ -16,8 +16,6 @@ public class XSDPathUtil
 {
     //the default separator between elements
     public static final String PATH_SEPARATOR = " ";
-    //the name atributes name
-    public static final String NAME = "name";
     //the replacement for PATH_SEPARATORs
     public static final String REPLACEMENT = ",";
 
@@ -45,7 +43,8 @@ public class XSDPathUtil
      */
     public static String parseFromXSDModel(XSDModel model, Element element)
     {
-        String prefixElementName = element.getAttribute(NAME) + getCorrespondingType(element);
+        String prefixElementName = element.getAttribute(XSDConstants.NAME) +
+                                   getCorrespondingType(element);
         return prefixElementName.trim().concat(PATH_SEPARATOR).concat(parseFromXSDModel(model));
     }
 
@@ -89,9 +88,10 @@ public class XSDPathUtil
             //get the current xsdnode
             Element currentElement = current.getXSDNode();
             //only append if name is present
-            if (currentElement.hasAttribute(NAME))
+            if (currentElement.hasAttribute(XSDConstants.NAME))
                 //append by using path separator and replacing illegal signs
-                sb.append(currentElement.getAttribute(NAME).replaceAll(PATH_SEPARATOR, REPLACEMENT))
+                sb.append(currentElement.getAttribute(XSDConstants.NAME)
+                                        .replaceAll(PATH_SEPARATOR, REPLACEMENT))
                   .append(getCorrespondingType(currentElement)).append(PATH_SEPARATOR);
             //move upwards
             current = current.getParentModel();

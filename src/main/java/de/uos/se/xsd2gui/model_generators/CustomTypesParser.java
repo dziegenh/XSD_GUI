@@ -5,6 +5,7 @@ import de.uos.se.xsd2gui.models.ElementModel;
 import de.uos.se.xsd2gui.models.XSDModel;
 import de.uos.se.xsd2gui.models.constraints.FixedValueConstraint;
 import de.uos.se.xsd2gui.util.XPathUtil;
+import de.uos.se.xsd2gui.util.XSDConstants;
 import de.uos.se.xsd2gui.xsdparser.AbstractWidgetFactory;
 import de.uos.se.xsd2gui.xsdparser.IWidgetGenerator;
 import javafx.scene.layout.Pane;
@@ -30,7 +31,6 @@ public class CustomTypesParser
         implements IWidgetGenerator
 {
 
-    public static final String FIXED = "fixed";
     /**
      * The namespace prefix of the matching type (e.g. "ct:").
      */
@@ -58,19 +58,19 @@ public class CustomTypesParser
 
         final Element elementNode = (Element) xsdNode;
         final String localName = elementNode.getLocalName();
-        if (! localName.equals("element") && ! localName.equals("attribute"))
+        if (! localName.equals(XSDConstants.ELEMENT) && ! localName.equals(XSDConstants.ATTRIBUTE))
         {
             return Optional.empty();
         }
 
-        final String type = elementNode.getAttribute("type");
+        final String type = elementNode.getAttribute(XSDConstants.TYPE);
         if (null == type || ! type.startsWith(typeNamespacePrefix))
         {
             return Optional.empty();
         }
         XSDModel model;
-        String fixed = elementNode.getAttribute(FIXED);
-        if (localName.equals("element"))
+        String fixed = elementNode.getAttribute(XSDConstants.FIXED);
+        if (localName.equals(XSDConstants.ELEMENT))
             model = new ElementModel(elementNode);
         else
             model = new AttributeModel(elementNode);
